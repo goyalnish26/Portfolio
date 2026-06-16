@@ -64,7 +64,8 @@ function App() {
   const [mode, setMode] = useState('entry'); // 'entry', 'dev', 'hacker'
   const [transitioning, setTransitioning] = useState(false);
   const [nextMode, setNextMode] = useState(null);
-  
+  const [entryExpandingSide, setEntryExpandingSide] = useState(null); // 'dev' or 'hacker'
+
   // Custom Cursor Refs
   const cursorDotRef = useRef(null);
   const cursorRingRef = useRef(null);
@@ -78,17 +79,34 @@ function App() {
   const [bootIndex, setBootIndex] = useState(0);
   const [hackerBooted, setHackerBooted] = useState(false);
   const [easterEggActive, setEasterEggActive] = useState(false);
+  const [hackerEasterEggContent, setHackerEasterEggContent] = useState(null);
   const typedBuffer = useRef("");
 
   // Navbar blur background state
   const [scrolled, setScrolled] = useState(false);
 
-  // Trigger custom transition
+  // Smooth expand transition for entry screen
+  const entryTransition = (targetMode) => {
+    if (entryExpandingSide) return;
+    setEntryExpandingSide(targetMode);
+    
+    // After expand animation completes (700ms), switch mode
+    setTimeout(() => {
+      setMode(targetMode);
+      setEntryExpandingSide(null);
+      if (targetMode === 'hacker') {
+        setBootIndex(0);
+        setHackerBooted(false);
+      }
+    }, 700);
+  };
+
+  // Canon Shift glitch transition — ONLY for switching between dev <-> hacker
   const triggerTransition = (targetMode) => {
     if (transitioning) return;
     setTransitioning(true);
     setNextMode(targetMode);
-    
+
     // Switch underlying content at the visual peak (400ms)
     setTimeout(() => {
       setMode(targetMode);
@@ -109,28 +127,47 @@ function App() {
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
       const key = e.key.toLowerCase();
-      
-      // Mode entry choice
-      if (mode === 'entry' && !transitioning) {
+
+      // Mode entry choice — smooth expand (no glitch)
+      if (mode === 'entry' && !entryExpandingSide) {
         if (key === 'd') {
-          triggerTransition('dev');
+          entryTransition('dev');
         } else if (key === 'h') {
-          triggerTransition('hacker');
+          entryTransition('hacker');
         }
       }
 
-      // Hacker Easter Egg
+      // Hacker Easter Eggs — shared keydown buffer
       if (mode === 'hacker') {
+        // Don't capture when in input fields
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        
         if (e.key.length === 1) {
           typedBuffer.current += key;
           if (typedBuffer.current.length > 20) {
             typedBuffer.current = typedBuffer.current.slice(-20);
           }
+          
+          // Check for all hacker commands
           if (typedBuffer.current.endsWith("sudo nish")) {
             setEasterEggActive(true);
-            setTimeout(() => {
-              setEasterEggActive(false);
-            }, 5000);
+            setHackerEasterEggContent('sudo');
+            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 5000);
+            typedBuffer.current = "";
+          } else if (typedBuffer.current.endsWith("help")) {
+            setEasterEggActive(true);
+            setHackerEasterEggContent('help');
+            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 8000);
+            typedBuffer.current = "";
+          } else if (typedBuffer.current.endsWith("ls /secrets")) {
+            setEasterEggActive(true);
+            setHackerEasterEggContent('secrets');
+            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 5000);
+            typedBuffer.current = "";
+          } else if (typedBuffer.current.endsWith("cat flag.txt")) {
+            setEasterEggActive(true);
+            setHackerEasterEggContent('flag');
+            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 6000);
             typedBuffer.current = "";
           }
         }
@@ -139,7 +176,198 @@ function App() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [mode, transitioning]);
+  }, [mode, transitioning, entryExpandingSide]);
+
+  // === DEV MODE EASTER EGG STATES ===
+  const [konamiActive, setKonamiActive] = useState(false);
+  const konamiIndex = useRef(0);
+  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+  
+  const [slashSearchOpen, setSlashSearchOpen] = useState(false);
+  const [slashSearchResult, setSlashSearchResult] = useState('');
+  const slashInputRef = useRef(null);
+  
+  const [spiderWebTooltip, setSpiderWebTooltip] = useState(false);
+  const [nameTripleClickFlash, setNameTripleClickFlash] = useState(false);
+  
+  // === POST CREDITS STATES ===
+  const [devPostCreditsActive, setDevPostCreditsActive] = useState(false);
+  const [hackerPostCreditsActive, setHackerPostCreditsActive] = useState(false);
+  const [ctfStage, setCtfStage] = useState(() => {
+    const saved = sessionStorage.getItem('breachLayer');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [ctfInput, setCtfInput] = useState('');
+  const [ctfMessage, setCtfMessage] = useState('');
+  const [ctfHintCount, setCtfHintCount] = useState(0);
+  const ctfInputRef = useRef(null);
+  const devPostCreditsSentinelRef = useRef(null);
+  const hackerPostCreditsSentinelRef = useRef(null);
+
+  useEffect(() => {
+    sessionStorage.setItem('breachLayer', ctfStage);
+  }, [ctfStage]);
+
+  // Konami Code listener
+  useEffect(() => {
+    if (mode !== 'dev') return;
+    const handleKonami = (e) => {
+      if (e.code === KONAMI[konamiIndex.current]) {
+        konamiIndex.current++;
+        if (konamiIndex.current === KONAMI.length) {
+          setKonamiActive(true);
+          konamiIndex.current = 0;
+          setTimeout(() => setKonamiActive(false), 8500);
+        }
+      } else {
+        konamiIndex.current = 0;
+      }
+    };
+    window.addEventListener('keydown', handleKonami);
+    return () => window.removeEventListener('keydown', handleKonami);
+  }, [mode]);
+
+  // Dev mode slash search listener
+  useEffect(() => {
+    if (mode !== 'dev') return;
+    const handleSlash = (e) => {
+      if (e.key === '/' && !e.target.closest('input, textarea')) {
+        e.preventDefault();
+        setSlashSearchOpen(true);
+        setSlashSearchResult('');
+        setTimeout(() => slashInputRef.current?.focus(), 100);
+      }
+      if (e.key === 'Escape' && slashSearchOpen) {
+        setSlashSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleSlash);
+    return () => window.removeEventListener('keydown', handleSlash);
+  }, [mode, slashSearchOpen]);
+
+  // Slash search handler
+  const handleSlashSearch = (query) => {
+    const q = query.toLowerCase().trim();
+    if (q === 'aegisguard') {
+      setSlashSearchOpen(false);
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+      setSlashSearchResult('aegisguard');
+      setTimeout(() => setSlashSearchResult(''), 3000);
+    } else if (['intelscopepulse', 'intelscoppe', 'intel'].includes(q)) {
+      setSlashSearchOpen(false);
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+      setSlashSearchResult('intelscopepulse');
+      setTimeout(() => setSlashSearchResult(''), 3000);
+    } else if (['writeblog', 'blog'].includes(q)) {
+      setSlashSearchOpen(false);
+      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+      setSlashSearchResult('writeblog');
+      setTimeout(() => setSlashSearchResult(''), 3000);
+    } else if (q === 'miles') {
+      setSlashSearchOpen(false);
+      setSlashSearchResult('miles');
+      setTimeout(() => setSlashSearchResult(''), 2000);
+    } else if (q === 'spider') {
+      setSlashSearchOpen(false);
+      setSlashSearchResult('spider');
+      setTimeout(() => setSlashSearchResult(''), 2000);
+    } else if (q === 'canon') {
+      setSlashSearchOpen(false);
+      setSlashSearchResult('canon');
+      setTimeout(() => setSlashSearchResult(''), 3000);
+    } else {
+      setSlashSearchResult('notfound');
+      setTimeout(() => setSlashSearchResult(''), 2000);
+    }
+  };
+
+  // Dev post-credits observer
+  useEffect(() => {
+    if (mode !== 'dev' || !devPostCreditsSentinelRef.current) return;
+    if (sessionStorage.getItem('devPostCreditsSeen')) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        sessionStorage.setItem('devPostCreditsSeen', 'true');
+        setDevPostCreditsActive(true);
+        setTimeout(() => setDevPostCreditsActive(false), 8500);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(devPostCreditsSentinelRef.current);
+    return () => observer.disconnect();
+  }, [mode]);
+
+  // Hacker post-credits observer
+  useEffect(() => {
+    if (mode !== 'hacker' || !hackerBooted || !hackerPostCreditsSentinelRef.current) return;
+    if (sessionStorage.getItem('hackerPostCreditsSeen')) return;
+    let timer;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        timer = setTimeout(() => {
+          setHackerPostCreditsActive(true);
+          setCtfStage(() => {
+            const saved = sessionStorage.getItem('breachLayer');
+            const savedStage = saved ? parseInt(saved, 10) : 0;
+            return savedStage > 0 ? savedStage : 1;
+          });
+          observer.disconnect();
+        }, 5000);
+      } else {
+        clearTimeout(timer);
+      }
+    }, { threshold: 0.1 });
+    observer.observe(hackerPostCreditsSentinelRef.current);
+    return () => { observer.disconnect(); clearTimeout(timer); };
+  }, [mode, hackerBooted]);
+
+  // CTF challenge handler
+  const handleCtfSubmit = () => {
+    const answer = ctfInput.trim().toLowerCase();
+    setCtfInput('');
+    
+    const cleanStr = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    if (ctfStage === 1) {
+      if (cleanStr(answer) === cleanStr('aegisguard')) {
+        setCtfMessage('[OK] AegisGuard. You\'ve been paying attention.\n[OK] Layer 1 breached.\n[INFO] Moving deeper...');
+        setTimeout(() => { setCtfStage(2); setCtfMessage(''); setCtfHintCount(0); }, 2500);
+      } else {
+        setCtfHintCount(prev => prev + 1);
+        setCtfMessage('[DENIED] Incorrect. The system remembers.');
+      }
+    } else if (ctfStage === 2) {
+      if (cleanStr(answer) === cleanStr("Nah, I'mma do my own thing.")) {
+        setCtfMessage('[OK] "Nah, I\'mma do my own thing."\n[OK] You know the mission.\n[OK] Layer 2 breached.');
+        setTimeout(() => { setCtfStage(3); setCtfMessage(''); setCtfHintCount(0); }, 2500);
+      } else {
+        const nextHintCount = ctfHintCount + 1;
+        setCtfHintCount(nextHintCount);
+        if (nextHintCount >= 2) {
+          setCtfMessage('[DENIED] Incorrect.\n[HINT] Every two hex characters is one ASCII byte.');
+        } else {
+          setCtfMessage('[DENIED] Incorrect. Try again.');
+        }
+      }
+    } else if (ctfStage === 3) {
+      if (cleanStr(answer) === cleanStr("you won't know I was there")) {
+        setCtfMessage('[OK] "...you won\'t know I was there."\n[OK] Exactly.');
+        setTimeout(() => { 
+          setCtfStage(4); 
+          setCtfMessage(''); 
+          sessionStorage.setItem('hackerPostCreditsSeen', 'true');
+        }, 2500);
+      } else {
+        const nextHintCount = ctfHintCount + 1;
+        setCtfHintCount(nextHintCount);
+        if (nextHintCount >= 2) {
+          setCtfMessage('[DENIED] Incorrect.\n[HINT] Check the footer. It was always there.');
+        } else {
+          setCtfMessage('[DENIED] Incorrect. Try again.');
+        }
+      }
+    }
+  };
 
   // Navbar scroll tracking
   useEffect(() => {
@@ -159,7 +387,7 @@ function App() {
     const onMouseMove = (e) => {
       mousePos.current.x = e.clientX;
       mousePos.current.y = e.clientY;
-      
+
       if (cursorDotRef.current) {
         cursorDotRef.current.style.left = `${e.clientX}px`;
         cursorDotRef.current.style.top = `${e.clientY}px`;
@@ -275,32 +503,38 @@ function App() {
       )}
 
       {/* Screen 1: Entry Screen */}
-      {mode === 'entry' && (
-        <div className="entry-container">
-          <div className="entry-side dev-side" onClick={() => triggerTransition('dev')}>
+      {(mode === 'entry' || entryExpandingSide) && (
+        <div className={`entry-container ${entryExpandingSide ? 'entry-expanding' : ''}`}>
+          <div 
+            className={`entry-side dev-side ${entryExpandingSide === 'dev' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'hacker' ? 'entry-side-dismissed' : ''}`} 
+            onClick={() => entryTransition('dev')}
+          >
             <div className="entry-side-content">
               <div className="side-label">MODE 01</div>
               <div className="side-title">THE DEVELOPER</div>
               <div className="side-desc">
-                Maximalist magazine aesthetic. Asymmetric grids. High-end typography. 
+                Maximalist magazine aesthetic. Asymmetric grids. High-end typography.
                 Focused on shipping backend REST APIs, DB schemes, and robust code.
               </div>
               <button className="entry-btn dev-btn">[ D ] SELECT</button>
             </div>
           </div>
-          <div className="entry-split-line"></div>
-          <div className="entry-side hacker-side" onClick={() => triggerTransition('hacker')}>
+          <div className={`entry-split-line ${entryExpandingSide ? 'entry-split-hidden' : ''}`}></div>
+          <div 
+            className={`entry-side hacker-side ${entryExpandingSide === 'hacker' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'dev' ? 'entry-side-dismissed' : ''}`} 
+            onClick={() => entryTransition('hacker')}
+          >
             <div className="entry-side-content">
               <div className="side-label">MODE 02</div>
               <div className="side-title">SECURITY RESEARCHER</div>
               <div className="side-desc">
-                Kernel terminal session. Monospace phosphor. Intrusive threat logs. 
+                Kernel terminal session. Monospace phosphor. Intrusive threat logs.
                 Focused on ethical hacking, CVE research, and building SIEM modules.
               </div>
               <button className="entry-btn hacker-btn">[ H ] SELECT</button>
             </div>
           </div>
-          <div className="entry-center-box">
+          <div className={`entry-center-box ${entryExpandingSide ? 'entry-center-hidden' : ''}`}>
             <div className="entry-question">Who are you looking for?</div>
             <div className="entry-subtext">"He is both. Always has been."</div>
           </div>
@@ -341,19 +575,40 @@ function App() {
 
           {/* Hero Section */}
           <header className="dev-hero">
-            <SpiderWebSVG />
+            <div 
+              className={`spider-web-wrapper ${slashSearchResult === 'spider' ? 'spider-animate' : ''}`}
+              onClick={() => { setSpiderWebTooltip(true); setTimeout(() => setSpiderWebTooltip(false), 6000); }}
+            >
+              <SpiderWebSVG />
+            </div>
+            {spiderWebTooltip && (
+              <div className="spider-tooltip">
+                <button className="spider-tooltip-close" onClick={(e) => { e.stopPropagation(); setSpiderWebTooltip(false); }}>✕</button>
+                <div>You found it. Most people don&apos;t observe this carefully.</div>
+                <div className="spider-tooltip-bold">That&apos;s exactly the kind of attention to detail I bring.</div>
+              </div>
+            )}
             <div className="hero-content">
               <h1 className="hero-heading">
-                <span className="hero-heading-first">{renderStaggeredLetters("Nishchal", 100)}</span>
+                <span 
+                  className={`hero-heading-first ${nameTripleClickFlash ? 'name-outline-flash' : ''}`}
+                  onClick={(e) => {
+                    if (e.detail === 3) {
+                      setNameTripleClickFlash(true);
+                      setTimeout(() => setNameTripleClickFlash(false), 400);
+                    }
+                  }}
+                >{renderStaggeredLetters("Nishchal", 100)}</span>
                 <span className="hero-heading-last">{renderStaggeredLetters("Goyal", 500)}</span>
               </h1>
-              <p className="hero-tagline">"No safety net. Just shipping."</p>
+              <p className="hero-tagline">"Behind the IDE, just a student from Jaipur."</p>
+              <p className="hero-tagline hero-tagline-dim">"Behind the terminal, you won't know I was there."</p>
             </div>
-            
+
             <div className="hero-bottom-left">
               ECE &apos;27 · SKIT Jaipur · Jaipur, IN
             </div>
-            <div className="hero-bottom-center">
+            <div className={`hero-bottom-center ${slashSearchResult === 'canon' ? 'canon-revealed' : ''}`}>
               // breaking the canon since 2021
             </div>
             <div className="hero-bottom-right">
@@ -372,15 +627,15 @@ function App() {
                 <h2 className="section-headline">Final-year ECE student who actually ships.</h2>
                 <div className="section-body-text">
                   <p>
-                    I build backend systems that actually work and security tools that actually detect. 
-                    Currently in my final year at SKIT Jaipur, interning at Dreamsoft4u building Odoo 15 
-                    REST APIs — HTTP controllers, ORM queries, JSON pipelines — on a Python + PostgreSQL + 
+                    I build backend systems that actually work and security tools that actually detect.
+                    Currently in my final year at SKIT Jaipur, interning at Dreamsoft4u building Odoo 15
+                    REST APIs — HTTP controllers, ORM queries, JSON pipelines — on a Python + PostgreSQL +
                     Linux stack.
                   </p>
                   <p>
-                    On the other side, I&apos;m deep into offensive security — OverTheWire, TryHackMe, building 
-                    my own SIEM tools. The goal isn&apos;t just to get a job. It&apos;s to get good enough that breaking 
-                    in becomes second nature. Certified by Google in Cybersecurity. Currently on the 
+                    On the other side, I&apos;m deep into offensive security — OverTheWire, TryHackMe, building
+                    my own SIEM tools. The goal isn&apos;t just to get a job. It&apos;s to get good enough that breaking
+                    in becomes second nature. Certified by Google in Cybersecurity. Currently on the
                     eJPT → OSCP pathway.
                   </p>
                 </div>
@@ -400,15 +655,15 @@ function App() {
             <div className="dev-section-inner">
               <div className="section-label">02 / SKILLS</div>
               <h2 className="section-headline">What I work with</h2>
-              
+
               <div className="skills-layout">
                 {/* Zone A: Development */}
                 <ScrollReveal className="skills-zone-a">
                   <h3 className="skills-subtitle">Development Competency</h3>
                   <div className="skills-tags-wrap">
                     {devSkills.map((skill, idx) => (
-                      <span 
-                        key={idx} 
+                      <span
+                        key={idx}
                         className="skill-tag"
                         style={{ fontSize: skill.size }}
                       >
@@ -422,7 +677,7 @@ function App() {
                 <ScrollReveal className="skills-zone-b-dark-panel">
                   <div className="dark-panel-scanline"></div>
                   <h3 className="dark-panel-title">The other side.</h3>
-                  
+
                   <div className="dark-panel-grid">
                     <DevCyberSkill name="Network Security" percentage={90} />
                     <DevCyberSkill name="SIEM &amp; Log Analysis" percentage={85} />
@@ -435,7 +690,7 @@ function App() {
                     <DevCyberSkill name="Metasploit Framework (learning)" percentage={50} />
                     <DevCyberSkill name="SQL Injection / XSS" percentage={65} />
                   </div>
-                  
+
                   <div className="dark-panel-pathway">
                     Pathway: OverTheWire → THM Jr Pentester → HackTheBox → eJPT → OSCP
                   </div>
@@ -449,19 +704,20 @@ function App() {
             <div className="dev-section-inner">
               <div className="section-label">03 / PROJECTS</div>
               <h2 className="section-headline">Things I&apos;ve built</h2>
-              
+
               <div className="projects-editorial-grid">
                 {/* Project 1 */}
                 <ScrollReveal className="project-card-wrapper p-card-large">
-                  <div className="project-card">
+                  <div className={`project-card project-card-sec project-card-aegis ${slashSearchResult === 'aegisguard' ? 'project-card-pulse' : ''}`}>
+                    <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
-                      <span className="project-category">Mini-SIEM Security Platform [SEC] <span className="red-spider-dot">🔴</span></span>
+                      <span className="project-category project-category-sec">SIEM Security Platform</span>
                       <h3 className="project-title">AegisGuard</h3>
                     </div>
                     <p className="project-desc">
-                      Real-time security monitoring platform that tails auth and web access logs, 
-                      detects SSH brute force attacks (5+ failed attempts from same IP in 60s window), 
-                      SQL injection, XSS, and path traversal using a custom regex rules engine. Ships with 
+                      Real-time security monitoring platform that tails auth and web access logs,
+                      detects SSH brute force attacks (5+ failed attempts from same IP in 60s window),
+                      SQL injection, XSS, and path traversal using a custom regex rules engine. Ships with
                       a live attack simulator sandbox and Discord webhook alerts for High/Critical events.
                     </p>
                     <div className="project-stack">
@@ -479,14 +735,15 @@ function App() {
 
                 {/* Project 2 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-right">
-                  <div className="project-card">
+                  <div className={`project-card project-card-sec ${slashSearchResult === 'intelscopepulse' ? 'project-card-pulse' : ''}`}>
+                    <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
-                      <span className="project-category">CVE &amp; Threat Intelligence Dashboard [SEC] <span className="red-spider-dot">🔴</span></span>
+                      <span className="project-category project-category-sec">Threat Intelligence Dashboard</span>
                       <h3 className="project-title">IntelScope-Pulse</h3>
                     </div>
                     <p className="project-desc">
-                      Live threat intelligence dashboard pulling CVE data from NVD API with 
-                      dynamic 90-day rolling windows, severity breakdown charts, and a persistent watchlist. 
+                      Live threat intelligence dashboard pulling CVE data from NVD API with
+                      dynamic 90-day rolling windows, severity breakdown charts, and a persistent watchlist.
                       Built for analysts who want actionable intel without the noise.
                     </p>
                     <div className="project-stack">
@@ -502,14 +759,14 @@ function App() {
 
                 {/* Project 3 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-left">
-                  <div className="project-card">
+                  <div className={`project-card project-card-normal ${slashSearchResult === 'writeblog' ? 'project-card-pulse' : ''}`}>
                     <div className="project-header">
-                      <span className="project-category">Full-Stack Blogging Platform</span>
+                      <span className="project-category">Full-Stack Platform</span>
                       <h3 className="project-title">WriteBlog</h3>
                     </div>
                     <p className="project-desc">
-                      Polished Flask blogging platform with role-based auth (reader/author/admin), 
-                      markdown editor with live preview, nested comments, likes, bookmarks, image uploads, 
+                      Polished Flask blogging platform with role-based auth (reader/author/admin),
+                      markdown editor with live preview, nested comments, likes, bookmarks, image uploads,
                       admin analytics dashboard, rate-limited auth routes, and full Docker + CI support.
                     </p>
                     <div className="project-stack">
@@ -533,10 +790,10 @@ function App() {
             <div className="dev-section-inner">
               <div className="section-label">04 / EXPERIENCE</div>
               <h2 className="section-headline">Where I&apos;ve worked</h2>
-              
+
               <div className="experience-timeline">
                 <div className="timeline-line"></div>
-                
+
                 <ScrollReveal className="timeline-item">
                   <div className="timeline-dot"></div>
                   <div className="timeline-content">
@@ -568,7 +825,7 @@ function App() {
                     </div>
                     <h4 className="timeline-org">AIESEC in Jaipur</h4>
                     <p className="timeline-desc">
-                      Led initiatives for youth leadership development, cross-cultural project coordination, 
+                      Led initiatives for youth leadership development, cross-cultural project coordination,
                       and international youth exchange event management.
                     </p>
                   </div>
@@ -593,28 +850,33 @@ function App() {
               <div className="certs-section">
                 <h3 className="certs-headline">Professional Certifications</h3>
                 <div className="certs-grid">
-                  <ScrollReveal className="cert-card">
-                    <div className="cert-verified">[VERIFIED]</div>
-                    <h4 className="cert-title">Google Cybersecurity Certificate</h4>
-                    <div className="cert-meta">Google / Coursera · Aug 2025</div>
+                  <ScrollReveal className="cert-card cert-card-featured">
+                    <div className="cert-verified cert-verified-red">[VERIFIED] ✓</div>
+                    <h4 className="cert-title-playfair">Google Cybersecurity Certificate</h4>
+                    <div className="cert-meta">Google / Coursera · August 2025</div>
                     <div className="cert-cred">Credential ID: LGYP4646QM36</div>
                   </ScrollReveal>
 
                   <ScrollReveal className="cert-card">
-                    <h4 className="cert-title">Ethical Hacking Certificate</h4>
-                    <div className="cert-meta">IIT Kharagpur (NPTEL) · 2026</div>
-                    <div className="cert-cred">12-week course covering NMAP, Wireshark, Burp Suite, Metasploit, SQLi</div>
+                    <div className="cert-verified cert-verified-gold">[VERIFIED] ✓</div>
+                    <h4 className="cert-title-playfair">Deloitte Australia — Cyber Job Simulation</h4>
+                    <div className="cert-meta">Forage · October 2025</div>
+                    <div className="cert-cred">Credential ID: 2LN74jKozspnmt3kh</div>
+                    <div className="cert-desc-small">Threat analysis · Incident response · Security assessment</div>
                   </ScrollReveal>
 
                   <ScrollReveal className="cert-card">
-                    <h4 className="cert-title">Cyber Security &amp; Privacy</h4>
-                    <div className="cert-meta">NPTEL Certificate · 2026</div>
+                    <div className="cert-verified cert-verified-gold">[VERIFIED] ✓</div>
+                    <h4 className="cert-title-playfair">J.P. Morgan Chase — Software Engineering Job Simulation</h4>
+                    <div className="cert-meta">Forage · October 2025</div>
+                    <div className="cert-cred">Credential ID: BvwC2Ge8oKbGSzgfr</div>
+                    <div className="cert-desc-small">Project Setup · Kafka · H2 · REST API · Controllers</div>
                   </ScrollReveal>
 
                   <ScrollReveal className="cert-card">
-                    <h4 className="cert-title">AI Security with Microsoft Sentinel</h4>
-                    <div className="cert-meta">Microsoft (AI Skills Fest) · 2026</div>
-                    <div className="cert-cred">Project Glasswing playlist: Blue team &amp; AI SOC operations</div>
+                    <div className="cert-verified cert-verified-gold">[VERIFIED] ✓</div>
+                    <h4 className="cert-title-playfair">PLC Programming &amp; Its Applications</h4>
+                    <div className="cert-meta">CSIR-CEERI · November 2024</div>
                   </ScrollReveal>
                 </div>
               </div>
@@ -626,16 +888,16 @@ function App() {
             <ScrollReveal className="contact-box">
               <h2 className="contact-headline">Let&apos;s work together.</h2>
               <p className="contact-subtext">
-                Open to backend roles, cybersecurity internships, SOC positions, and freelance. 
+                Open to backend roles, cybersecurity internships, SOC positions, and freelance.
                 Remote or Jaipur-based.
               </p>
-              
+
               <div className="contact-buttons-group">
                 <a href="mailto:goyalnishchal71@gmail.com" className="contact-btn email-btn">Send Email</a>
                 <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">LinkedIn</a>
                 <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">GitHub</a>
               </div>
-              
+
               <div className="contact-vuln-note">
                 Or find a vulnerability in this site. I&apos;ll be impressed.
               </div>
@@ -645,10 +907,112 @@ function App() {
           {/* Footer */}
           <footer className="dev-footer">
             <div className="footer-content">
-              <div>nishchal goyal · jaipur · 2025</div>
-              <div className="footer-quote">&quot;I&apos;ll break it.&quot; — Miles Morales</div>
+              <div>nishchal goyal · jaipur · 2026</div>
+              <div className={`footer-quote ${slashSearchResult === 'miles' ? 'footer-quote-flash' : ''}`}>&quot;I&apos;ll break it.&quot; — Miles Morales</div>
             </div>
           </footer>
+
+          {/* Post-credits sentinel — hidden below footer */}
+          <div ref={devPostCreditsSentinelRef} style={{ height: '1px', width: '100%' }} />
+
+          {/* Slash Search Bar */}
+          {slashSearchOpen && (
+            <div className="slash-search-bar">
+              <input
+                ref={slashInputRef}
+                className="slash-search-input"
+                type="text"
+                placeholder="Search... try 'aegisguard', 'miles', 'spider'"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSlashSearch(e.target.value);
+                  if (e.key === 'Escape') setSlashSearchOpen(false);
+                }}
+              />
+              {slashSearchResult === 'notfound' && (
+                <div className="slash-search-notfound">Nothing found. But you know where to look.</div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Spider-Verse Post Credits Overlay */}
+      {devPostCreditsActive && (
+        <div className="spiderverse-overlay">
+          <div className="sv-panel sv-panel-1">
+            <div className="sv-halftone" />
+            <div className="sv-label">SKIT JAIPUR, 2023</div>
+            <div className="sv-large">STUDENT.</div>
+            <div className="sv-small">Nobody knew what was coming.</div>
+          </div>
+          <div className="sv-panel sv-panel-2">
+            <div className="sv-halftone" />
+            <div className="sv-label">DREAMSOFT4U, 2025</div>
+            <div className="sv-large">DEVELOPER.</div>
+            <div className="sv-small">REST APIs. ORM queries. Shipping code.</div>
+          </div>
+          <div className="sv-panel sv-panel-3">
+            <div className="sv-halftone" />
+            <div className="sv-label">3AM. TERMINAL OPEN.</div>
+            <div className="sv-large">HACKER.</div>
+            <div className="sv-small">The logs don&apos;t lie. <span className="sv-cursor">▋</span></div>
+          </div>
+          <div className="sv-panel sv-panel-4">
+            <div className="sv-halftone" />
+            <div className="sv-label">JAIPUR.</div>
+            <div className="sv-large">CANON BREAKER.</div>
+            <div className="sv-small">They said this is how the story goes.</div>
+          </div>
+          <div className="sv-panel sv-panel-5">
+            <div className="sv-halftone sv-halftone-multi" />
+            <div className="sv-large sv-large-splash">NAH.</div>
+            <div className="sv-splash-sub">I&apos;MMA DO MY OWN THING.</div>
+            <div className="sv-splash-sig">— Nishchal Goyal, ECE &apos;27</div>
+          </div>
+          <div className="sv-to-be-continued">
+            <span className="sv-typewriter">// to be continued</span>
+            <span className="terminal-cursor" />
+          </div>
+        </div>
+      )}
+
+      {/* Konami Code — AoT Manga Overlay */}
+      {konamiActive && (
+        <div className="aot-overlay">
+          <div className="aot-crack" />
+          <div className="aot-panels">
+            <div className="aot-panel aot-panel-1">
+              <div className="aot-halftone" />
+              <div className="aot-text-large">STUDENT.</div>
+              <div className="aot-text-small">Jaipur, Rajasthan</div>
+            </div>
+            <div className="aot-panel aot-panel-2">
+              <div className="aot-halftone" />
+              <div className="aot-text-large">DEVELOPER.</div>
+              <div className="aot-text-small">Ships before breakfast.</div>
+            </div>
+            <div className="aot-panel aot-panel-3">
+              <div className="aot-halftone" />
+              <div className="aot-text-large">HACKER.</div>
+              <div className="aot-text-small">You won&apos;t know I was there.</div>
+              <div className="aot-eye">
+                <div className="aot-iris" />
+              </div>
+            </div>
+            <div className="aot-panel aot-panel-4">
+              <div className="aot-halftone" />
+              <div className="aot-wings">
+                <svg viewBox="0 0 100 60" className="wings-svg">
+                  <path d="M50 30 L20 5 L15 20 L35 30 L15 40 L20 55 Z" fill="white" />
+                  <path d="M50 30 L80 5 L85 20 L65 30 L85 40 L80 55 Z" fill="white" />
+                  <circle cx="50" cy="30" r="5" fill="white" />
+                </svg>
+              </div>
+              <div className="aot-text-small">&quot;If you keep moving forward, you will win.&quot;</div>
+              <div className="aot-text-small">&quot;— Eren Yeager&quot;</div>
+              <div className="aot-kanji">進撃の巨人</div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -657,15 +1021,15 @@ function App() {
         <div className="hacker-portfolio-wrapper">
           <div className="hacker-status-bar">
             <span>[nish@kali:~] — SECURITY RESEARCH PORTFOLIO</span>
-            <span className="nav-links-desktop">[SESSION ACTIVE] [2025]</span>
+            <span className="status-tags">[SESSION ACTIVE] [2026]</span>
           </div>
 
           <div className="hacker-terminal-body">
             {/* 1. Boot sequence output */}
             <div className="terminal-boot-container">
               {BOOT_LINES.slice(0, bootIndex).map((line, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className={`boot-line ${line.includes('[  OK  ]') ? 'ok' : line.includes('[ WARN ]') ? 'warn' : 'info'}`}
                 >
                   {line}
@@ -754,31 +1118,39 @@ function App() {
                   </div>
                 </TerminalCommand>
 
-                <TerminalCommand command="cat /projects/aegisguard/README" delay={5000}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    <span style={{ color: 'var(--hacker-text-bright)' }}>[PROJECT]    AegisGuard — Mini-SIEM Security Platform</span><br />
-                    [STATUS]     Active | GitHub: <a href="https://github.com/goyalnish26/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/AegisGuard</a><br />
-                    [STACK]      Python · FastAPI · SQLite · JavaScript<br />
-                    [THREAT-CAP] SSH Brute Force (stateful, 5+ attempts/60s window)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SQL Injection · XSS · Path Traversal · Sensitive Dir Discovery<br />
-                    [FEATURES]   Real-time log tailer (auth.log + web_access.log)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Custom regex rules engine<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Live attack simulator sandbox<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Discord webhook alerts (High + Critical severity)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Interactive web dashboard with alert management<br />
-                    [LIVE]       <a href="https://goyalnish26.github.io/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>goyalnish26.github.io/AegisGuard</a>
+                <TerminalCommand command="cat /projects/aegisguard/threat_report.txt" delay={5000}>
+                  <div className="terminal-command-output" style={{ color: 'var(--hacker-text-primary)' }}>
+                    ╔══════════════════════════════════════════════╗<br />
+                    ║  THREAT DETECTION SYSTEM — AEGISGUARD v1.0  ║<br />
+                    ║  STATUS: ACTIVE | CLASSIFICATION: SEC-TOOL  ║<br />
+                    ╚══════════════════════════════════════════════╝<br /><br />
+                    [SYSTEM]  Real-time log monitoring daemon<br />
+                    [DETECTS] SSH Brute Force (5+ attempts/60s window)<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL Injection patterns<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XSS attack vectors<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Path traversal attempts<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sensitive directory probing<br />
+                    [ENGINE]  Custom regex rules — zero dependencies<br />
+                    [ALERTS]  Discord webhook → High + Critical severity<br />
+                    [SANDBOX] Live attack simulator included<br />
+                    [STACK]   Python · FastAPI · SQLite · JavaScript<br />
+                    [REPO]    <a href="https://github.com/goyalnish26/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/AegisGuard</a><br />
+                    [LIVE]    <a href="https://goyalnish26.github.io/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>goyalnish26.github.io/AegisGuard</a>
                   </div>
                 </TerminalCommand>
 
-                <TerminalCommand command="cat /projects/intelscopepulse/README" delay={5700}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    <span style={{ color: 'var(--hacker-text-bright)' }}>[PROJECT]    IntelScope-Pulse — CVE Threat Intelligence Dashboard</span><br />
-                    [STATUS]     Active | GitHub: <a href="https://github.com/goyalnish26/IntelScope-Pulse" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/IntelScope-Pulse</a><br />
-                    [STACK]      React · NVD API · Chart.js<br />
-                    [FEATURES]   Dynamic 90-day CVE rolling window from NVD API<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Severity breakdown charts<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Persistent watchlist<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Real-time threat feed
+                <TerminalCommand command="cat /projects/intelscopepulse/threat_report.txt" delay={5700}>
+                  <div className="terminal-command-output" style={{ color: 'var(--hacker-text-primary)' }}>
+                    ╔══════════════════════════════════════════════╗<br />
+                    ║  CVE INTELLIGENCE FEED — INTELSCOPEPULSE    ║<br />
+                    ║  STATUS: SYNCING | SOURCE: NVD API          ║<br />
+                    ╚══════════════════════════════════════════════╝<br /><br />
+                    [FEED]    NVD API — dynamic 90-day rolling window<br />
+                    [OUTPUT]  Severity breakdown charts<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Persistent watchlist<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Real-time threat classification<br />
+                    [STACK]   React · NVD API · Chart.js<br />
+                    [REPO]    <a href="https://github.com/goyalnish26/IntelScope-Pulse" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/IntelScope-Pulse</a>
                   </div>
                 </TerminalCommand>
 
@@ -816,23 +1188,23 @@ function App() {
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Google / Coursera<br />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: August 2025<br />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: LGYP4646QM36<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> NPTEL — Ethical Hacking<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: IIT Kharagpur (Prof. Indranil Sengupta)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: 2026<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Coverage: NMAP · Wireshark · Burp Suite · Metasploit · SQLi<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Duration: 12 weeks<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> NPTEL — Cyber Security &amp; Privacy<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: NPTEL | Date: 2026<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> AI Security — Microsoft Sentinel &amp; Copilot for Security<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Microsoft AI Skills Fest<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: 2026<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Track: Blue team · AI-powered SOC operations
+                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> Deloitte Australia — Cyber Job Simulation<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Forage | Date: October 2025<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: 2LN74jKozspnmt3kh<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tasks: Threat analysis · Incident response<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Security assessment<br /><br />
+                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> J.P. Morgan — Software Engineering Simulation<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Forage | Date: October 2025<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: BvwC2Ge8oKbGSzgfr<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tasks: Kafka · H2 · REST API · Controllers<br /><br />
+                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> PLC Programming &amp; Its Applications<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: CSIR-CEERI | Date: November 2024
                   </div>
                 </TerminalCommand>
 
                 {/* 3. Live Simulated activity tail logger */}
                 <div style={{ margin: '36px 0' }}>
-                  <ActivityLog easterEggActive={easterEggActive} />
+                  <ActivityLog easterEggActive={easterEggActive} hackerEasterEggContent={hackerEasterEggContent} />
                 </div>
 
                 <TerminalCommand command="contact --list" delay={8500}>
@@ -858,10 +1230,138 @@ function App() {
 
                 <div className="hacker-footer">
                   <div>[SESSION END] nishchal_goyal@kali — all rights reserved, none respected</div>
-                  <div style={{ color: 'var(--hacker-text-dim)', marginTop: '6px' }}>
-                    [QUOTE] &quot;Everyone told Miles this is how it&apos;s supposed to be. He broke the canon anyway.&quot;
+                  <div className="hacker-footer-quote">
+                    &quot;Everyone keeps telling me how my story is supposed to go&hellip; Nah, I&apos;mma do my own thing.&quot; &mdash; Miles Morales
                   </div>
                 </div>
+
+                {/* CTF Post-Credits */}
+                <div ref={hackerPostCreditsSentinelRef} style={{ height: '1px', width: '100%' }} />
+                
+                {hackerPostCreditsActive && (
+                  <div className="ctf-container">
+                    {ctfStage === 0 && (
+                      <div className="ctf-intro">
+                        <div style={{ color: 'var(--hacker-text-dim)' }}>[SYS] End of public profile reached.</div>
+                        <div style={{ color: 'var(--hacker-text-dim)' }}>[SYS] Deeper access requires authentication.</div>
+                        <div style={{ color: '#C0C0C0' }}>[INFO] There is another layer. Find it.</div>
+                      </div>
+                    )}
+                    {ctfStage >= 1 && ctfStage <= 3 && (
+                      <div className="ctf-game">
+                        <div className="ctf-banner">
+                          ╔═══════════════════════════════════╗<br />
+                          ║&nbsp;&nbsp; BREACH PROTOCOL — NISHCHAL OS&nbsp;&nbsp;║<br />
+                          ║&nbsp;&nbsp; Unauthorized access detected.&nbsp;&nbsp;║<br />
+                          ║&nbsp;&nbsp; Prove you belong here.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ╚═══════════════════════════════════╝
+                        </div>
+                        <div style={{ color: 'var(--hacker-text-dim)', marginBottom: '16px' }}>
+                          [SYS] 3 layers of security. Break them all.<br />
+                          [SYS] Your keystrokes are being logged.
+                        </div>
+
+                        {ctfStage === 1 && (
+                          <div>
+                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 1/3] RECON</div>
+                            <div style={{ color: '#C0C0C0' }}>The system has fingerprints. Find mine.</div>
+                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
+                              Clue: &quot;What tool did I build that watches your auth.log?&quot;
+                            </div>
+                            <div className="ctf-progress">████░░░░░░░░ 0%</div>
+                          </div>
+                        )}
+                        {ctfStage === 2 && (
+                          <div>
+                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 2/3] CRYPTANALYSIS</div>
+                            <div style={{ color: '#C0C0C0' }}>Someone left a message in the logs.</div>
+                            <div style={{ color: 'var(--hacker-amber)', marginTop: '8px', fontFamily: 'JetBrains Mono', wordBreak: 'break-all' }}>
+                              4e61682c2049276d6d6120646f206d79206f776e207468696e672e
+                            </div>
+                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
+                              [INFO] It&apos;s not encrypted. Just encoded.<br />
+                              [INFO] Standard encoding. You know this.
+                            </div>
+                            <div className="ctf-progress">████████░░░░ 33%</div>
+                          </div>
+                        )}
+                        {ctfStage === 3 && (
+                          <div>
+                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 3/3] FINAL ACCESS</div>
+                            <div style={{ color: '#C0C0C0' }}>One last thing. This one&apos;s personal.</div>
+                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '8px', fontFamily: 'JetBrains Mono', fontSize: '0.75rem' }}>
+                              0x00: 42 65 68 69 6e 64 20 74 68 65 20&nbsp;&nbsp;&quot;Behind the &quot;<br />
+                              0x0B: 49 44 45 2c 20 6a 75 73 74 20 61&nbsp;&nbsp;&quot;IDE, just a&quot;<br />
+                              0x17: 20 73 74 75 64 65 6e 74 20 66 72&nbsp;&nbsp;&quot; student fr&quot;<br />
+                              0x23: 6f 6d 20 4a 61 69 70 75 72 2e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;om Jaipur.&quot;<br />
+                              0x2C: 42 65 68 69 6e 64 20 74 68 65 20&nbsp;&nbsp;&quot;Behind the &quot;<br />
+                              0x38: 74 65 72 6d 69 6e 61 6c 2c 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;terminal, &quot;<br />
+                              0x43: ?? ?? ?? ?? ?? ?? ?? ?? ?? ??&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;??????????&quot;
+                            </div>
+                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
+                              [INFO] Complete the redacted section.<br />
+                              [INFO] What won&apos;t I leave behind?
+                            </div>
+                            <div className="ctf-progress">████████████ 66%</div>
+                          </div>
+                        )}
+
+                        {ctfMessage && (
+                          <div className="ctf-message">
+                            {ctfMessage.split('\n').map((line, i) => (
+                              <div key={i} style={{ color: line.includes('[OK]') ? '#00FF66' : line.includes('[DENIED]') ? '#FF3B30' : line.includes('[HINT]') ? '#FFB300' : '#C0C0C0' }}>{line}</div>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="ctf-input-row">
+                          <span style={{ color: 'var(--hacker-amber)' }}>&gt; </span>
+                          <input
+                            ref={ctfInputRef}
+                            className="ctf-input"
+                            type="text"
+                            value={ctfInput}
+                            onChange={(e) => setCtfInput(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === 'Enter') handleCtfSubmit(); }}
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {ctfStage === 4 && (
+                      <div className="ctf-victory">
+                        <div style={{ color: '#C0C0C0' }}>[SYS] ================================</div>
+                        <div style={{ color: '#C0C0C0' }}>[SYS] BREACH PROTOCOL — COMPLETE</div>
+                        <div style={{ color: '#C0C0C0', marginBottom: '12px' }}>[SYS] ================================</div>
+                        <div style={{ color: '#00FF66' }}>[OK]&nbsp; Identity confirmed.</div>
+                        <div style={{ color: '#00FF66' }}>[OK]&nbsp; You think like I do.</div>
+                        <div style={{ color: '#00FF66', marginBottom: '12px' }}>[OK]&nbsp; That&apos;s rare.</div>
+                        <div style={{ color: '#C0C0C0' }}>[SYS] Dropping you a flag:</div>
+                        <div style={{ color: '#FFB300', fontWeight: 'bold', marginBottom: '12px' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&#123;c4n0n_br34k3r_1n_th3_n3tw0rk&#125;</div>
+                        <div style={{ color: '#C0C0C0' }}>[SYS] And something more useful:</div>
+                        <div className="ctf-contact-box">
+                          ╔══════════════════════════════════════╗<br />
+                          ║&nbsp; DIRECT LINE — NISHCHAL GOYAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ║&nbsp; goyalnishchal71@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ║&nbsp; github.com/goyalnish26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ║&nbsp; linkedin.com/in/nishchal-goyal-&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ║&nbsp; 6409a5289&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
+                          ╚══════════════════════════════════════╝
+                        </div>
+                        <div style={{ color: '#4A4A4A', fontStyle: 'italic', marginTop: '12px' }}>
+                          [SYS] &quot;Everyone keeps telling me how my story is supposed to go…&quot;<br />
+                          [SYS] &quot;Nah, I&apos;mma do my own thing.&quot;<br />
+                          [SYS] — Miles Morales
+                        </div>
+                        <div style={{ color: '#4A4A4A', marginTop: '12px' }}>[SYS] Session terminated. Good hunt.</div>
+                        <div className="ctf-final-cursor">
+                          <span style={{ color: 'var(--hacker-amber)' }}>&gt; </span>
+                          <span className="terminal-cursor" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1011,7 +1511,7 @@ const HackerSkillRow = ({ name, percentage, targetCount, statusText }) => {
 };
 
 // Subcomponent: Active rolling activity tail log simulator
-const ActivityLog = ({ easterEggActive }) => {
+const ActivityLog = ({ easterEggActive, hackerEasterEggContent }) => {
   const [logs, setLogs] = useState([]);
   const logIndex = useRef(0);
   const baseTime = useRef(new Date());
@@ -1033,13 +1533,13 @@ const ActivityLog = ({ easterEggActive }) => {
 
     const interval = setInterval(() => {
       if (easterEggActive) return;
-      
+
       setLogs(prev => {
         const nextIndex = logIndex.current % logTemplates.length;
         if (nextIndex === 0 && logIndex.current !== 0) {
           baseTime.current = new Date();
         }
-        
+
         const template = logTemplates[nextIndex];
         const logTime = new Date(baseTime.current.getTime() + template.offsetSec * 1000);
         const pad = (num) => String(num).padStart(2, '0');
@@ -1047,35 +1547,80 @@ const ActivityLog = ({ easterEggActive }) => {
         const formattedTime = `${pad(logTime.getHours())}:${pad(logTime.getMinutes())}:${pad(logTime.getSeconds())}`;
         const timestamp = `[${formattedDate} ${formattedTime}]`;
         const logLine = `${timestamp} ${template.isCommand ? '' : '>> '}${template.text}`;
-        
+
         logIndex.current += 1;
         const updated = [...prev, logLine];
         if (updated.length > 9) updated.shift();
         return updated;
       });
     }, 1800);
-    
+
     return () => clearInterval(interval);
   }, [easterEggActive]);
+
+  const renderEasterEggContent = () => {
+    switch (hackerEasterEggContent) {
+      case 'sudo':
+        return (
+          <div className="easter-egg-terminal-content">
+            <div className="red-alert-msg">[AUTH]  sudo: permission denied</div>
+            <div className="red-alert-msg">[AUTH]  nish is not in the sudoers file.</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO]  This incident will be reported.</div>
+            <div className="amber-msg">[WARN]  Just kidding. But I&apos;m already in your system.</div>
+            <div className="sig-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Nishchal</div>
+          </div>
+        );
+      case 'help':
+        return (
+          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
+            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ help</div>
+            <div style={{ color: '#C0C0C0', marginBottom: '4px' }}>AVAILABLE COMMANDS:</div>
+            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;whoami&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— you already know</div>
+            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;ls /secrets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— nice try</div>
+            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;cat flag.txt&nbsp;&nbsp;&nbsp;&nbsp;— not today</div>
+            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;sudo nish&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— you wish</div>
+            <div style={{ color: '#C0C0C0', marginBottom: '8px' }}>&nbsp;&nbsp;exit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— why would you?</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO] Some commands do more than others.</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO] Type carefully.</div>
+          </div>
+        );
+      case 'secrets':
+        return (
+          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
+            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ ls /secrets</div>
+            <div style={{ color: '#C0C0C0' }}>ls: cannot access &apos;/secrets&apos;: Permission denied</div>
+            <div className="red-alert-msg">[ERRNO 13] Access denied — not your directory.</div>
+            <div className="amber-msg">[HINT] Try harder. Or maybe don&apos;t.</div>
+          </div>
+        );
+      case 'flag':
+        return (
+          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
+            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ cat flag.txt</div>
+            <div style={{ color: '#FFB300', fontWeight: 'bold', marginBottom: '8px' }}>flag&#123;y0u_f0und_n0th1ng_but_y0u_tr13d&#125;</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO] Points for effort.</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO] Zero for success.</div>
+            <div style={{ color: '#C0C0C0' }}>[INFO] But I respect the attempt.</div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="terminal-log-panel">
       <div className="tail-log-header">
         $ tail -f /var/log/activity.log
       </div>
-      
+
       {easterEggActive ? (
-        <div className="easter-egg-terminal-content">
-          <div className="red-alert-msg">[AUTH]  sudo: permission denied — you are not in the sudoers file.</div>
-          <div>[INFO]  This incident will be reported.</div>
-          <div className="amber-msg">[WARN]  Just kidding. But I&apos;m already in your system.</div>
-          <div className="sig-line">— Nishchal</div>
-        </div>
+        renderEasterEggContent()
       ) : (
         <div className="logs-scroller-content">
           {logs.map((log, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className={`log-line-entry ${log.includes('ALERT') ? 'amber-log' : log.includes('CRITICAL') ? 'red-log' : 'normal-log'}`}
             >
               {log}
@@ -1169,14 +1714,17 @@ const CustomStyles = () => (
       background-color: #1A1A1A;
     }
     .cursor-ring.dev {
-      border-color: #E9C46A;
-      opacity: 0.55;
+      border-color: #C9A84C;
+      border-width: 2px;
+      opacity: 0.85;
+      mix-blend-mode: multiply;
     }
     .cursor-ring.dev.cursor-hover {
       width: 48px;
       height: 48px;
+      border-color: #1A1A1A;
       opacity: 1;
-      background-color: rgba(233, 196, 106, 0.1);
+      background-color: transparent;
     }
 
     .cursor-dot.hacker {
@@ -1184,13 +1732,32 @@ const CustomStyles = () => (
     }
     .cursor-ring.hacker {
       border-color: #C0C0C0;
-      opacity: 0.35;
+      opacity: 0.4;
+      mix-blend-mode: normal;
     }
     .cursor-ring.hacker.cursor-hover {
       width: 44px;
       height: 44px;
-      opacity: 0.7;
+      opacity: 0.75;
       background-color: rgba(192, 192, 192, 0.05);
+    }
+
+    /* Text Selection Colors */
+    .dev-mode-active ::selection {
+      background: #E9C46A;
+      color: #1A1A1A;
+    }
+    .dev-mode-active ::-moz-selection {
+      background: #E9C46A;
+      color: #1A1A1A;
+    }
+    .hacker-mode-active ::selection {
+      background: rgba(0, 255, 65, 0.15);
+      color: #00FF41;
+    }
+    .hacker-mode-active ::-moz-selection {
+      background: rgba(0, 255, 65, 0.15);
+      color: #00FF41;
     }
 
     /* Entry Split Screen styling */
@@ -1234,7 +1801,7 @@ const CustomStyles = () => (
     }
     .side-label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
+      font-size: clamp(0.65rem, 1.5vw, 0.78rem);
       opacity: 0.5;
       letter-spacing: 2px;
     }
@@ -1326,6 +1893,35 @@ const CustomStyles = () => (
       background-color: rgba(0, 0, 0, 0.8);
       padding: 4px 12px;
       border-radius: 4px;
+    }
+
+    /* Entry Expansion Animation */
+    .entry-expanding {
+      position: relative;
+    }
+    .entry-side {
+      transition: flex 700ms cubic-bezier(0.76, 0, 0.24, 1), opacity 700ms cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .entry-side-chosen {
+      flex: 1 0 100% !important;
+      opacity: 1 !important;
+      z-index: 10;
+    }
+    .entry-side-dismissed {
+      flex: 0 0 0% !important;
+      opacity: 0 !important;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+    .entry-split-hidden {
+      opacity: 0 !important;
+      transition: opacity 300ms ease;
+    }
+    .entry-center-hidden {
+      opacity: 0 !important;
+      transition: opacity 300ms ease;
+      pointer-events: none;
     }
 
     /* Floating Toggle Button */
@@ -1640,13 +2236,10 @@ const CustomStyles = () => (
       pointer-events: none;
       z-index: 0;
     }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
+
     .hero-heading {
       font-family: 'Playfair Display', serif;
-      font-size: 10.5vw;
+      font-size: clamp(2.5rem, 8vw, 6.5rem);
       line-height: 0.9;
       font-weight: 900;
       margin: 0 0 1.5rem 0;
@@ -1679,9 +2272,18 @@ const CustomStyles = () => (
       color: #8A7F6B;
       margin: 0;
       padding-left: 0.5rem;
+      line-height: 1.6;
     }
-
-    /* Hero bottom layout elements */
+    .hero-tagline-dim {
+      color: #A89F8B;
+      font-weight: 300;
+      opacity: 0.85;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      margin-top: 2rem;
+    }
     .hero-bottom-left {
       position: absolute;
       bottom: 2rem;
@@ -1740,14 +2342,14 @@ const CustomStyles = () => (
 
     .section-label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
+      font-size: clamp(0.65rem, 1.5vw, 0.78rem);
       color: #8A7F6B;
       letter-spacing: 3px;
       margin-bottom: 1rem;
     }
     .section-headline {
       font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
       line-height: 1.15;
       font-weight: 900;
       color: #2D2416;
@@ -1921,7 +2523,7 @@ const CustomStyles = () => (
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
     }
     .project-card:hover {
       transform: translateY(-5px);
@@ -1938,6 +2540,32 @@ const CustomStyles = () => (
     }
     .project-card:hover::before {
       height: 100%;
+    }
+
+    /* Security project card styles */
+    .project-card-sec {
+      border-left: 3px solid #E63946 !important;
+    }
+    .project-card-sec::before {
+      background-color: #E63946 !important;
+    }
+    .project-card-aegis:hover {
+      background-color: #FEF5F5 !important;
+    }
+    .project-sec-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: bold;
+      color: #E63946;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .project-category-sec {
+      color: #E63946 !important;
     }
 
     .project-header {
@@ -2101,18 +2729,33 @@ const CustomStyles = () => (
     .cert-card {
       background-color: #FDF5C0;
       border: 1px solid rgba(233, 196, 106, 0.3);
+      border-left: 3px solid #E9C46A;
       padding: 2rem;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
+    .cert-card-featured {
+      border-left: 3px solid #E63946;
+    }
     .cert-verified {
       font-family: 'DM Mono', monospace;
       font-size: 0.75rem;
       font-weight: bold;
-      color: #E63946;
       letter-spacing: 1px;
+    }
+    .cert-verified-red {
+      color: #E63946;
+    }
+    .cert-verified-gold {
+      color: #C9A84C;
+    }
+    .cert-title-playfair {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #1A1A1A;
     }
     .cert-title {
       font-family: 'DM Sans', sans-serif;
@@ -2121,15 +2764,21 @@ const CustomStyles = () => (
       color: #1A1A1A;
     }
     .cert-meta {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
       color: #8A7F6B;
     }
     .cert-cred {
       font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      color: #8A7F6B;
+      font-size: 0.72rem;
+      color: #C9A84C;
       margin-top: 4px;
+    }
+    .cert-desc-small {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: #8A7F6B;
+      opacity: 0.8;
     }
 
     /* Contact Section */
@@ -2257,11 +2906,14 @@ const CustomStyles = () => (
       border-bottom: 1px solid #1E1E1E;
       padding: 0.6rem 1.5rem;
       font-size: 0.75rem;
-      color: #4A4A4A;
+      color: #6A6A6A;
       display: flex;
       justify-content: space-between;
       z-index: 1000;
       box-sizing: border-box;
+    }
+    .hacker-status-bar .status-tags {
+      color: #888888;
     }
 
     .hacker-terminal-body {
@@ -2398,6 +3050,14 @@ const CustomStyles = () => (
       color: #4A4A4A;
       line-height: 1.6;
     }
+    .hacker-footer-quote {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #4A4A4A;
+      margin-top: 0.8rem;
+      text-align: center;
+      font-style: italic;
+    }
 
     /* CRT scanline simulation overlay */
     .crt-scanline {
@@ -2430,12 +3090,586 @@ const CustomStyles = () => (
       outline: 2px solid #FFB300;
     }
 
+    /* Slash Search Bar styling */
+    .slash-search-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #FDF5C0;
+      border-top: 1px solid #E9C46A;
+      padding: 1.5rem 2rem;
+      z-index: 10000;
+      box-shadow: 0 -10px 30px rgba(45, 36, 22, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: search-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      box-sizing: border-box;
+    }
+    @keyframes search-slide-up {
+      0% { transform: translateY(100%); }
+      100% { transform: translateY(0); }
+    }
+    .slash-search-input {
+      width: 100%;
+      max-width: 600px;
+      padding: 0.8rem 1.2rem;
+      background: transparent;
+      border: 1px solid #E9C46A;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      color: #1A1A1A;
+      outline: none;
+    }
+    .slash-search-input::placeholder {
+      color: #A89F8B;
+    }
+    .slash-search-notfound {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: #8A7F6B;
+      margin-top: 0.8rem;
+    }
+
+    /* Keyword animations */
+    .project-card-pulse {
+      animation: gold-pulse-anim 1s ease-in-out 3;
+    }
+    @keyframes gold-pulse-anim {
+      0%, 100% { box-shadow: 0 4px 20px rgba(45, 36, 22, 0.04); border-color: rgba(233, 196, 106, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(233, 196, 106, 0.6); border-color: #E9C46A; transform: scale(1.02); }
+    }
+
+    .footer-quote-flash {
+      animation: quote-flash-anim 2s ease-in-out forwards;
+    }
+    @keyframes quote-flash-anim {
+      0%, 100% { color: #8A7F6B; font-weight: normal; }
+      20%, 80% { color: #E9C46A; text-shadow: 0 0 8px rgba(233, 196, 106, 0.5); font-weight: bold; }
+    }
+
+    .canon-revealed {
+      animation: canon-reveal-anim 3s ease-in-out forwards;
+    }
+    @keyframes canon-reveal-anim {
+      0%, 100% { opacity: 0.5; color: #C9A84C; }
+      10%, 90% { opacity: 1; color: #1A1A1A; font-weight: bold; }
+    }
+
+    /* Spider web click & search animation */
+    .spider-web-wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .spider-web-element {
+      width: 100%;
+      height: 100%;
+      fill: none;
+      stroke: #E9C46A;
+      stroke-width: 0.5px;
+      opacity: 0.15;
+      transition: opacity 0.3s ease, stroke-width 0.3s ease;
+    }
+    .spider-web-wrapper:hover .spider-web-element {
+      opacity: 0.35;
+      stroke-width: 1px;
+    }
+
+    /* Web spinning stroke animation */
+    .spider-animate .spider-web-element circle,
+    .spider-animate .spider-web-element line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-web 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0.5;
+    }
+    @keyframes draw-web {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* Spider Tooltip styling */
+    .spider-tooltip {
+      position: absolute;
+      top: 180px;
+      right: 20px;
+      background-color: #FDF5C0;
+      border: 1px solid #E9C46A;
+      padding: 1.2rem 1.5rem;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(45, 36, 22, 0.08);
+      z-index: 100;
+      max-width: 280px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: #1A1A1A;
+      animation: tooltip-fade-in 0.3s ease forwards;
+    }
+    @keyframes tooltip-fade-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .spider-tooltip-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #8A7F6B;
+    }
+    .spider-tooltip-close:hover {
+      color: #1A1A1A;
+    }
+    .spider-tooltip-bold {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: bold;
+      margin-top: 0.4rem;
+    }
+
+    /* Name Outline Flash styling */
+    .name-outline-flash {
+      animation: mask-outline 400ms ease forwards;
+    }
+    @keyframes mask-outline {
+      0% {
+        color: transparent;
+        -webkit-text-stroke: 2px #1A1A1A;
+      }
+      90% {
+        color: transparent;
+        -webkit-text-stroke: 2px #1A1A1A;
+      }
+      100% {
+        color: #2D2416;
+        -webkit-text-stroke: 0px transparent;
+      }
+    }
+
+    /* CTF Breach Protocol styling */
+    .ctf-container {
+      margin-top: 3rem;
+      border-top: 1px dashed #1E1E1E;
+      padding-top: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .ctf-banner {
+      color: #FFB300;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+    }
+    .ctf-progress {
+      font-family: 'JetBrains Mono', monospace;
+      color: #FFB300;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    .ctf-message {
+      margin: 16px 0;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .ctf-input-row {
+      display: flex;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .ctf-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #C0C0C0;
+      flex-grow: 1;
+      caret-color: #FFB300;
+    }
+    .ctf-contact-box {
+      color: #C0C0C0;
+      border: 1px solid #FFB300;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: inline-block;
+      line-height: 1.5;
+      background-color: #111111;
+      white-space: pre-wrap;
+    }
+    .ctf-victory {
+      line-height: 1.6;
+    }
+    .ctf-final-cursor {
+      display: flex;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    /* Spider-Verse Post Credits Overlay styling */
+    .spiderverse-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      z-index: 100000;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 1.2fr 1.5fr;
+      padding: 2rem;
+      gap: 1.5rem;
+      box-sizing: border-box;
+      animation: sv-fade-out 0.5s ease 8s forwards;
+    }
+    @keyframes sv-fade-out {
+      to { opacity: 0; pointer-events: none; }
+    }
+    .sv-panel {
+      border: 4px solid #000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      text-align: center;
+      opacity: 0;
+    }
+    .sv-halftone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.15;
+    }
+    .sv-label {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background-color: #000;
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      z-index: 2;
+      font-weight: bold;
+    }
+    .sv-large {
+      font-family: 'Bangers', sans-serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: #fff;
+      z-index: 1;
+      text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+    }
+    .sv-small {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #fff;
+      z-index: 1;
+      font-weight: bold;
+      text-shadow: 1px 1px 0px #000;
+    }
+    .sv-panel-1 {
+      grid-column: 1 / 3;
+      background-color: #8B0000;
+      animation: panel-show 0.1s forwards 0.3s;
+    }
+    .sv-panel-1 .sv-halftone {
+      background-image: radial-gradient(#A50000 20%, transparent 20%);
+      background-size: 10px 10px;
+    }
+    .sv-panel-2 {
+      grid-column: 3 / 5;
+      background-color: #1A1A5E;
+      animation: panel-show 0.1s forwards 1.3s;
+    }
+    .sv-panel-2 .sv-halftone {
+      background-image: radial-gradient(#1E1E6E 20%, transparent 20%);
+      background-size: 10px 10px;
+    }
+    .sv-panel-3 {
+      grid-column: 1 / 3;
+      background-color: #0D0D0D;
+      animation: panel-show 0.1s forwards 2.3s;
+    }
+    .sv-panel-3 .sv-halftone {
+      background-image: radial-gradient(#FF006E 15%, transparent 15%);
+      background-size: 8px 8px;
+    }
+    .sv-cursor {
+      color: #FF006E;
+      animation: blink 1s step-end infinite;
+    }
+    .sv-panel-4 {
+      grid-column: 3 / 5;
+      background-color: #000;
+      border-color: #fff;
+      animation: panel-show 0.1s forwards 3.3s;
+    }
+    .sv-panel-4 .sv-halftone {
+      background-image: radial-gradient(#fff 10%, transparent 10%);
+      background-size: 12px 12px;
+      opacity: 0.1;
+    }
+    .sv-panel-5 {
+      grid-column: 1 / 5;
+      background: linear-gradient(135deg, #8B0000, #1A1A5E, #FF006E, #000);
+      animation: panel-show 0.1s forwards 4.3s;
+      border-width: 5px;
+    }
+    .sv-panel-5 .sv-halftone-multi {
+      background-image: radial-gradient(#E9C46A 20%, transparent 20%);
+      background-size: 10px 10px;
+      opacity: 0.1;
+    }
+    .sv-large-splash {
+      font-size: clamp(4rem, 10vw, 8rem);
+      color: #E9C46A;
+      animation: splash-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 4.4s both;
+    }
+    @keyframes splash-scale {
+      0% { transform: scale(0.5); }
+      100% { transform: scale(1); }
+    }
+    .sv-splash-sub {
+      font-family: 'Bangers', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #fff;
+      text-shadow: 3px 3px 0px #000;
+      letter-spacing: 2px;
+      z-index: 1;
+      margin-bottom: 1rem;
+    }
+    .sv-splash-sig {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: #fff;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    @keyframes panel-show {
+      to { opacity: 1; }
+    }
+    .sv-to-be-continued {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      z-index: 200;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: tbc-show 0.1s forwards 5.8s;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+    @keyframes tbc-show {
+      to { opacity: 1; }
+    }
+    .sv-typewriter {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 0;
+      animation: sv-typing 1.2s steps(20, end) forwards 6.1s;
+    }
+    @keyframes sv-typing {
+      from { width: 0; }
+      to { width: 220px; }
+    }
+
+    /* Konami AoT Manga Overlay styling */
+    .aot-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      animation: sv-fade-out 0.5s ease 8s forwards;
+    }
+    .aot-crack {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' stroke='black' stroke-width='1.5' fill='none'><path d='M50 50 L10 10 M50 50 L90 10 M50 50 L10 90 M50 50 L90 90 M50 50 L50 0 M50 50 L50 100 M50 50 L0 50 M50 50 L100 50 M30 30 L40 10 L50 30 L70 20 L80 40 L60 50 L70 70 L90 60 L80 80 L50 70 L30 80 L10 70 L30 50 L20 40 Z'/></svg>");
+      background-size: cover;
+      z-index: 200;
+      pointer-events: none;
+      animation: crack-shatter 0.5s ease-out forwards;
+    }
+    .aot-crack-end {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' stroke='black' stroke-width='1.5' fill='none'><path d='M50 50 L10 10 M50 50 L90 10 M50 50 L10 90 M50 50 L90 90 M50 50 L50 0 M50 50 L50 100 M50 50 L0 50 M50 50 L100 50 M30 30 L40 10 L50 30 L70 20 L80 40 L60 50 L70 70 L90 60 L80 80 L50 70 L30 80 L10 70 L30 50 L20 40 Z'/></svg>");
+      background-size: cover;
+      z-index: 200;
+      pointer-events: none;
+      opacity: 0;
+      animation: crack-shatter 0.5s ease-out forwards 8s;
+    }
+    @keyframes crack-shatter {
+      0% { opacity: 0; transform: scale(0.8); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .aot-panels {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      width: 100%;
+      height: 100%;
+      gap: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+      background-color: #000;
+    }
+    .aot-panel {
+      position: relative;
+      background-color: #000;
+      border: 4px solid #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+      overflow: hidden;
+      opacity: 0;
+      animation: panel-show 0.1s forwards 0.5s;
+    }
+    .aot-halftone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(#333 15%, transparent 15%);
+      background-size: 8px 8px;
+      opacity: 0.3;
+      z-index: 0;
+    }
+    .aot-text-large {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      color: #fff;
+      z-index: 1;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 0px #000;
+      margin-bottom: 0.5rem;
+    }
+    .aot-text-small {
+      font-family: 'Impact', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.8rem);
+      color: #ccc;
+      z-index: 1;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0px #000;
+    }
+    .aot-panel-1 {
+      border-right-width: 6px;
+      border-bottom-width: 6px;
+    }
+    .aot-panel-2 {
+      border-left-width: 6px;
+      border-bottom-width: 6px;
+    }
+    .aot-panel-3 {
+      border-right-width: 6px;
+      border-top-width: 6px;
+    }
+    .aot-panel-3 .aot-halftone {
+      background-image: radial-gradient(#555 20%, transparent 20%);
+      background-size: 6px 6px;
+      opacity: 0.5;
+    }
+    .aot-panel-4 {
+      border-left-width: 6px;
+      border-top-width: 6px;
+    }
+    .aot-eye {
+      width: 80px;
+      height: 40px;
+      background-color: #fff;
+      border-radius: 50% 50%;
+      border: 3px solid #000;
+      position: relative;
+      margin-top: 1rem;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    .aot-iris {
+      width: 30px;
+      height: 30px;
+      background-color: #000;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      position: relative;
+    }
+    .aot-iris::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: 6px;
+      height: 6px;
+      background-color: #fff;
+      border-radius: 50%;
+    }
+    .aot-wings {
+      margin-bottom: 1rem;
+      z-index: 1;
+    }
+    .wings-svg {
+      width: 100px;
+      height: 60px;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
+    }
+    .aot-kanji {
+      font-family: 'Impact', sans-serif;
+      font-size: 1.5rem;
+      color: #888;
+      margin-top: 1rem;
+      z-index: 1;
+    }
+
     /* ----------------------------------------- */
     /* RESPONSIVE DESIGN STYLES */
     /* ----------------------------------------- */
     @media (max-width: 1024px) {
-      .hero-heading { font-size: 12vw; }
-      .section-headline { font-size: 3rem; }
       .about-grid { grid-template-columns: 1fr; gap: 1rem; }
       .decor-num { display: none; }
       .skills-layout { grid-template-columns: 1fr; gap: 3rem; }
@@ -2470,17 +3704,11 @@ const CustomStyles = () => (
       .dev-section {
         padding: 5rem 0;
       }
-      .hero-heading {
-        font-size: 15vw;
-      }
       .hero-heading-last {
         -webkit-text-stroke: 1.5px #1A1A1A;
       }
       .hero-tagline {
         font-size: 1.15rem;
-      }
-      .section-headline {
-        font-size: 2.3rem;
       }
       .project-card {
         padding: 2rem;
@@ -2502,13 +3730,44 @@ const CustomStyles = () => (
         text-align: center;
       }
 
-      /* Hacker mobile responsiveness choice: */
-      /* Real terminals aren't responsive. We allow horizontal scroll on mobile. */
+      /* Hero vertical text positioning on mobile */
+      .hero-bottom-left {
+        position: relative;
+        writing-mode: horizontal-tb;
+        transform: none;
+        bottom: auto;
+        left: auto;
+        margin-top: 2rem;
+        padding-left: 0.5rem;
+      }
+
+      /* Hacker responsive styling - no horizontal page scroll, scroll only inside containers */
       .hacker-portfolio-wrapper {
-        overflow-x: auto;
+        overflow-x: hidden;
       }
       .hacker-terminal-body {
-        min-width: 800px; /* Force desktop width so terminal columns layout matches exactly */
+        width: 100%;
+        max-width: 900px;
+        min-width: 0 !important;
+        padding: 4rem 1.2rem 6rem 1.2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .certs-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .entry-container {
+        flex-direction: column;
+      }
+      .entry-side {
+        padding: 2rem;
+      }
+      .hacker-side {
+        text-align: left;
+      }
+      .hacker-btn {
+        align-self: flex-start;
       }
     }
   `}</style>

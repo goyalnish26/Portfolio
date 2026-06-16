@@ -115,9 +115,9 @@ cursorDot.style.left = `${e.clientX}px`
 ringPos.x += (mousePos.x - ringPos.x) * 0.12
 ```
 
-- **Dev mode** — dot `#1A1A1A`, ring `#E9C46A` at 55% opacity
-- **Hacker mode** — dot `#C0C0C0`, ring `#C0C0C0` at 35% opacity
-- On hover: ring scales up and fills slightly
+- **Dev mode** — dot `#1A1A1A`, ring `#C9A84C` at 85% opacity, `mix-blend-mode: multiply` for high visibility on warm backgrounds
+- **Hacker mode** — dot `#C0C0C0`, ring `#C0C0C0` at 40% opacity, `mix-blend-mode: normal`
+- On hover: ring scales up and switches color/intensity (48px in Dev, 44px in Hacker)
 
 ### Architecture
 
@@ -162,7 +162,7 @@ npm run preview
 ```
 Portfolio/
 ├── src/
-│   ├── App.jsx          ← The entire portfolio (single file, ~2500 lines)
+│   ├── App.jsx          ← The entire portfolio (single file, ~3150 lines)
 │   ├── index.css        ← Minimal reset only (cursor: none, box-sizing)
 │   └── main.jsx         ← React DOM entry point
 ├── index.html           ← Root HTML with SEO meta tags
@@ -175,15 +175,31 @@ Portfolio/
 
 ---
 
-## 🔐 Easter Egg
+## 🔐 Easter Eggs & Secrets
 
-While in **Hacker Mode**, type anywhere on the page:
+The portfolio is packed with hidden interactive features:
 
-```
-sudo nish
-```
+### 1. Developer Mode Secrets
+* **Slash Key Search (`/`)**: Press `/` in Dev Mode (outside input fields) to slide up a minimal bottom search bar. Try searching:
+  - `aegisguard` / `intelscopepulse` / `writeblog` / `blog` → scrolls to and pulses the respective project card gold.
+  - `miles` → flashes the footer quote gold for 2 seconds.
+  - `spider` → triggers a full sequence web-spinning drawing animation on the hero web.
+  - `canon` → briefly reveals the hidden header comment line.
+* **Spider Web Click**: Click the SVG web in the top-right corner to reveal a custom styled attention-to-detail tooltip popup.
+* **Name Triple Click**: Rapidly click 3 times on the "Nishchal" hero heading to trigger a visual text-stroke outline mask.
+* **Spider-Verse Comic Panels (Post Credits)**: Scroll past the footer completely to trigger a 5-panel comic strip sequence designed in saturated Ben-Day dot gradient backgrounds, Bangers font, and film cuts, closing on a typewriter sequence.
+* **Konami Code AoT Spread**: Entering `↑ ↑ ↓ ↓ ← → ← → B A` (Arrow keys, B, A) globally on keyboard triggers a violent screen shatter SVG animation and opens a 2x2 manga panel spread with inline wing SVGs and custom CSS eye looking at you.
 
-You'll get a response in the live activity log. That's all I'll say.
+### 2. Hacker Mode Secrets
+* **Global Command Buffer**: Type commands globally on the page:
+  - `help` → outputs command list in the tail-log.
+  - `sudo nish` → permission denied alert in red and amber.
+  - `ls /secrets` → unauthorized directory listing error.
+  - `cat flag.txt` → yields a secret flag key.
+* **Breach Protocol CTF (Post Credits)**: Scroll to the bottom of the active terminal session and wait for 5 seconds to initiate a terminal-styled 3-layer cybersecurity CTF game. Decrypt hex codes, complete terminal phrases, and breach the OS to unlock:
+  - The victory flag `flag{c4n0n_br34k3r_1n_th3_n3tw0rk}`.
+  - An exclusive direct contact terminal card for Nishchal.
+  *Note: CTF progress is saved in `sessionStorage` under `breachLayer` so your progress persists if you scroll away or reload.*
 
 ---
 
@@ -241,6 +257,6 @@ Full-stack blogging platform — role-based auth, markdown editor, nested commen
 
 *"Everyone told Miles this is how it's supposed to be. He broke the canon anyway."*
 
-**`nishchal goyal · jaipur · 2025`**
+**`nishchal goyal · jaipur · 2026`**
 
 </div>
