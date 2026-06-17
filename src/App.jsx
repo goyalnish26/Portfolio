@@ -76,6 +76,7 @@ experience      Professional experience
 certs           Certifications
 journey         Learning journey
 contact         Contact information
+hero            Print hero greeting section
 
 themes          List available themes
 theme           Apply a theme
@@ -334,13 +335,7 @@ const PETER_TEXT = `With great power comes technical debt.`;
 
 const THEMES_TEXT = `Available themes:
 
-light       Developer palette terminal
-dark        Default dark terminal
-peter       Black + red
-miles       Black + purple + red
-noir        Black + white
-2099        Deep blue + cyan
-kali        Dark navy + Kali purple
+light  dark  peter  miles  noir  2099  kali
 
 Usage: theme <name>
 Example: theme miles`;
@@ -366,19 +361,34 @@ Making coffee... ✓ Complete`
 
 const getGreetingOutput = () => {
   const asciiLines = [
-    " ███╗   ██╗██╗███████╗██╗  ██╗ ██████╗██╗  ██╗ █████╗ ██╗              /\\_/\\",
-    " ████╗  ██║██║██╔════╝██║  ██║██╔════╝██║  ██║██╔══██╗██║             / ^ ^ \\",
-    " ██╔██╗ ██║██║███████╗███████║██║     ███████║███████║██║            (  # #  )",
-    " ██║╚██╗██║██║╚════██║██╔══██║██║     ██╔══██║██╔══██║██║             \\  _  /",
-    " ██║ ╚████║██║███████║██║  ██║╚██████╗██║  ██║██║  ██║███████╗        /     \\",
-    " ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝       /       \\"
+    " ███╗   ██╗██╗███████╗██╗  ██╗ ██████╗██╗  ██╗ █████╗ ██╗                       ,##,,eew,",
+    " ████╗  ██║██║██╔════╝██║  ██║██╔════╝██║  ██║██╔══██╗██║                     ,##############C",
+    " ██╔██╗ ██║██║███████╗███████║██║     ███████║███████║██║                  a###############@##",
+    " ██║╚██╗██║██║╚════██║██╔══██║██║     ██╔══██║██╔══██║██║                 7####^`^\"7W7^\"@####",
+    " ██║ ╚████║██║███████║██║  ██║╚██████╗██║  ██║██║  ██║███████╗        @#@b`         ^@#@^",
+    " ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝         ##^,,,,   ,,,,^#^",
+    "                                                                     ,,@######\"#######=",
+    "                                                                      .''555\"` '5555b|",
+    "                                                                      T\"@  ,,,^,mg,@,*",
+    "                                                                         %p||`~~'.#`",
+    "                                                                          ^Wp  ,#T",
+    "                                                                         :b''/ Y \\\\b^}",
+    "                                                                      ,^    / \\\\_/ \\\\ 'b 3-",
+    "                                                                  .<` 'p    \\\\ / \\\\ / #   b   *.",
+    "                                                                {      }   # \\\\_Y_/b   [",
+    "                                                                C      3 * @#######Nl      `",
+    "                                                               '            ^@##b     ($    !"
   ];
   return (
     <div className="terminal-system-greeting">
       <pre className="terminal-ascii-art">
         {asciiLines.join("\n")}
       </pre>
-      <div className="terminal-welcome-msg">Welcome back.</div>
+      <div className="terminal-welcome-msg" style={{ marginTop: '1rem' }}>Welcome back.</div>
+      <div className="terminal-welcome-sub" style={{ fontStyle: 'italic', margin: '0.4rem 0', color: 'var(--hacker-secondary)' }}>
+        building systems by day<br />
+        breaking them by night
+      </div>
       <div className="terminal-welcome-sub">Type &apos;help&apos; to begin.</div>
     </div>
   );
@@ -405,6 +415,8 @@ function App() {
   const [hackerHistory, setHackerHistory] = useState([
     { command: null, output: getGreetingOutput() }
   ]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [cursorPos, setCursorPos] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
   const [hackerTheme, setHackerTheme] = useState(() => {
     return localStorage.getItem('hackerModeTheme') || 'dark';
@@ -431,6 +443,8 @@ function App() {
       if (targetMode === 'hacker') {
         setHackerState('terminal');
         setHackerInput('');
+        setCursorPos(0);
+        setHistoryIndex(-1);
         setHackerHistory([{ command: null, output: getGreetingOutput() }]);
         setCanonRejectedActive(false);
         setExitingTerminal(false);
@@ -459,6 +473,8 @@ function App() {
       if (targetMode === 'hacker') {
         setHackerState('terminal');
         setHackerInput('');
+        setCursorPos(0);
+        setHistoryIndex(-1);
         setHackerHistory([{ command: null, output: getGreetingOutput() }]);
         setCanonRejectedActive(false);
         setExitingTerminal(false);
@@ -711,14 +727,41 @@ function App() {
         .map(h => h.command)
         .filter(cmd => cmd !== null && cmd !== undefined && cmd.trim() !== '');
       if (historyCmds.length > 0) {
-        const lastCmd = historyCmds[historyCmds.length - 1];
-        setHackerInput(lastCmd);
+        let newIndex = historyIndex;
+        if (historyIndex === -1) {
+          newIndex = historyCmds.length - 1;
+        } else if (historyIndex > 0) {
+          newIndex = historyIndex - 1;
+        }
+        setHistoryIndex(newIndex);
+        setHackerInput(historyCmds[newIndex]);
+        setCursorPos(historyCmds[newIndex].length);
+      }
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const historyCmds = hackerHistory
+        .map(h => h.command)
+        .filter(cmd => cmd !== null && cmd !== undefined && cmd.trim() !== '');
+      if (historyCmds.length > 0 && historyIndex !== -1) {
+        if (historyIndex < historyCmds.length - 1) {
+          const newIndex = historyIndex + 1;
+          setHistoryIndex(newIndex);
+          setHackerInput(historyCmds[newIndex]);
+          setCursorPos(historyCmds[newIndex].length);
+        } else {
+          setHistoryIndex(-1);
+          setHackerInput('');
+          setCursorPos(0);
+        }
       }
     }
     if (e.key === 'Enter') {
       const rawCmd = hackerInput;
       const cmdTrimmed = rawCmd.trim();
       setHackerInput('');
+      setCursorPos(0);
+      setHistoryIndex(-1);
       
       if (!cmdTrimmed) {
         setHackerHistory(prev => [...prev, { command: '', output: null }]);
@@ -871,6 +914,9 @@ Available: aegisguard, intelscope, writeblog`}</TerminalText>;
             setIsGlitching(false);
           }, 250);
           output = null;
+          break;
+        case 'hero':
+          output = getGreetingOutput();
           break;
         case 'themes':
           output = <TerminalText>{THEMES_TEXT}</TerminalText>;
@@ -1507,15 +1553,41 @@ to view available themes.`}</TerminalText>;
                 <div className="terminal-input-row">
                   <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
                   <div className="terminal-input-container">
-                    <span className="terminal-typed-text">{hackerInput}</span>
-                    <span className="terminal-cursor-block"></span>
+                    <span className="terminal-typed-text">{hackerInput.slice(0, cursorPos)}</span>
+                    <span className="terminal-cursor-block">{cursorPos < hackerInput.length ? hackerInput[cursorPos] : ' '}</span>
+                    <span className="terminal-typed-text">{hackerInput.slice(cursorPos + 1)}</span>
                     <input
                       ref={terminalInputRef}
                       className="terminal-hidden-input"
                       type="text"
                       value={hackerInput}
-                      onChange={(e) => setHackerInput(e.target.value)}
-                      onKeyDown={handleTerminalKeyDown}
+                      onChange={(e) => {
+                        setHackerInput(e.target.value);
+                        setCursorPos(e.target.selectionStart);
+                      }}
+                      onKeyDown={(e) => {
+                        setTimeout(() => {
+                          if (terminalInputRef.current) {
+                            setCursorPos(terminalInputRef.current.selectionStart);
+                          }
+                        }, 0);
+                        handleTerminalKeyDown(e);
+                      }}
+                      onClick={() => {
+                        if (terminalInputRef.current) {
+                          setCursorPos(terminalInputRef.current.selectionStart);
+                        }
+                      }}
+                      onKeyUp={() => {
+                        if (terminalInputRef.current) {
+                          setCursorPos(terminalInputRef.current.selectionStart);
+                        }
+                      }}
+                      onFocus={() => {
+                        if (terminalInputRef.current) {
+                          setCursorPos(terminalInputRef.current.selectionStart);
+                        }
+                      }}
                       autoFocus
                       autoComplete="off"
                       autoCorrect="off"
@@ -3145,15 +3217,25 @@ const CustomStyles = () => (
     }
     .terminal-cursor-block {
       display: inline-block;
-      width: 10px;
-      height: 16px;
+      min-width: 9px;
+      height: 19px;
       background-color: var(--hacker-text-bright);
-      margin-left: 2px;
+      color: var(--hacker-bg) !important;
+      line-height: 19px;
+      text-align: center;
       animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      white-space: pre;
     }
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+      0%, 100% {
+        background-color: var(--hacker-text-bright);
+        color: var(--hacker-bg) !important;
+      }
+      50% {
+        background-color: transparent;
+        color: inherit !important;
+      }
     }
     .terminal-hidden-input {
       position: absolute;
