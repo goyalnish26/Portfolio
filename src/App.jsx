@@ -132,7 +132,7 @@ View details: project <name>`;
 
 const EXPERIENCE_TEXT = `Dreamsoft4u Pvt. Ltd. — Backend Developer Intern
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2025 – Present | Jaipur
+May 21, 2026 – Present | Jaipur
 
 Building Odoo 15 REST API module integrating mobile
 app with Sales module. HTTP controllers, ORM queries,
@@ -142,21 +142,22 @@ Stack: Python · Odoo 15 · PostgreSQL · Ubuntu
 
 ---
 
+True Value Infosoft — Python Developer Intern
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Prior
+
+Developed Flask-based multi-user blog application with authentication, dashboard, CRUD functionality.
+Implemented user dashboard, full CRUD functionalities for articles, and database mapping using SQLAlchemy.
+Designed responsive Bootstrap templates and integrated SQLite database schemas.
+
+---
+
 AIESEC in Jaipur — Volunteer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 2023
 
 Leadership development, cross-cultural project
-coordination, international youth exchange programs.
-
----
-
-True Value Infosoft — Python Developer Intern
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Prior
-
-Developed Flask-based multi-user blog application
-with authentication, dashboard, CRUD functionality.`;
+coordination, international youth exchange programs.`;
 
 const CERTS_TEXT = `Google Cybersecurity Certificate
   Issuer: Google / Coursera
@@ -704,6 +705,16 @@ function App() {
 
   // Handle terminal command execution
   const handleTerminalKeyDown = (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const historyCmds = hackerHistory
+        .map(h => h.command)
+        .filter(cmd => cmd !== null && cmd !== undefined && cmd.trim() !== '');
+      if (historyCmds.length > 0) {
+        const lastCmd = historyCmds[historyCmds.length - 1];
+        setHackerInput(lastCmd);
+      }
+    }
     if (e.key === 'Enter') {
       const rawCmd = hackerInput;
       const cmdTrimmed = rawCmd.trim();
@@ -940,10 +951,11 @@ to view available themes.`}</TerminalText>;
         {mode === 'dev' && spiderSenseNear && (
           <div className="spider-sense-bolts">
             <svg viewBox="0 0 100 100" className="spider-sense-svg">
-              <path d="M 50,50 L 30,30 L 40,30 L 15,10" className="bolt-path" />
-              <path d="M 50,50 L 70,30 L 60,30 L 85,10" className="bolt-path" />
-              <path d="M 50,50 L 30,70 L 40,70 L 15,90" className="bolt-path" />
-              <path d="M 50,50 L 70,70 L 60,70 L 85,90" className="bolt-path" />
+              <path d="M 28,48 C 22,46 18,52 10,48" className="bolt-path" />
+              <path d="M 34,34 C 28,28 26,34 18,26" className="bolt-path" />
+              <path d="M 50,28 C 47,20 53,16 50,6" className="bolt-path" />
+              <path d="M 66,34 C 72,28 74,34 82,26" className="bolt-path" />
+              <path d="M 72,48 C 78,46 82,52 90,48" className="bolt-path" />
             </svg>
           </div>
         )}
@@ -1103,8 +1115,8 @@ to view available themes.`}</TerminalText>;
                 <div className="decor-num">01</div>
               </div>
               <div className="about-right-col">
-                <div className="section-label spider-sense-trigger">01 / LORE</div>
-                <h2 className="section-headline spider-sense-trigger">Final-year ECE student who actually ships.</h2>
+                <div className="section-label">01 / LORE</div>
+                <h2 className="section-headline">Final-year ECE student who actually ships.</h2>
                 <div className="section-body-text">
                   <p>
                     I build backend systems that actually work and security tools that actually detect.
@@ -1173,16 +1185,16 @@ to view available themes.`}</TerminalText>;
                   <h3 className="dark-panel-title">The other side.</h3>
 
                   <div className="dark-panel-grid">
-                    <DevCyberSkill name="Network Security" percentage={90} />
-                    <DevCyberSkill name="SIEM &amp; Log Analysis" percentage={85} />
-                    <DevCyberSkill name="Web App Pentesting" percentage={78} />
+                    <DevCyberSkill name="Network Security" percentage={72} />
+                    <DevCyberSkill name="SIEM &amp; Log Analysis" percentage={65} />
+                    <DevCyberSkill name="Web App Pentesting" percentage={55} />
                     <DevCyberSkill name="OverTheWire Bandit (Lvl 12+)" percentage={75} />
                     <DevCyberSkill name="TryHackMe CS101" percentage={70} />
-                    <DevCyberSkill name="Threat Intelligence" percentage={76} />
-                    <DevCyberSkill name="OSINT &amp; CVE Research" percentage={68} />
-                    <DevCyberSkill name="Burp Suite / NMAP / Wireshark" percentage={60} />
-                    <DevCyberSkill name="Metasploit Framework (learning)" percentage={50} />
-                    <DevCyberSkill name="SQL Injection / XSS" percentage={65} />
+                    <DevCyberSkill name="Threat Intelligence" percentage={58} />
+                    <DevCyberSkill name="OSINT &amp; CVE Research" percentage={52} />
+                    <DevCyberSkill name="Burp Suite / NMAP / Wireshark" percentage={48} />
+                    <DevCyberSkill name="Metasploit Framework (learning)" percentage={35} />
+                    <DevCyberSkill name="SQL Injection / XSS" percentage={45} />
                   </div>
 
                   <div className="dark-panel-pathway">
@@ -1202,7 +1214,7 @@ to view available themes.`}</TerminalText>;
               <div className="projects-editorial-grid">
                 {/* Project 1 */}
                 <ScrollReveal className="project-card-wrapper p-card-large">
-                  <div className="project-card project-card-sec project-card-aegis spider-sense-trigger">
+                  <div className="project-card project-card-sec project-card-aegis">
                     <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
                       <span className="project-category project-category-sec">SIEM Security Platform</span>
@@ -1229,7 +1241,7 @@ to view available themes.`}</TerminalText>;
 
                 {/* Project 2 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-right">
-                  <div className="project-card project-card-sec spider-sense-trigger">
+                  <div className="project-card project-card-sec">
                     <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
                       <span className="project-category project-category-sec">Threat Intelligence Dashboard</span>
@@ -1253,7 +1265,7 @@ to view available themes.`}</TerminalText>;
 
                 {/* Project 3 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-left">
-                  <div className="project-card project-card-normal spider-sense-trigger">
+                  <div className="project-card project-card-normal">
                     <div className="project-header">
                       <span className="project-category">Full-Stack Platform</span>
                       <h3 className="project-title">WriteBlog</h3>
@@ -1293,7 +1305,7 @@ to view available themes.`}</TerminalText>;
                   <div className="timeline-content">
                     <div className="timeline-header">
                       <h3 className="timeline-title">Backend Developer Intern</h3>
-                      <span className="timeline-date">2025 – Present</span>
+                      <span className="timeline-date">May 21, 2026 – Present</span>
                     </div>
                     <h4 className="timeline-org">Dreamsoft4u Pvt. Ltd. | Jaipur, IN</h4>
                     <p className="timeline-desc">
@@ -1314,14 +1326,22 @@ to view available themes.`}</TerminalText>;
                   <div className="timeline-dot"></div>
                   <div className="timeline-content">
                     <div className="timeline-header">
-                      <h3 className="timeline-title">Volunteer — Local Committee Member</h3>
-                      <span className="timeline-date">2023</span>
+                      <h3 className="timeline-title">Python Developer Intern</h3>
+                      <span className="timeline-date">Prior Experience</span>
                     </div>
-                    <h4 className="timeline-org">AIESEC in Jaipur</h4>
+                    <h4 className="timeline-org">True Value Infosoft | Jaipur, IN</h4>
                     <p className="timeline-desc">
-                      Led initiatives for youth leadership development, cross-cultural project coordination,
-                      and international youth exchange event management.
+                      Developed Flask-based multi-user blog application with authentication, dashboard, CRUD functionality.
+                      Implemented user dashboard, full CRUD functionalities for articles, and database mapping using SQLAlchemy.
+                      Designed responsive Bootstrap templates and integrated SQLite database schemas.
                     </p>
+                    <div className="timeline-stack">
+                      <span>Python</span>
+                      <span>Flask</span>
+                      <span>SQLAlchemy</span>
+                      <span>SQLite</span>
+                      <span>Bootstrap</span>
+                    </div>
                   </div>
                 </ScrollReveal>
 
@@ -1329,12 +1349,13 @@ to view available themes.`}</TerminalText>;
                   <div className="timeline-dot"></div>
                   <div className="timeline-content">
                     <div className="timeline-header">
-                      <h3 className="timeline-title">Intern</h3>
-                      <span className="timeline-date">Prior Experience</span>
+                      <h3 className="timeline-title">Volunteer — Local Committee Member</h3>
+                      <span className="timeline-date">2023</span>
                     </div>
-                    <h4 className="timeline-org">True Value Infosoft</h4>
+                    <h4 className="timeline-org">AIESEC in Jaipur</h4>
                     <p className="timeline-desc">
-                      Acquired hands-on software development exposure within commercial context.
+                      Led initiatives for youth leadership development, cross-cultural project coordination,
+                      and international youth exchange event management.
                     </p>
                   </div>
                 </ScrollReveal>
@@ -1351,8 +1372,8 @@ to view available themes.`}</TerminalText>;
                     <div className="cert-cred">Credential ID: LGYP4646QM36</div>
                   </ScrollReveal>
 
-                  <ScrollReveal className="cert-card">
-                    <div className="cert-verified cert-verified-gold">[VERIFIED] ✓</div>
+                  <ScrollReveal className="cert-card cert-card-featured">
+                    <div className="cert-verified cert-verified-red">[VERIFIED] ✓</div>
                     <h4 className="cert-title-playfair">Deloitte Australia — Cyber Job Simulation</h4>
                     <div className="cert-meta">Forage · October 2025</div>
                     <div className="cert-cred">Credential ID: 2LN74jKozspnmt3kh</div>
@@ -1387,9 +1408,9 @@ to view available themes.`}</TerminalText>;
               </p>
 
               <div className="contact-buttons-group">
-                <a href="mailto:goyalnishchal71@gmail.com" className="contact-btn email-btn spider-sense-trigger">Send Email</a>
-                <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn spider-sense-trigger">LinkedIn</a>
-                <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn spider-sense-trigger">GitHub</a>
+                <a href="mailto:goyalnishchal71@gmail.com" className="contact-btn email-btn">Send Email</a>
+                <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">LinkedIn</a>
+                <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">GitHub</a>
               </div>
 
               <div className="contact-vuln-note">
@@ -2219,9 +2240,15 @@ const CustomStyles = () => (
       justify-content: center;
     }
     .hero-right-column {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 45%;
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 2;
     }
     .hero-illustration-wrapper {
       width: 100%;
@@ -2238,6 +2265,11 @@ const CustomStyles = () => (
       opacity: 0.95;
       filter: drop-shadow(0 10px 20px rgba(45, 36, 22, 0.08));
       animation: illustration-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      mix-blend-mode: multiply;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-illustration-img:hover {
+      transform: scale(1.05);
     }
     @keyframes illustration-fade-in {
       from { opacity: 0; transform: translateY(20px); }
@@ -2517,19 +2549,19 @@ const CustomStyles = () => (
       position: relative;
     }
     .p-card-large {
-      width: 72%;
+      width: 70%;
       align-self: flex-start;
     }
     .p-card-medium-right {
-      width: 62%;
+      width: 65%;
       align-self: flex-end;
-      margin-top: -3.5rem;
+      margin-top: -6rem;
       z-index: 2;
     }
     .p-card-medium-left {
-      width: 62%;
+      width: 65%;
       align-self: flex-start;
-      margin-top: -1.5rem;
+      margin-top: -6rem;
     }
 
     .project-card {
@@ -2547,6 +2579,7 @@ const CustomStyles = () => (
     }
     .project-card:hover {
       transform: translateY(-5px);
+      background-color: #FEFAE0;
     }
     .project-card::before {
       content: '';
@@ -2750,11 +2783,11 @@ const CustomStyles = () => (
       background-color: #FDF5C0;
       border: 1px solid rgba(233, 196, 106, 0.3);
       border-left: 3px solid #E9C46A;
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
     .cert-card-featured {
       border-left: 3px solid #E63946;
@@ -3359,7 +3392,7 @@ const CustomStyles = () => (
     .cb350-bike {
       position: fixed;
       bottom: 2rem;
-      left: -50px;
+      left: 100vw;
       font-size: 2.5rem;
       z-index: 9999;
       pointer-events: none;
@@ -3367,7 +3400,7 @@ const CustomStyles = () => (
     }
     @keyframes rideScreen {
       0% {
-        left: -50px;
+        left: calc(100vw + 50px);
         transform: translateY(0);
       }
       10% { transform: translateY(-4px); }
@@ -3380,7 +3413,7 @@ const CustomStyles = () => (
       80% { transform: translateY(0); }
       90% { transform: translateY(-4px); }
       100% {
-        left: calc(100vw + 50px);
+        left: -80px;
         transform: translateY(0);
       }
     }
@@ -3618,6 +3651,16 @@ const CustomStyles = () => (
         left: auto;
         margin-top: 2rem;
         padding-left: 0.5rem;
+      }
+      .hero-right-column {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .hero-grid-container {
         grid-template-columns: 1fr;
