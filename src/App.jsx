@@ -366,38 +366,44 @@ const getGreetingOutput = () => {
     " ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝"
   ];
   const figureLines = [
-    "                       ,##,,eew,",
-    "                     ,##############C",
-    "                  a###############@##",
-    "                 7####^`^\"7W7^\"@####",
-    "                 @#@b`         ^@#@^",
-    "                  ##^,,,,   ,,,,^#^",
-    "                 ,,@######\"#######=",
-    "                  .''555\"` '5555b|",
-    "                  T\"@  ,,,^,mg,@,*",
-    "                     %p||`~~'.#`",
-    "                      ^Wp  ,#T",
-    "                     :b''@@b^}",
-    "                  ,^      ^      b 3-",
-    "              .<` 'p    <🕷>    b   *.",
-    "            {      }   #\"GpGb   [",
-    "            C      3 * @#######Nl      `",
-    "           '            ^@##b     ($    !"
+    "       ,##,,eew,",
+    "     ,##############C",
+    "  a###############@##",
+    " 7####^`^\"7W7^\"@####",
+    " @#@b`         ^@#@^",
+    "  ##^,,,,   ,,,,^#^",
+    " ,,@######\"#######=",
+    "  .''555\"` '5555b|",
+    "  T\"@  ,,,^,mg,@,*",
+    "     %p||`~~'.#`",
+    "      ^Wp  ,#T",
+    "     :b''@@b^}",
+    "  ,^      ^      b 3-",
+    ".<` 'p    <🕷>    b   *.",
+    "      }   #\"GpGb   [",
+    "      3 * @#######Nl      `",
+    "           ^@##b     ($    !"
   ];
   return (
     <div className="terminal-system-greeting">
-      <pre className="terminal-ascii-art">
-        {nameLines.join("\n")}
-      </pre>
-      <pre className="terminal-ascii-art" style={{ marginTop: '0.8rem' }}>
-        {figureLines.join("\n")}
-      </pre>
-      <div className="terminal-welcome-msg" style={{ marginTop: '1rem' }}>Welcome back.</div>
-      <div className="terminal-welcome-sub" style={{ fontStyle: 'italic', margin: '0.4rem 0', color: 'var(--hacker-secondary)' }}>
-        building systems by day<br />
-        breaking them by night
+      <div className="terminal-hero-row">
+        <div className="terminal-hero-left">
+          <pre className="terminal-ascii-art">
+            {nameLines.join("\n")}
+          </pre>
+          <div className="terminal-welcome-msg" style={{ marginTop: '1rem' }}>Welcome back.</div>
+          <div className="terminal-welcome-sub" style={{ fontStyle: 'italic', margin: '0.4rem 0', color: 'var(--hacker-secondary)' }}>
+            building systems by day<br />
+            breaking them by night
+          </div>
+          <div className="terminal-welcome-sub">Type &apos;help&apos; to begin.</div>
+        </div>
+        <div className="terminal-hero-right">
+          <pre className="terminal-ascii-figure">
+            {figureLines.join("\n")}
+          </pre>
+        </div>
       </div>
-      <div className="terminal-welcome-sub">Type &apos;help&apos; to begin.</div>
     </div>
   );
 };
@@ -2331,14 +2337,13 @@ const CustomStyles = () => (
       align-items: center;
     }
     .hero-illustration-img {
-      width: 110%;
+      width: 100%;
       height: auto;
       max-height: 72vh;
       object-fit: contain;
-      opacity: 0.95;
-      filter: drop-shadow(0 10px 30px rgba(45, 36, 22, 0.12));
+      opacity: 1;
+      filter: drop-shadow(0 10px 30px rgba(45, 36, 22, 0.15));
       animation: illustration-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards, hero-float 4s ease-in-out 1.5s infinite;
-      mix-blend-mode: multiply;
       transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
     }
     .hero-illustration-img:hover {
@@ -2347,7 +2352,7 @@ const CustomStyles = () => (
     }
     @keyframes illustration-fade-in {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 0.95; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
     @keyframes hero-float {
       0%, 100% { transform: translateY(0); }
@@ -3194,6 +3199,33 @@ const CustomStyles = () => (
       color: var(--hacker-text-primary);
       white-space: pre-wrap;
     }
+    /* Terminal Hero Row — name left, figure right */
+    .terminal-hero-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 4rem;
+      width: 100%;
+    }
+    .terminal-hero-left {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+    .terminal-hero-right {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: flex-start;
+      padding-top: 0.5rem;
+    }
+    .terminal-ascii-figure {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.3;
+      color: var(--hacker-accent, #E9C46A);
+      white-space: pre;
+      opacity: 0.85;
+    }
+
     .terminal-output-text {
       margin: 0;
       font-family: 'JetBrains Mono', monospace;
@@ -3817,6 +3849,13 @@ const CustomStyles = () => (
       }
 
       /* Hacker responsive styling */
+      .terminal-hero-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .terminal-hero-right {
+        display: none;
+      }
       .hacker-portfolio-wrapper {
         overflow-x: hidden;
       }
