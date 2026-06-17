@@ -92,7 +92,9 @@ bike            CB350 reference
 coffee          Random coffee status
 
 clear           Clear terminal
-maskoff         Return to Developer Mode`;
+maskoff         Return to Developer Mode
+
+Tab  =>  Autocompletes the command`;
 
 const WHOAMI_TEXT = `nishchal_goyal
 ECE Final Year · SKIT Jaipur, Batch 2027
@@ -438,6 +440,7 @@ function App() {
   const [lastLoginTime, setLastLoginTime] = useState('');
   const [canonRejectedActive, setCanonRejectedActive] = useState(false);
   const [exitingTerminal, setExitingTerminal] = useState(false);
+  const [tabSuggestions, setTabSuggestions] = useState([]);
   const [unmaskProtocolState, setUnmaskProtocolState] = useState(null); // null, 'exit', 'sync', 'off'
 
   const terminalInputRef = useRef(null);
@@ -757,14 +760,16 @@ function App() {
         // Single match → autofill
         setHackerInput(matches[0]);
         setCursorPos(matches[0].length);
+        setTabSuggestions([]);
       } else if (matches.length > 1) {
-        // Multiple matches → show them as a line in history
-        setHackerHistory(prev => [...prev, {
-          command: hackerInput,
-          output: <pre className="terminal-output-text" style={{ color: 'var(--hacker-accent)' }}>{matches.join('  ')}</pre>
-        }]);
+        // Multiple matches → show inline below prompt
+        setTabSuggestions(matches);
       }
       return;
+    }
+    // Clear suggestions on any other key
+    if (tabSuggestions.length > 0 && e.key !== 'Shift') {
+      setTabSuggestions([]);
     }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -1587,6 +1592,7 @@ to view available themes.`}</TerminalText>;
               ))}
               
               {!exitingTerminal && (
+                <>
                 <div className="terminal-input-row">
                   <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
                   <div className="terminal-input-container">
@@ -1601,6 +1607,7 @@ to view available themes.`}</TerminalText>;
                       onChange={(e) => {
                         setHackerInput(e.target.value);
                         setCursorPos(e.target.selectionStart);
+                        setTabSuggestions([]);
                       }}
                       onKeyDown={(e) => {
                         setTimeout(() => {
@@ -1633,6 +1640,12 @@ to view available themes.`}</TerminalText>;
                     />
                   </div>
                 </div>
+                {tabSuggestions.length > 0 && (
+                  <div className="terminal-tab-suggestions">
+                    {tabSuggestions.join('  ')}
+                  </div>
+                )}
+                </>
               )}
             </div>
           </div>
@@ -3270,6 +3283,16 @@ const CustomStyles = () => (
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+    .terminal-tab-suggestions {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--hacker-accent, #E9C46A);
+      padding-left: 1.8rem;
+      padding-top: 0.3rem;
+      white-space: pre-wrap;
+      letter-spacing: 0.05em;
+      opacity: 0.9;
     }
     .terminal-input-container {
       display: inline-flex;
