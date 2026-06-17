@@ -734,8 +734,38 @@ function App() {
     }
   }, [mode, hackerState]);
 
+  // All available terminal commands for Tab autocomplete
+  const TERMINAL_COMMANDS = [
+    'about', 'whoami', 'skills', 'projects', 'project', 'experience',
+    'certs', 'journey', 'contact', 'hero', 'themes', 'theme',
+    'canon', 'lore', 'origin', 'reality', 'watcher', 'masks',
+    'nexus', 'bike', 'coffee', 'clear', 'maskoff', 'help',
+    'miles', 'peter', 'glitch'
+  ];
+
   // Handle terminal command execution
   const handleTerminalKeyDown = (e) => {
+    // Tab autocomplete
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const typed = hackerInput.trim().toLowerCase();
+      if (!typed) return;
+
+      const matches = TERMINAL_COMMANDS.filter(cmd => cmd.startsWith(typed));
+
+      if (matches.length === 1) {
+        // Single match → autofill
+        setHackerInput(matches[0]);
+        setCursorPos(matches[0].length);
+      } else if (matches.length > 1) {
+        // Multiple matches → show them as a line in history
+        setHackerHistory(prev => [...prev, {
+          command: hackerInput,
+          output: <pre className="terminal-output-text" style={{ color: 'var(--hacker-accent)' }}>{matches.join('  ')}</pre>
+        }]);
+      }
+      return;
+    }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       const historyCmds = hackerHistory
