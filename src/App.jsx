@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import heroImage from './assets/hero.png';
 
 // Google Fonts are imported dynamically in the styles below.
 
@@ -60,6 +61,328 @@ const padRight = (str, len) => {
   return str + " ".repeat(Math.max(0, len - str.length));
 };
 
+const TerminalText = ({ children }) => (
+  <pre className="terminal-output-text">{children}</pre>
+);
+
+const HELP_TEXT = `AVAILABLE COMMANDS:
+
+about           About Nishchal
+whoami          Display identity
+skills          Technical skills
+projects        List projects
+project         View project details
+experience      Professional experience
+certs           Certifications
+journey         Learning journey
+contact         Contact information
+
+themes          List available themes
+theme           Apply a theme
+
+canon           Canon event status
+lore            Personal story
+origin          Starting point
+reality         Current status
+watcher         Hidden observer
+masks           Dual identity
+nexus           Universe status
+bike            CB350 reference
+coffee          Random coffee status
+
+clear           Clear terminal
+maskoff         Return to Developer Mode`;
+
+const WHOAMI_TEXT = `nishchal_goyal
+ECE Final Year · SKIT Jaipur, Batch 2027
+Backend Developer · Offensive Security Learner
+Based in Jaipur, Rajasthan`;
+
+const ABOUT_TEXT = `I build backend systems that actually work.
+I break into systems to make them better.
+
+Currently in my final year at SKIT Jaipur,
+interning at Dreamsoft4u building Odoo 15 REST APIs.
+
+On the other side, I'm deep into offensive security —
+OverTheWire, TryHackMe, building my own SIEM tools.
+
+The goal: get good enough that breaking in becomes
+second nature. Certified by Google in Cybersecurity.
+Currently on the eJPT → OSCP pathway.
+
+I don't accept the canon. I break it.`;
+
+const SKILLS_TEXT = `DEVELOPMENT:
+  Python, FastAPI, Flask, REST APIs, PostgreSQL,
+  SQLite, Odoo 15 ERP, Git, Linux/Ubuntu, Docker,
+  JavaScript, React, HTML/CSS, ORM
+
+CYBERSECURITY:
+  Network Security, SIEM & Log Analysis,
+  Web Application Pentesting, OverTheWire Bandit,
+  TryHackMe, Threat Intelligence, OSINT,
+  CVE Research, Burp Suite, NMAP`;
+
+const PROJECTS_TEXT = `aegisguard         Mini-SIEM Security Platform
+intelscope         CVE Threat Intelligence Dashboard
+writeblog          Full-Stack Blogging Platform
+
+View details: project <name>`;
+
+const EXPERIENCE_TEXT = `Dreamsoft4u Pvt. Ltd. — Backend Developer Intern
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025 – Present | Jaipur
+
+Building Odoo 15 REST API module integrating mobile
+app with Sales module. HTTP controllers, ORM queries,
+JSON response pipelines.
+
+Stack: Python · Odoo 15 · PostgreSQL · Ubuntu
+
+---
+
+AIESEC in Jaipur — Volunteer
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+2023
+
+Leadership development, cross-cultural project
+coordination, international youth exchange programs.
+
+---
+
+True Value Infosoft — Python Developer Intern
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Prior
+
+Developed Flask-based multi-user blog application
+with authentication, dashboard, CRUD functionality.`;
+
+const CERTS_TEXT = `Google Cybersecurity Certificate
+  Issuer: Google / Coursera
+  Date: August 2025
+  ID: LGYP4646QM36
+  [VERIFIED ✓]
+
+Deloitte Australia — Cyber Job Simulation
+  Issuer: Forage
+  Date: October 2025
+  ID: 2LN74jKozspnmt3kh
+  [VERIFIED ✓]
+
+J.P. Morgan — Software Engineering Job Simulation
+  Issuer: Forage
+  Date: October 2025
+  ID: BvwC2Ge8oKbGSzgfr
+  [VERIFIED ✓]
+
+PLC Programming & Its Applications
+  Issuer: CSIR-CEERI
+  Date: November 2024
+  [VERIFIED ✓]`;
+
+const JOURNEY_TEXT = `Started learning Python in 2nd year.
+Fell in love with backend development.
+Built Flask projects, REST APIs, databases.
+
+ECE student doing cybersecurity was unconventional.
+Everyone said: embedded systems, placement chasing.
+I said: no thanks.
+
+Started with OverTheWire Bandit. Level 12+.
+Moved to TryHackMe CS101 path.
+Building my own SIEM tools.
+
+The learning never stops.
+The canon isn't the destination.
+Breaking it is.`;
+
+const CONTACT_TEXT = `Email: goyalnishchal71@gmail.com
+LinkedIn: linkedin.com/in/nishchal-goyal-6409a5289
+GitHub: github.com/goyalnish26
+
+Open to: SOC Analyst · Security Intern · 
+         Pentesting · Backend Development
+Location: Remote or Jaipur-based
+Response: < 24 hours`;
+
+const CANON_TEXT = `Canon Event 1:
+  Everyone told me: ECE = embedded systems
+Canon Breaker Response:
+  I chose: backend + cybersecurity
+
+Canon Event 2:
+  Placement culture = TCS / Infosys / Wipro
+Canon Breaker Response:
+  I'm building my own path
+
+Canon Event 3:
+  Students follow the conventional roadmap
+Canon Breaker Response:
+  I break the roadmap
+
+This universe rewards risk-takers.
+I'm taking risks.`;
+
+const LORE_TEXT = `Started in 2nd year with Python basics.
+Syntax felt natural. Logic clicked.
+
+Built small projects. Flask apps. Database queries.
+Fell in love with the craft.
+
+3rd year: discovered cybersecurity.
+Found something even more compelling —
+the intersection of building AND breaking.
+
+ECE student doing backend + hacking?
+Not on the conventional path.
+But the best journeys never are.
+
+Everyone has a canon event — the moment
+the universe tells you who you're supposed to be.
+
+I rejected mine.`;
+
+const ORIGIN_TEXT = `SKIT Jaipur
+B.Tech Electronics & Communication Engineering
+Batch 2027 · 7.5 CGPA · No Backlogs
+
+Started with Python.
+Moved to FastAPI, Flask.
+REST APIs became home.
+
+Found security in year 3.
+Never looked back.
+
+This is where it began.`;
+
+const REALITY_TEXT = `Current State:
+  Final year ECE student
+  Backend Intern @ Dreamsoft4u
+  Building Odoo 15 REST APIs
+
+Goals:
+  Secure a backend/security role (startup preferred)
+  Complete eJPT certification
+  Begin OSCP pathway
+  Build more SIEM tools
+
+Challenges:
+  Time management: full-time student + internship + learning
+  Skills still developing in offensive security
+  Balancing portfolio projects + placement prep
+  Finding mentors in the pentesting space
+
+But I'm not stopping.`;
+
+const WATCHER_TEXT = `You weren't supposed to find this.
+
+But you did.
+
+This terminal is a window into parallel dimensions.
+Each theme is a different universe.
+Each command is a breadcrumb.
+
+The watcher observes all versions of reality.
+The one where you chose the mask.
+The one where you put it down.
+The one where you break the canon.
+
+Welcome to Earth-26.`;
+
+const MASKS_TEXT = `Mask 1: THE DEVELOPER
+  Clean code. REST APIs. Production systems.
+  Writes. Ships. Iterates.
+  Attention to detail. Craft matters.
+
+Mask 2: THE SECURITY RESEARCHER
+  Breaking systems. Finding entry points.
+  Ethical hacking. Offensive mindset.
+  Nobody gets past. Always looking deeper.
+
+Same person.
+Different masks.
+Same core: curiosity + precision + relentless learning.
+
+The masks are real.
+The person beneath them is realer.`;
+
+const NEXUS_TEXT = `Current Universe: Earth-26
+Status: Stable
+Anomalies: None detected
+
+Dimension bridged via Spider-Verse protocol.
+Canon events: 3 rejected
+Reality stability: High
+Observer status: Active
+
+Welcome to the nexus point.
+This is where the canon breaks.`;
+
+const BIKE_TEXT = `Honda CB350 Classic · 2024 · Jaipur
+
+Red fuel tank, retro frame, classic vibes.
+Two wheels. Open road. No distractions.
+
+When the terminal gets too intense,
+the bike reminds me: sometimes you just ride.`;
+
+const MILES_TEXT = `The mask stays on.`;
+
+const PETER_TEXT = `With great power comes technical debt.`;
+
+const THEMES_TEXT = `Available themes:
+
+light       Developer palette terminal
+dark        Default dark terminal
+peter       Black + red
+miles       Black + purple + red
+noir        Black + white
+2099        Deep blue + cyan
+kali        Dark navy + Kali purple
+
+Usage: theme <name>
+Example: theme miles`;
+
+const COFFEE_TEXTS = [
+  `☕ Status: Brewing...
+Current caffeine level: 73%
+Motivation multiplier: 2.1x`,
+  `☕ Null pointer exception detected in coffee cup
+Stack overflow of espresso shots
+No solutions. Only more coffee.`,
+  `☕ Coffee status: Too hot to handle
+Temperature: Absolute unit
+Recommendation: Wait 5 minutes. Or don't.`,
+  `☕ Coffee debug log:
+[01:47:23] Coffee loaded
+[01:47:24] Neural pathways activated
+[01:47:26] Debugging initiated. All systems nominal.`,
+  `☕ sudo make coffee
+[sudo] password for nishchal:
+Making coffee... ✓ Complete`
+];
+
+const getGreetingOutput = () => {
+  const asciiLines = [
+    " _   _ ___ ____  _   _  ____ _   _    _            /\\_/\\",
+    "| \\ | |_ _/ ___|| | | |/ ___| | | |  / \\          / ^ ^ \\",
+    "|  \\| || |\\___ \\| |_| | |   | |_| | / _ \\        (  # #  )",
+    "| |\\  || | ___) |  _  | |___|  _  |/ ___ \\        \\  _  /",
+    "|_| \\_|___|____/|_| |_|\\____|_| |_/_/   \\_\\       /     \\",
+    "                                                 /       \\"
+  ];
+  return (
+    <div className="terminal-system-greeting">
+      <pre className="terminal-ascii-art">
+        {asciiLines.join("\n")}
+      </pre>
+      <div className="terminal-welcome-msg">Welcome back.</div>
+      <div className="terminal-welcome-sub">Type &apos;help&apos; to begin.</div>
+    </div>
+  );
+};
+
 function App() {
   const [mode, setMode] = useState('entry'); // 'entry', 'dev', 'hacker'
   const [transitioning, setTransitioning] = useState(false);
@@ -75,12 +398,22 @@ function App() {
   // Developer Menu state
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Hacker Boot state
-  const [bootIndex, setBootIndex] = useState(0);
-  const [hackerBooted, setHackerBooted] = useState(false);
-  const [easterEggActive, setEasterEggActive] = useState(false);
-  const [hackerEasterEggContent, setHackerEasterEggContent] = useState(null);
-  const typedBuffer = useRef("");
+  // Rebuilt Hacker Mode state variables & refs
+  const [hackerState, setHackerState] = useState('terminal'); // starts directly in terminal
+  const [hackerInput, setHackerInput] = useState('');
+  const [hackerHistory, setHackerHistory] = useState([
+    { command: null, output: getGreetingOutput() }
+  ]);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [hackerTheme, setHackerTheme] = useState(() => {
+    return localStorage.getItem('hackerModeTheme') || 'dark';
+  });
+  const [lastLoginTime, setLastLoginTime] = useState('');
+  const [canonRejectedActive, setCanonRejectedActive] = useState(false);
+  const [exitingTerminal, setExitingTerminal] = useState(false);
+
+  const terminalInputRef = useRef(null);
+  const terminalHistoryRef = useRef(null);
 
   // Navbar blur background state
   const [scrolled, setScrolled] = useState(false);
@@ -95,8 +428,20 @@ function App() {
       setMode(targetMode);
       setEntryExpandingSide(null);
       if (targetMode === 'hacker') {
-        setBootIndex(0);
-        setHackerBooted(false);
+        setHackerState('terminal');
+        setHackerInput('');
+        setHackerHistory([{ command: null, output: getGreetingOutput() }]);
+        setCanonRejectedActive(false);
+        setExitingTerminal(false);
+        const now = new Date();
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dayStr = days[now.getDay()];
+        const monthStr = months[now.getMonth()];
+        const dateStr = String(now.getDate()).padStart(2, '0');
+        const timeStr = now.toTimeString().split(' ')[0];
+        const yearStr = now.getFullYear();
+        setLastLoginTime(`${dayStr} ${monthStr} ${dateStr} ${timeStr} ${yearStr}`);
       }
     }, 700);
   };
@@ -111,8 +456,20 @@ function App() {
     setTimeout(() => {
       setMode(targetMode);
       if (targetMode === 'hacker') {
-        setBootIndex(0);
-        setHackerBooted(false);
+        setHackerState('terminal');
+        setHackerInput('');
+        setHackerHistory([{ command: null, output: getGreetingOutput() }]);
+        setCanonRejectedActive(false);
+        setExitingTerminal(false);
+        const now = new Date();
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dayStr = days[now.getDay()];
+        const monthStr = months[now.getMonth()];
+        const dateStr = String(now.getDate()).padStart(2, '0');
+        const timeStr = now.toTimeString().split(' ')[0];
+        const yearStr = now.getFullYear();
+        setLastLoginTime(`${dayStr} ${monthStr} ${dateStr} ${timeStr} ${yearStr}`);
       }
     }, 400);
 
@@ -123,7 +480,7 @@ function App() {
     }, 800);
   };
 
-  // Keyboard input for selection and easter eggs
+  // Keyboard input for selection
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
       const key = e.key.toLowerCase();
@@ -136,238 +493,108 @@ function App() {
           entryTransition('hacker');
         }
       }
-
-      // Hacker Easter Eggs — shared keydown buffer
-      if (mode === 'hacker') {
-        // Don't capture when in input fields
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        
-        if (e.key.length === 1) {
-          typedBuffer.current += key;
-          if (typedBuffer.current.length > 20) {
-            typedBuffer.current = typedBuffer.current.slice(-20);
-          }
-          
-          // Check for all hacker commands
-          if (typedBuffer.current.endsWith("sudo nish")) {
-            setEasterEggActive(true);
-            setHackerEasterEggContent('sudo');
-            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 5000);
-            typedBuffer.current = "";
-          } else if (typedBuffer.current.endsWith("help")) {
-            setEasterEggActive(true);
-            setHackerEasterEggContent('help');
-            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 8000);
-            typedBuffer.current = "";
-          } else if (typedBuffer.current.endsWith("ls /secrets")) {
-            setEasterEggActive(true);
-            setHackerEasterEggContent('secrets');
-            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 5000);
-            typedBuffer.current = "";
-          } else if (typedBuffer.current.endsWith("cat flag.txt")) {
-            setEasterEggActive(true);
-            setHackerEasterEggContent('flag');
-            setTimeout(() => { setEasterEggActive(false); setHackerEasterEggContent(null); }, 6000);
-            typedBuffer.current = "";
-          }
-        }
-      }
     };
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
-  }, [mode, transitioning, entryExpandingSide]);
+  }, [mode, entryExpandingSide]);
 
   // === DEV MODE EASTER EGG STATES ===
-  const [konamiActive, setKonamiActive] = useState(false);
-  const konamiIndex = useRef(0);
-  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
-  
-  const [slashSearchOpen, setSlashSearchOpen] = useState(false);
-  const [slashSearchResult, setSlashSearchResult] = useState('');
-  const slashInputRef = useRef(null);
-  
   const [spiderWebTooltip, setSpiderWebTooltip] = useState(false);
-  const [nameTripleClickFlash, setNameTripleClickFlash] = useState(false);
-  
-  // === POST CREDITS STATES ===
-  const [devPostCreditsActive, setDevPostCreditsActive] = useState(false);
-  const [hackerPostCreditsActive, setHackerPostCreditsActive] = useState(false);
-  const [ctfStage, setCtfStage] = useState(() => {
-    const saved = sessionStorage.getItem('breachLayer');
-    return saved ? parseInt(saved, 10) : 0;
-  });
-  const [ctfInput, setCtfInput] = useState('');
-  const [ctfMessage, setCtfMessage] = useState('');
-  const [ctfHintCount, setCtfHintCount] = useState(0);
-  const ctfInputRef = useRef(null);
+  const [maskProtocolState, setMaskProtocolState] = useState(null); // null, 'init', 'sync', 'ready'
+  const [bikeRides, setBikeRides] = useState([]);
+  const [devPostCreditsState, setDevPostCreditsState] = useState(null); // null, 'wait', 'rejected', 'loading', 'cursor'
+  const [spiderSenseNear, setSpiderSenseNear] = useState(false);
   const devPostCreditsSentinelRef = useRef(null);
-  const hackerPostCreditsSentinelRef = useRef(null);
 
-  useEffect(() => {
-    sessionStorage.setItem('breachLayer', ctfStage);
-  }, [ctfStage]);
-
-  // Konami Code listener
-  useEffect(() => {
-    if (mode !== 'dev') return;
-    const handleKonami = (e) => {
-      if (e.code === KONAMI[konamiIndex.current]) {
-        konamiIndex.current++;
-        if (konamiIndex.current === KONAMI.length) {
-          setKonamiActive(true);
-          konamiIndex.current = 0;
-          setTimeout(() => setKonamiActive(false), 8500);
-        }
-      } else {
-        konamiIndex.current = 0;
-      }
-    };
-    window.addEventListener('keydown', handleKonami);
-    return () => window.removeEventListener('keydown', handleKonami);
-  }, [mode]);
-
-  // Dev mode slash search listener
-  useEffect(() => {
-    if (mode !== 'dev') return;
-    const handleSlash = (e) => {
-      if (e.key === '/' && !e.target.closest('input, textarea')) {
-        e.preventDefault();
-        setSlashSearchOpen(true);
-        setSlashSearchResult('');
-        setTimeout(() => slashInputRef.current?.focus(), 100);
-      }
-      if (e.key === 'Escape' && slashSearchOpen) {
-        setSlashSearchOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleSlash);
-    return () => window.removeEventListener('keydown', handleSlash);
-  }, [mode, slashSearchOpen]);
-
-  // Slash search handler
-  const handleSlashSearch = (query) => {
-    const q = query.toLowerCase().trim();
-    if (q === 'aegisguard') {
-      setSlashSearchOpen(false);
-      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-      setSlashSearchResult('aegisguard');
-      setTimeout(() => setSlashSearchResult(''), 3000);
-    } else if (['intelscopepulse', 'intelscoppe', 'intel'].includes(q)) {
-      setSlashSearchOpen(false);
-      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-      setSlashSearchResult('intelscopepulse');
-      setTimeout(() => setSlashSearchResult(''), 3000);
-    } else if (['writeblog', 'blog'].includes(q)) {
-      setSlashSearchOpen(false);
-      document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-      setSlashSearchResult('writeblog');
-      setTimeout(() => setSlashSearchResult(''), 3000);
-    } else if (q === 'miles') {
-      setSlashSearchOpen(false);
-      setSlashSearchResult('miles');
-      setTimeout(() => setSlashSearchResult(''), 2000);
-    } else if (q === 'spider') {
-      setSlashSearchOpen(false);
-      setSlashSearchResult('spider');
-      setTimeout(() => setSlashSearchResult(''), 2000);
-    } else if (q === 'canon') {
-      setSlashSearchOpen(false);
-      setSlashSearchResult('canon');
-      setTimeout(() => setSlashSearchResult(''), 3000);
-    } else {
-      setSlashSearchResult('notfound');
-      setTimeout(() => setSlashSearchResult(''), 2000);
-    }
+  const triggerMaskProtocol = () => {
+    if (maskProtocolState !== null) return;
+    setMaskProtocolState('init');
+    setTimeout(() => {
+      setMaskProtocolState('sync');
+    }, 1000);
+    setTimeout(() => {
+      setMaskProtocolState('ready');
+    }, 2000);
+    setTimeout(() => {
+      triggerTransition('hacker');
+      setTimeout(() => {
+        setMaskProtocolState(null);
+      }, 1000);
+    }, 2600);
   };
 
-  // Dev post-credits observer
+  const triggerBikeRide = () => {
+    const newRide = { id: Date.now() + Math.random() };
+    setBikeRides(prev => [...prev, newRide]);
+  };
+
+  // Dev mode keydown buffer for "maskon"
+  const devKeyBuffer = useRef('');
+  useEffect(() => {
+    if (mode !== 'dev') return;
+    const handleDevKeyDown = (e) => {
+      if (e.target.closest('input, textarea')) return;
+      if (e.key.length === 1) {
+        devKeyBuffer.current = (devKeyBuffer.current + e.key.toLowerCase()).slice(-10);
+        if (devKeyBuffer.current.endsWith('maskon')) {
+          triggerMaskProtocol();
+          devKeyBuffer.current = '';
+        }
+      }
+    };
+    window.addEventListener('keydown', handleDevKeyDown);
+    return () => window.removeEventListener('keydown', handleDevKeyDown);
+  }, [mode, maskProtocolState]);
+
+  // Dev post-credits observer with 4s delay and state transitions
+  const isSentinelIntersecting = useRef(false);
+  const postCreditsTimer = useRef(null);
+
   useEffect(() => {
     if (mode !== 'dev' || !devPostCreditsSentinelRef.current) return;
     if (sessionStorage.getItem('devPostCreditsSeen')) return;
+
     const observer = new IntersectionObserver(([entry]) => {
+      isSentinelIntersecting.current = entry.isIntersecting;
+
       if (entry.isIntersecting) {
-        sessionStorage.setItem('devPostCreditsSeen', 'true');
-        setDevPostCreditsActive(true);
-        setTimeout(() => setDevPostCreditsActive(false), 8500);
-        observer.disconnect();
+        if (postCreditsTimer.current) clearTimeout(postCreditsTimer.current);
+
+        postCreditsTimer.current = setTimeout(() => {
+          if (isSentinelIntersecting.current) {
+            sessionStorage.setItem('devPostCreditsSeen', 'true');
+            setDevPostCreditsState('wait');
+            
+            setTimeout(() => {
+              setDevPostCreditsState('rejected');
+            }, 2000);
+            
+            setTimeout(() => {
+              setDevPostCreditsState('loading');
+            }, 3500);
+            
+            setTimeout(() => {
+              setDevPostCreditsState('cursor');
+            }, 4500);
+          }
+        }, 4000);
+      } else {
+        if (postCreditsTimer.current) {
+          clearTimeout(postCreditsTimer.current);
+          postCreditsTimer.current = null;
+        }
       }
     }, { threshold: 0.1 });
+
     observer.observe(devPostCreditsSentinelRef.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (postCreditsTimer.current) clearTimeout(postCreditsTimer.current);
+    };
   }, [mode]);
 
-  // Hacker post-credits observer
-  useEffect(() => {
-    if (mode !== 'hacker' || !hackerBooted || !hackerPostCreditsSentinelRef.current) return;
-    if (sessionStorage.getItem('hackerPostCreditsSeen')) return;
-    let timer;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        timer = setTimeout(() => {
-          setHackerPostCreditsActive(true);
-          setCtfStage(() => {
-            const saved = sessionStorage.getItem('breachLayer');
-            const savedStage = saved ? parseInt(saved, 10) : 0;
-            return savedStage > 0 ? savedStage : 1;
-          });
-          observer.disconnect();
-        }, 5000);
-      } else {
-        clearTimeout(timer);
-      }
-    }, { threshold: 0.1 });
-    observer.observe(hackerPostCreditsSentinelRef.current);
-    return () => { observer.disconnect(); clearTimeout(timer); };
-  }, [mode, hackerBooted]);
 
-  // CTF challenge handler
-  const handleCtfSubmit = () => {
-    const answer = ctfInput.trim().toLowerCase();
-    setCtfInput('');
-    
-    const cleanStr = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-    if (ctfStage === 1) {
-      if (cleanStr(answer) === cleanStr('aegisguard')) {
-        setCtfMessage('[OK] AegisGuard. You\'ve been paying attention.\n[OK] Layer 1 breached.\n[INFO] Moving deeper...');
-        setTimeout(() => { setCtfStage(2); setCtfMessage(''); setCtfHintCount(0); }, 2500);
-      } else {
-        setCtfHintCount(prev => prev + 1);
-        setCtfMessage('[DENIED] Incorrect. The system remembers.');
-      }
-    } else if (ctfStage === 2) {
-      if (cleanStr(answer) === cleanStr("Nah, I'mma do my own thing.")) {
-        setCtfMessage('[OK] "Nah, I\'mma do my own thing."\n[OK] You know the mission.\n[OK] Layer 2 breached.');
-        setTimeout(() => { setCtfStage(3); setCtfMessage(''); setCtfHintCount(0); }, 2500);
-      } else {
-        const nextHintCount = ctfHintCount + 1;
-        setCtfHintCount(nextHintCount);
-        if (nextHintCount >= 2) {
-          setCtfMessage('[DENIED] Incorrect.\n[HINT] Every two hex characters is one ASCII byte.');
-        } else {
-          setCtfMessage('[DENIED] Incorrect. Try again.');
-        }
-      }
-    } else if (ctfStage === 3) {
-      if (cleanStr(answer) === cleanStr("you won't know I was there")) {
-        setCtfMessage('[OK] "...you won\'t know I was there."\n[OK] Exactly.');
-        setTimeout(() => { 
-          setCtfStage(4); 
-          setCtfMessage(''); 
-          sessionStorage.setItem('hackerPostCreditsSeen', 'true');
-        }, 2500);
-      } else {
-        const nextHintCount = ctfHintCount + 1;
-        setCtfHintCount(nextHintCount);
-        if (nextHintCount >= 2) {
-          setCtfMessage('[DENIED] Incorrect.\n[HINT] Check the footer. It was always there.');
-        } else {
-          setCtfMessage('[DENIED] Incorrect. Try again.');
-        }
-      }
-    }
-  };
 
   // Navbar scroll tracking
   useEffect(() => {
@@ -382,7 +609,7 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Custom Cursor tracking
+  // Custom Cursor tracking & Proximity detection
   useEffect(() => {
     const onMouseMove = (e) => {
       mousePos.current.x = e.clientX;
@@ -392,11 +619,32 @@ function App() {
         cursorDotRef.current.style.left = `${e.clientX}px`;
         cursorDotRef.current.style.top = `${e.clientY}px`;
       }
+
+      // Proximity check for spider sense
+      if (mode === 'dev') {
+        const triggers = document.querySelectorAll('.spider-sense-trigger');
+        let near = false;
+        const radius = window.innerWidth < 768 ? 60 : 40;
+        
+        for (let i = 0; i < triggers.length; i++) {
+          const rect = triggers[i].getBoundingClientRect();
+          const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+          const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < radius) {
+            near = true;
+            break;
+          }
+        }
+        setSpiderSenseNear(near);
+      } else {
+        setSpiderSenseNear(false);
+      }
     };
 
     window.addEventListener('mousemove', onMouseMove);
     return () => window.removeEventListener('mousemove', onMouseMove);
-  }, []);
+  }, [mode]);
 
   // Custom Cursor ring lerping
   useEffect(() => {
@@ -440,21 +688,230 @@ function App() {
     };
   }, []);
 
-  // Hacker Boot sequence ticking
+  // Scroll terminal history to bottom
   useEffect(() => {
-    if (mode !== 'hacker') return;
-    if (bootIndex < BOOT_LINES.length) {
-      const timer = setTimeout(() => {
-        setBootIndex(prev => prev + 1);
-      }, 120 + Math.random() * 80);
-      return () => clearTimeout(timer);
-    } else {
-      const timer = setTimeout(() => {
-        setHackerBooted(true);
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (mode === 'hacker' && hackerState === 'terminal' && terminalHistoryRef.current) {
+      terminalHistoryRef.current.scrollTop = terminalHistoryRef.current.scrollHeight;
     }
-  }, [mode, bootIndex]);
+  }, [hackerHistory, hackerState, mode]);
+
+  // Focus terminal input
+  useEffect(() => {
+    if (mode === 'hacker' && hackerState === 'terminal') {
+      terminalInputRef.current?.focus();
+    }
+  }, [mode, hackerState]);
+
+  // Handle terminal command execution
+  const handleTerminalKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const rawCmd = hackerInput;
+      const cmdTrimmed = rawCmd.trim();
+      setHackerInput('');
+      
+      if (!cmdTrimmed) {
+        setHackerHistory(prev => [...prev, { command: '', output: null }]);
+        return;
+      }
+      
+      const parts = cmdTrimmed.split(/\s+/);
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1);
+      
+      let output = null;
+
+      // Abbreviations mapping
+      let cmdMatched = command;
+      if (command === 's') cmdMatched = 'skills';
+      else if (command === 'p') cmdMatched = 'projects';
+      else if (command === 'c') cmdMatched = 'contact';
+
+      switch (cmdMatched) {
+        case 'help':
+          output = <TerminalText>{HELP_TEXT}</TerminalText>;
+          break;
+        case 'whoami':
+          output = <TerminalText>{WHOAMI_TEXT}</TerminalText>;
+          break;
+        case 'about':
+          output = <TerminalText>{ABOUT_TEXT}</TerminalText>;
+          break;
+        case 'skills':
+          output = <TerminalText>{SKILLS_TEXT}</TerminalText>;
+          break;
+        case 'projects':
+          output = <TerminalText>{PROJECTS_TEXT}</TerminalText>;
+          break;
+        case 'project': {
+          const targetProj = args[0] ? args[0].toLowerCase() : '';
+          if (targetProj === 'aegisguard') {
+            output = <TerminalText>{`AegisGuard — Real-time Security Monitoring Platform
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Real-time log monitoring tailing auth.log and
+web_access.log streams. Detects:
+
+  • SSH Brute Force (5+ failed attempts per 60s window)
+  • SQL Injection patterns
+  • Cross-Site Scripting (XSS) vectors
+  • Path Traversal attempts
+  • Sensitive directory discovery
+
+Custom regex rules engine. Zero dependencies.
+Live attack simulator sandbox for testing.
+Discord webhook alerts for High + Critical severity events.
+
+Stack: Python · FastAPI · SQLite · JavaScript
+
+Repository: github.com/goyalnish26/AegisGuard
+Live Demo: goyalnish26.github.io/AegisGuard`}</TerminalText>;
+          } else if (targetProj === 'intelscope' || targetProj === 'intelscope-pulse') {
+            output = <TerminalText>{`IntelScope-Pulse — CVE Threat Intelligence Dashboard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Live threat intelligence dashboard pulling CVE data
+from the NVD API. Features:
+
+  • Dynamic 90-day rolling window queries
+  • Real-time severity breakdown charts
+  • Persistent CVE watchlist
+  • Actionable threat classification
+
+Built for analysts who want signal, not noise.
+
+Stack: React · NVD API · Chart.js
+
+Repository: github.com/goyalnish26/IntelScope-Pulse`}</TerminalText>;
+          } else if (targetProj === 'writeblog') {
+            output = <TerminalText>{`WriteBlog — Full-Stack Blogging Platform
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Polished Flask blogging application with:
+
+  • Role-based authentication (reader/author/admin)
+  • Markdown editor with live preview
+  • Nested comments system
+  • Likes and bookmarks
+  • Image uploads
+  • Admin analytics dashboard
+  • Rate-limited auth routes
+  • Full Docker + CI/CD pipeline
+
+Stack: Python · Flask · SQLAlchemy · Bootstrap 5 ·
+       Chart.js · Docker · GitHub Actions
+
+Repository: github.com/goyalnish26/writeblog`}</TerminalText>;
+          } else {
+            output = <TerminalText>{`Project not found.
+Available: aegisguard, intelscope, writeblog`}</TerminalText>;
+          }
+          break;
+        }
+        case 'experience':
+          output = <TerminalText>{EXPERIENCE_TEXT}</TerminalText>;
+          break;
+        case 'certs':
+          output = <TerminalText>{CERTS_TEXT}</TerminalText>;
+          break;
+        case 'journey':
+          output = <TerminalText>{JOURNEY_TEXT}</TerminalText>;
+          break;
+        case 'contact':
+          output = <TerminalText>{CONTACT_TEXT}</TerminalText>;
+          break;
+        case 'canon':
+          output = <TerminalText>{CANON_TEXT}</TerminalText>;
+          break;
+        case 'lore':
+          output = <TerminalText>{LORE_TEXT}</TerminalText>;
+          break;
+        case 'origin':
+          output = <TerminalText>{ORIGIN_TEXT}</TerminalText>;
+          break;
+        case 'reality':
+          output = <TerminalText>{REALITY_TEXT}</TerminalText>;
+          break;
+        case 'watcher':
+          output = <TerminalText>{WATCHER_TEXT}</TerminalText>;
+          break;
+        case 'masks':
+          output = <TerminalText>{MASKS_TEXT}</TerminalText>;
+          break;
+        case 'nexus':
+          output = <TerminalText>{NEXUS_TEXT}</TerminalText>;
+          break;
+        case 'bike':
+          output = <TerminalText>{BIKE_TEXT}</TerminalText>;
+          break;
+        case 'coffee': {
+          const randomIndex = Math.floor(Math.random() * COFFEE_TEXTS.length);
+          output = <TerminalText>{COFFEE_TEXTS[randomIndex]}</TerminalText>;
+          break;
+        }
+        case 'miles':
+          output = <TerminalText>{MILES_TEXT}</TerminalText>;
+          break;
+        case 'peter':
+          output = <TerminalText>{PETER_TEXT}</TerminalText>;
+          break;
+        case 'glitch':
+          setIsGlitching(true);
+          setTimeout(() => {
+            setIsGlitching(false);
+          }, 250);
+          output = null;
+          break;
+        case 'themes':
+          output = <TerminalText>{THEMES_TEXT}</TerminalText>;
+          break;
+        case 'theme': {
+          const targetTheme = args[0] ? args[0].toLowerCase() : '';
+          const validThemes = ['light', 'dark', 'peter', 'miles', 'noir', '2099', 'kali'];
+          if (validThemes.includes(targetTheme)) {
+            setHackerTheme(targetTheme);
+            localStorage.setItem('hackerModeTheme', targetTheme);
+            let themeResponse = '';
+            if (targetTheme === 'light') themeResponse = "Day Mode Activated.\nTheme updated successfully.";
+            else if (targetTheme === 'dark') themeResponse = "Night Mode Activated.\nTheme updated successfully.";
+            else if (targetTheme === 'peter') themeResponse = "Dimension Shift Successful.\nPeter Universe Connected.";
+            else if (targetTheme === 'miles') themeResponse = "Dimension Shift Successful.\nEarth-1610 Connected.";
+            else if (targetTheme === 'noir') themeResponse = "Dimension Shift Successful.\nNoir Universe Connected.";
+            else if (targetTheme === '2099') themeResponse = "Dimension Shift Successful.\nNueva York Connected.";
+            else if (targetTheme === 'kali') themeResponse = "Kali Environment Loaded.\nHappy Hacking.";
+            output = <TerminalText>{themeResponse}</TerminalText>;
+          } else {
+            output = <TerminalText>{`Theme not found.
+Type: themes
+to view available themes.`}</TerminalText>;
+          }
+          break;
+        }
+        case 'clear':
+          setHackerHistory([]);
+          return;
+        case 'maskoff':
+          setExitingTerminal(true);
+          setHackerHistory(prev => [...prev, { command: rawCmd, output: <TerminalText>Exiting terminal...</TerminalText> }]);
+          setTimeout(() => {
+            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Synchronizing dimensions...</TerminalText> }]);
+          }, 1000);
+          setTimeout(() => {
+            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Mask off.</TerminalText> }]);
+          }, 2000);
+          setTimeout(() => {
+            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Welcome back.</TerminalText> }]);
+          }, 2500);
+          setTimeout(() => {
+            triggerTransition('dev');
+          }, 3000);
+          return;
+        default:
+          output = <TerminalText>{`Command not found: ${command}\nType 'help' for available commands.`}</TerminalText>;
+      }
+      
+      setHackerHistory(prev => [...prev, { command: rawCmd, output }]);
+    }
+  };
 
   // Staggered letters for dev hero
   const renderStaggeredLetters = (word, startDelay = 0) => {
@@ -475,7 +932,22 @@ function App() {
 
       {/* Custom Cursor Dot & Ring */}
       <div id="custom-cursor-dot" ref={cursorDotRef} className={`cursor-dot ${mode === 'dev' ? 'dev' : 'hacker'}`} />
-      <div id="custom-cursor-ring" ref={cursorRingRef} className={`cursor-ring ${mode === 'dev' ? 'dev' : 'hacker'}`} />
+      <div 
+        id="custom-cursor-ring" 
+        ref={cursorRingRef} 
+        className={`cursor-ring ${mode === 'dev' ? 'dev' : 'hacker'}`}
+      >
+        {mode === 'dev' && spiderSenseNear && (
+          <div className="spider-sense-bolts">
+            <svg viewBox="0 0 100 100" className="spider-sense-svg">
+              <path d="M 50,50 L 30,30 L 40,30 L 15,10" className="bolt-path" />
+              <path d="M 50,50 L 70,30 L 60,30 L 85,10" className="bolt-path" />
+              <path d="M 50,50 L 30,70 L 40,70 L 15,90" className="bolt-path" />
+              <path d="M 50,50 L 70,70 L 60,70 L 85,90" className="bolt-path" />
+            </svg>
+          </div>
+        )}
+      </div>
 
       {/* Glitch Overlay */}
       {transitioning && (
@@ -496,7 +968,13 @@ function App() {
       {mode !== 'entry' && (
         <button
           className={`mode-toggle-button ${mode === 'dev' ? 'dev-toggle' : 'hacker-toggle'}`}
-          onClick={() => triggerTransition(mode === 'dev' ? 'hacker' : 'dev')}
+          onClick={() => {
+            if (mode === 'dev') {
+              triggerMaskProtocol();
+            } else {
+              triggerTransition('dev');
+            }
+          }}
         >
           {mode === 'dev' ? '[ >_ ]' : '[ ◈ DEV ]'}
         </button>
@@ -549,7 +1027,7 @@ function App() {
             <div className="nav-container">
               <div className="nav-logo">NG.</div>
               <div className="nav-links-desktop">
-                <a href="#about">01. ABOUT</a>
+                <a href="#about">01. LORE</a>
                 <a href="#skills">02. SKILLS</a>
                 <a href="#projects">03. PROJECTS</a>
                 <a href="#experience">04. EXPERIENCE</a>
@@ -564,7 +1042,7 @@ function App() {
             <div className="dev-menu-overlay">
               <button className="dev-menu-close" onClick={() => setMenuOpen(false)}>[ close ]</button>
               <div className="dev-menu-links">
-                <a href="#about" onClick={() => setMenuOpen(false)}>01. ABOUT</a>
+                <a href="#about" onClick={() => setMenuOpen(false)}>01. LORE</a>
                 <a href="#skills" onClick={() => setMenuOpen(false)}>02. SKILLS</a>
                 <a href="#projects" onClick={() => setMenuOpen(false)}>03. PROJECTS</a>
                 <a href="#experience" onClick={() => setMenuOpen(false)}>04. EXPERIENCE</a>
@@ -576,7 +1054,7 @@ function App() {
           {/* Hero Section */}
           <header className="dev-hero">
             <div 
-              className={`spider-web-wrapper ${slashSearchResult === 'spider' ? 'spider-animate' : ''}`}
+              className="spider-web-wrapper spider-sense-trigger"
               onClick={() => { setSpiderWebTooltip(true); setTimeout(() => setSpiderWebTooltip(false), 6000); }}
             >
               <SpiderWebSVG />
@@ -588,27 +1066,29 @@ function App() {
                 <div className="spider-tooltip-bold">That&apos;s exactly the kind of attention to detail I bring.</div>
               </div>
             )}
-            <div className="hero-content">
-              <h1 className="hero-heading">
-                <span 
-                  className={`hero-heading-first ${nameTripleClickFlash ? 'name-outline-flash' : ''}`}
-                  onClick={(e) => {
-                    if (e.detail === 3) {
-                      setNameTripleClickFlash(true);
-                      setTimeout(() => setNameTripleClickFlash(false), 400);
-                    }
-                  }}
-                >{renderStaggeredLetters("Nishchal", 100)}</span>
-                <span className="hero-heading-last">{renderStaggeredLetters("Goyal", 500)}</span>
-              </h1>
-              <p className="hero-tagline">"Behind the IDE, just a student from Jaipur."</p>
-              <p className="hero-tagline hero-tagline-dim">"Behind the terminal, you won't know I was there."</p>
+            
+            <div className="hero-grid-container">
+              <div className="hero-left-column">
+                <div className="hero-content">
+                  <h1 className="hero-heading">
+                    <span className="hero-heading-first">{renderStaggeredLetters("Nishchal", 100)}</span>
+                    <span className="hero-heading-last">{renderStaggeredLetters("Goyal", 500)}</span>
+                  </h1>
+                  <p className="hero-tagline">&quot;Behind the IDE, just a student from Jaipur.&quot;</p>
+                  <p className="hero-tagline hero-tagline-dim">&quot;Behind the terminal, you won&apos;t know I was there.&quot;</p>
+                </div>
+              </div>
+              <div className="hero-right-column">
+                <div className="hero-illustration-wrapper">
+                  <img src={heroImage} alt="Nishchal Goyal Illustration" className="hero-illustration-img" />
+                </div>
+              </div>
             </div>
 
             <div className="hero-bottom-left">
               ECE &apos;27 · SKIT Jaipur · Jaipur, IN
             </div>
-            <div className={`hero-bottom-center ${slashSearchResult === 'canon' ? 'canon-revealed' : ''}`}>
+            <div className="hero-bottom-center">
               // breaking the canon since 2021
             </div>
             <div className="hero-bottom-right">
@@ -623,8 +1103,8 @@ function App() {
                 <div className="decor-num">01</div>
               </div>
               <div className="about-right-col">
-                <div className="section-label">01 / ABOUT</div>
-                <h2 className="section-headline">Final-year ECE student who actually ships.</h2>
+                <div className="section-label spider-sense-trigger">01 / LORE</div>
+                <h2 className="section-headline spider-sense-trigger">Final-year ECE student who actually ships.</h2>
                 <div className="section-body-text">
                   <p>
                     I build backend systems that actually work and security tools that actually detect.
@@ -644,7 +1124,21 @@ function App() {
                   <span className="about-pill">7.5 CGPA · No Backlogs</span>
                   <span className="about-pill">Batch 2027</span>
                   <span className="about-pill">Jaipur, Rajasthan</span>
-                  <span className="about-pill">Honda CB350 · 2024</span>
+                  <span 
+                    className="about-pill spider-sense-trigger interactive"
+                    style={{ cursor: 'pointer' }}
+                    onClick={triggerBikeRide}
+                    onMouseEnter={triggerBikeRide}
+                    tabIndex="0"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        triggerBikeRide();
+                      }
+                    }}
+                  >
+                    Honda CB350 · 2024
+                  </span>
                 </div>
               </div>
             </ScrollReveal>
@@ -708,7 +1202,7 @@ function App() {
               <div className="projects-editorial-grid">
                 {/* Project 1 */}
                 <ScrollReveal className="project-card-wrapper p-card-large">
-                  <div className={`project-card project-card-sec project-card-aegis ${slashSearchResult === 'aegisguard' ? 'project-card-pulse' : ''}`}>
+                  <div className="project-card project-card-sec project-card-aegis spider-sense-trigger">
                     <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
                       <span className="project-category project-category-sec">SIEM Security Platform</span>
@@ -735,7 +1229,7 @@ function App() {
 
                 {/* Project 2 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-right">
-                  <div className={`project-card project-card-sec ${slashSearchResult === 'intelscopepulse' ? 'project-card-pulse' : ''}`}>
+                  <div className="project-card project-card-sec spider-sense-trigger">
                     <div className="project-sec-badge">[SEC] 🔴</div>
                     <div className="project-header">
                       <span className="project-category project-category-sec">Threat Intelligence Dashboard</span>
@@ -759,7 +1253,7 @@ function App() {
 
                 {/* Project 3 */}
                 <ScrollReveal className="project-card-wrapper p-card-medium-left">
-                  <div className={`project-card project-card-normal ${slashSearchResult === 'writeblog' ? 'project-card-pulse' : ''}`}>
+                  <div className="project-card project-card-normal spider-sense-trigger">
                     <div className="project-header">
                       <span className="project-category">Full-Stack Platform</span>
                       <h3 className="project-title">WriteBlog</h3>
@@ -893,9 +1387,9 @@ function App() {
               </p>
 
               <div className="contact-buttons-group">
-                <a href="mailto:goyalnishchal71@gmail.com" className="contact-btn email-btn">Send Email</a>
-                <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">LinkedIn</a>
-                <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn">GitHub</a>
+                <a href="mailto:goyalnishchal71@gmail.com" className="contact-btn email-btn spider-sense-trigger">Send Email</a>
+                <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn spider-sense-trigger">LinkedIn</a>
+                <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="contact-btn secondary-btn spider-sense-trigger">GitHub</a>
               </div>
 
               <div className="contact-vuln-note">
@@ -908,467 +1402,149 @@ function App() {
           <footer className="dev-footer">
             <div className="footer-content">
               <div>nishchal goyal · jaipur · 2026</div>
-              <div className={`footer-quote ${slashSearchResult === 'miles' ? 'footer-quote-flash' : ''}`}>&quot;I&apos;ll break it.&quot; — Miles Morales</div>
+              <div className="footer-quote">&quot;I&apos;ll break it.&quot; — Miles Morales</div>
             </div>
           </footer>
 
           {/* Post-credits sentinel — hidden below footer */}
           <div ref={devPostCreditsSentinelRef} style={{ height: '1px', width: '100%' }} />
-
-          {/* Slash Search Bar */}
-          {slashSearchOpen && (
-            <div className="slash-search-bar">
-              <input
-                ref={slashInputRef}
-                className="slash-search-input"
-                type="text"
-                placeholder="Search... try 'aegisguard', 'miles', 'spider'"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSlashSearch(e.target.value);
-                  if (e.key === 'Escape') setSlashSearchOpen(false);
-                }}
-              />
-              {slashSearchResult === 'notfound' && (
-                <div className="slash-search-notfound">Nothing found. But you know where to look.</div>
-              )}
-            </div>
-          )}
         </div>
       )}
 
-      {/* Spider-Verse Post Credits Overlay */}
-      {devPostCreditsActive && (
-        <div className="spiderverse-overlay">
-          <div className="sv-panel sv-panel-1">
-            <div className="sv-halftone" />
-            <div className="sv-label">SKIT JAIPUR, 2023</div>
-            <div className="sv-large">STUDENT.</div>
-            <div className="sv-small">Nobody knew what was coming.</div>
+      {/* Dev Mode Post-Credits Timeline */}
+      {devPostCreditsState !== null && (
+        <div className="dev-post-credits-timeline">
+          {devPostCreditsState === 'wait' && <span>wait</span>}
+          {devPostCreditsState === 'rejected' && <span>Canon rejected</span>}
+          {devPostCreditsState === 'loading' && <span>Story still loading</span>}
+          {devPostCreditsState === 'cursor' && <span className="blinking-cursor">_</span>}
+        </div>
+      )}
+
+      {/* Mask Protocol Phased Overlay */}
+      {maskProtocolState !== null && (
+        <div className="mask-protocol-overlay">
+          <div className="mask-protocol-content">
+            {maskProtocolState === 'init' && (
+              <div className="mask-phase-text">Initializing Mask Protocol...</div>
+            )}
+            {maskProtocolState === 'sync' && (
+              <div className="mask-phase-text">Synchronizing dimensions...</div>
+            )}
+            {maskProtocolState === 'ready' && (
+              <div className="mask-phase-text">Mask on.</div>
+            )}
           </div>
-          <div className="sv-panel sv-panel-2">
-            <div className="sv-halftone" />
-            <div className="sv-label">DREAMSOFT4U, 2025</div>
-            <div className="sv-large">DEVELOPER.</div>
-            <div className="sv-small">REST APIs. ORM queries. Shipping code.</div>
+        </div>
+      )}
+
+      {/* Dynamic motorcycle runs */}
+      {bikeRides.map(ride => (
+        <div 
+          key={ride.id} 
+          className="cb350-bike"
+          style={{ animationDuration: window.innerWidth < 768 ? '1.8s' : '2.5s' }}
+          onAnimationEnd={() => {
+            setBikeRides(prev => prev.filter(b => b.id !== ride.id));
+          }}
+        >
+          🏍️
+        </div>
+      ))}
+
+
+
+      {/* Screen 3: Security Researcher Mode */}
+      {mode === 'hacker' && (
+        <div className={`hacker-portfolio-wrapper theme-${hackerTheme} ${isGlitching ? 'terminal-glitching' : ''}`} onClick={() => {
+          terminalInputRef.current?.focus();
+        }}>
+          <div className="hacker-terminal-container">
+            <div className="hacker-status-bar">
+              <span>nishchal@canon-breaker:~</span>
+              <span className="status-tags">[SESSION ACTIVE]</span>
+            </div>
+            
+            <div className="terminal-history-scroller" ref={terminalHistoryRef}>
+              {hackerHistory.map((item, idx) => (
+                <div key={idx} className="history-item-group">
+                  {item.command !== null && (
+                    <div className="history-command-line">
+                      <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
+                      <span className="history-command-text">{item.command}</span>
+                    </div>
+                  )}
+                  {item.output && (
+                    <div className="history-output-line">
+                      {item.output}
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              {!exitingTerminal && (
+                <div className="terminal-input-row">
+                  <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
+                  <div className="terminal-input-container">
+                    <span className="terminal-typed-text">{hackerInput}</span>
+                    <span className="terminal-cursor-block"></span>
+                    <input
+                      ref={terminalInputRef}
+                      className="terminal-hidden-input"
+                      type="text"
+                      value={hackerInput}
+                      onChange={(e) => setHackerInput(e.target.value)}
+                      onKeyDown={handleTerminalKeyDown}
+                      autoFocus
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="off"
+                      spellCheck="false"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="sv-panel sv-panel-3">
-            <div className="sv-halftone" />
-            <div className="sv-label">3AM. TERMINAL OPEN.</div>
-            <div className="sv-large">HACKER.</div>
-            <div className="sv-small">The logs don&apos;t lie. <span className="sv-cursor">▋</span></div>
-          </div>
-          <div className="sv-panel sv-panel-4">
-            <div className="sv-halftone" />
-            <div className="sv-label">JAIPUR.</div>
-            <div className="sv-large">CANON BREAKER.</div>
-            <div className="sv-small">They said this is how the story goes.</div>
-          </div>
-          <div className="sv-panel sv-panel-5">
-            <div className="sv-halftone sv-halftone-multi" />
-            <div className="sv-large sv-large-splash">NAH.</div>
-            <div className="sv-splash-sub">I&apos;MMA DO MY OWN THING.</div>
-            <div className="sv-splash-sig">— Nishchal Goyal, ECE &apos;27</div>
+          
+          <div className="crt-scanline"></div>
+        </div>
+      )}
+      
+      {/* Canon Rejected Ending Noir Overlay */}
+      {canonRejectedActive && (
+        <div className="canon-rejected-overlay" onClick={() => setCanonRejectedActive(false)}>
+          <div className="aot-crack" />
+          <div className="sv-panels-noir">
+            <div className="sv-panel-noir sv-panel-noir-1">
+              <div className="sv-halftone" />
+              <div className="sv-panel-noir-title">ANOMALY DETECTED</div>
+              <div className="sv-panel-noir-desc">Subject: Nishchal Goyal, ECE &apos;27. Diverging from the prescribed syllabus pathway.</div>
+            </div>
+            <div className="sv-panel-noir-2">
+              <div className="sv-halftone" />
+              <div className="sv-panel-noir-title">THE SHIFT</div>
+              <div className="sv-panel-noir-desc">Writing high-performance API layers, structuring PostgreSQL queries, building log parsers in the dark.</div>
+            </div>
+            <div className="sv-panel-noir-3">
+              <div className="sv-halftone" />
+              <div className="sv-panel-noir-title">CANON BROKEN</div>
+              <div className="sv-panel-noir-desc">Standard curriculum expectations rejected. Operating outside standard dimensions.</div>
+            </div>
+            <div className="sv-panel-noir-4">
+              <div className="sv-halftone-multi" />
+              <div className="sv-panel-noir-large-splash">REJECTED.</div>
+              <div className="sv-panel-noir-splash-sub">NAH, I&apos;MMA DO MY OWN THING.</div>
+              <div className="sv-panel-noir-splash-sig">— Nishchal Goyal, ECE &apos;27</div>
+            </div>
           </div>
           <div className="sv-to-be-continued">
-            <span className="sv-typewriter">// to be continued</span>
+            <span className="sv-typewriter">// ending verified.</span>
             <span className="terminal-cursor" />
           </div>
         </div>
       )}
 
-      {/* Konami Code — AoT Manga Overlay */}
-      {konamiActive && (
-        <div className="aot-overlay">
-          <div className="aot-crack" />
-          <div className="aot-panels">
-            <div className="aot-panel aot-panel-1">
-              <div className="aot-halftone" />
-              <div className="aot-text-large">STUDENT.</div>
-              <div className="aot-text-small">Jaipur, Rajasthan</div>
-            </div>
-            <div className="aot-panel aot-panel-2">
-              <div className="aot-halftone" />
-              <div className="aot-text-large">DEVELOPER.</div>
-              <div className="aot-text-small">Ships before breakfast.</div>
-            </div>
-            <div className="aot-panel aot-panel-3">
-              <div className="aot-halftone" />
-              <div className="aot-text-large">HACKER.</div>
-              <div className="aot-text-small">You won&apos;t know I was there.</div>
-              <div className="aot-eye">
-                <div className="aot-iris" />
-              </div>
-            </div>
-            <div className="aot-panel aot-panel-4">
-              <div className="aot-halftone" />
-              <div className="aot-wings">
-                <svg viewBox="0 0 100 60" className="wings-svg">
-                  <path d="M50 30 L20 5 L15 20 L35 30 L15 40 L20 55 Z" fill="white" />
-                  <path d="M50 30 L80 5 L85 20 L65 30 L85 40 L80 55 Z" fill="white" />
-                  <circle cx="50" cy="30" r="5" fill="white" />
-                </svg>
-              </div>
-              <div className="aot-text-small">&quot;If you keep moving forward, you will win.&quot;</div>
-              <div className="aot-text-small">&quot;— Eren Yeager&quot;</div>
-              <div className="aot-kanji">進撃の巨人</div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Screen 3: Security Researcher Mode */}
-      {mode === 'hacker' && (
-        <div className="hacker-portfolio-wrapper">
-          <div className="hacker-status-bar">
-            <span>[nish@kali:~] — SECURITY RESEARCH PORTFOLIO</span>
-            <span className="status-tags">[SESSION ACTIVE] [2026]</span>
-          </div>
-
-          <div className="hacker-terminal-body">
-            {/* 1. Boot sequence output */}
-            <div className="terminal-boot-container">
-              {BOOT_LINES.slice(0, bootIndex).map((line, i) => (
-                <div
-                  key={i}
-                  className={`boot-line ${line.includes('[  OK  ]') ? 'ok' : line.includes('[ WARN ]') ? 'warn' : 'info'}`}
-                >
-                  {line}
-                </div>
-              ))}
-              {bootIndex === BOOT_LINES.length && !hackerBooted && (
-                <div className="cursor-blink-line">
-                  <span>&gt; </span>
-                  <span className="terminal-cursor"></span>
-                </div>
-              )}
-            </div>
-
-            {/* 2. Main Portfolio terminal command lines */}
-            {hackerBooted && (
-              <div className="terminal-content">
-                <TerminalCommand command="whoami" delay={100}>
-                  <div style={{ color: 'var(--hacker-text-bright)' }}>&gt; nishchal_goyal</div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat identity.txt" delay={800}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    &gt; ECE Final Year — SKIT Jaipur, Batch 2027<br />
-                    &gt; Backend Developer. Offensive Security Learner.<br />
-                    &gt; Based in Jaipur, Rajasthan, IN.
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat mission.txt" delay={1500}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    &gt; Break things ethically.<br />
-                    &gt; Find what others miss.<br />
-                    &gt; Never accept the canon.
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="uptime" delay={2200}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    &gt; Skills active for 3+ years | Currently: eJPT → OSCP pathway
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat skills --category=security" delay={2900}>
-                  <div style={{ color: 'var(--hacker-text-dim)', marginBottom: '8px' }}>
-                    [SYSTEM] Loading security competency matrix...
-                  </div>
-                  <div className="skills-matrix-monocle">
-                    <HackerSkillRow name="Network Security" percentage={90} targetCount={9} statusText="[PROFICIENT]" />
-                    <HackerSkillRow name="SIEM &amp; Log Analysis" percentage={85} targetCount={8} statusText="[PROFICIENT]" />
-                    <HackerSkillRow name="Web Application Pentesting" percentage={78} targetCount={8} statusText="[DEVELOPING]" />
-                    <HackerSkillRow name="OverTheWire Bandit" percentage={75} targetCount={7} statusText="[Lvl 12+ ACTIVE]" />
-                    <HackerSkillRow name="TryHackMe CS101" percentage={70} targetCount={7} statusText="[IN PROGRESS]" />
-                    <HackerSkillRow name="Threat Intelligence &amp; CVE" percentage={76} targetCount={7} statusText="[DEVELOPING]" />
-                    <HackerSkillRow name="OSINT &amp; CVE Research" percentage={68} targetCount={7} statusText="[DEVELOPING]" />
-                    <HackerSkillRow name="Burp Suite / NMAP / Wireshark" percentage={60} targetCount={6} statusText="[LEARNING]" />
-                    <HackerSkillRow name="Metasploit Framework" percentage={50} targetCount={5} statusText="[LEARNING]" />
-                    <HackerSkillRow name="SQL Injection / XSS" percentage={65} targetCount={6} statusText="[DEVELOPING]" />
-                  </div>
-                  <div style={{ color: 'var(--hacker-text-dim)', marginTop: '8px' }}>
-                    [INFO] Current pathway: OverTheWire → THM Jr Pentester → HackTheBox → eJPT → OSCP<br />
-                    [INFO] Long-term target: OSCP certification
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat skills --category=development" delay={3600}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    [+] Python                        [CORE — 3yrs]<br />
-                    [+] FastAPI / Flask               [CORE — backend]<br />
-                    [+] REST API Design               [CORE]<br />
-                    [+] PostgreSQL / SQLite           [PROFICIENT]<br />
-                    [+] Odoo 15 ERP                   [ACTIVE — current internship]<br />
-                    [+] Linux/Ubuntu                  [DAILY DRIVER]<br />
-                    [+] Git                           [DAILY]<br />
-                    [+] Docker                        [COMPETENT]<br />
-                    [+] JavaScript / React            [COMPETENT]<br />
-                    [+] HTML/CSS                      [COMPETENT]
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="ls -la /projects/" delay={4300}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    total 12<br />
-                    drwxr-xr-x  2 nish nish 4096 Jun 15 12:00 aegisguard/<br />
-                    drwxr-xr-x  2 nish nish 4096 Jun 15 12:00 intelscopepulse/<br />
-                    drwxr-xr-x  2 nish nish 4096 Jun 15 12:00 writeblog/
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat /projects/aegisguard/threat_report.txt" delay={5000}>
-                  <div className="terminal-command-output" style={{ color: 'var(--hacker-text-primary)' }}>
-                    ╔══════════════════════════════════════════════╗<br />
-                    ║  THREAT DETECTION SYSTEM — AEGISGUARD v1.0  ║<br />
-                    ║  STATUS: ACTIVE | CLASSIFICATION: SEC-TOOL  ║<br />
-                    ╚══════════════════════════════════════════════╝<br /><br />
-                    [SYSTEM]  Real-time log monitoring daemon<br />
-                    [DETECTS] SSH Brute Force (5+ attempts/60s window)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL Injection patterns<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XSS attack vectors<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Path traversal attempts<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sensitive directory probing<br />
-                    [ENGINE]  Custom regex rules — zero dependencies<br />
-                    [ALERTS]  Discord webhook → High + Critical severity<br />
-                    [SANDBOX] Live attack simulator included<br />
-                    [STACK]   Python · FastAPI · SQLite · JavaScript<br />
-                    [REPO]    <a href="https://github.com/goyalnish26/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/AegisGuard</a><br />
-                    [LIVE]    <a href="https://goyalnish26.github.io/AegisGuard" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>goyalnish26.github.io/AegisGuard</a>
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat /projects/intelscopepulse/threat_report.txt" delay={5700}>
-                  <div className="terminal-command-output" style={{ color: 'var(--hacker-text-primary)' }}>
-                    ╔══════════════════════════════════════════════╗<br />
-                    ║  CVE INTELLIGENCE FEED — INTELSCOPEPULSE    ║<br />
-                    ║  STATUS: SYNCING | SOURCE: NVD API          ║<br />
-                    ╚══════════════════════════════════════════════╝<br /><br />
-                    [FEED]    NVD API — dynamic 90-day rolling window<br />
-                    [OUTPUT]  Severity breakdown charts<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Persistent watchlist<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Real-time threat classification<br />
-                    [STACK]   React · NVD API · Chart.js<br />
-                    [REPO]    <a href="https://github.com/goyalnish26/IntelScope-Pulse" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/IntelScope-Pulse</a>
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat /projects/writeblog/README" delay={6400}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    <span style={{ color: 'var(--hacker-text-bright)' }}>[PROJECT]    WriteBlog — Full-Stack Blogging Platform</span><br />
-                    [STATUS]     Deployed | GitHub: <a href="https://github.com/goyalnish26/writeblog" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26/writeblog</a><br />
-                    [STACK]      Python · Flask · SQLAlchemy · Bootstrap 5 · Docker · GitHub Actions<br />
-                    [FEATURES]   Role-based auth (reader/author/admin)<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Markdown editor with live preview<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nested comments · Likes · Bookmarks<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Admin analytics dashboard<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rate-limited auth routes<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Docker + CI/CD pipeline
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat /etc/work_history" delay={7100}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    <span style={{ color: 'var(--hacker-text-bright)' }}>[ACTIVE]   Dreamsoft4u Pvt. Ltd. — Backend Developer Intern | 2025–Present</span><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Building Odoo 15 REST API module<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP controllers · ORM queries · JSON pipelines<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Stack: Python · Odoo 15 · PostgreSQL · Ubuntu · PyCharm · Git<br /><br />
-                    [INACTIVE] AIESEC in Jaipur — Volunteer | 2023<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cross-cultural project coordination<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Leadership development · International youth exchange<br /><br />
-                    [INACTIVE] True Value Infosoft — Intern | Prior<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Software development internship
-                  </div>
-                </TerminalCommand>
-
-                <TerminalCommand command="cat /etc/credentials" delay={7800}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> Google Cybersecurity Certificate<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Google / Coursera<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: August 2025<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: LGYP4646QM36<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> Deloitte Australia — Cyber Job Simulation<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Forage | Date: October 2025<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: 2LN74jKozspnmt3kh<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tasks: Threat analysis · Incident response<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Security assessment<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> J.P. Morgan — Software Engineering Simulation<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: Forage | Date: October 2025<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID: BvwC2Ge8oKbGSzgfr<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tasks: Kafka · H2 · REST API · Controllers<br /><br />
-                    <span style={{ color: '#00FF66' }}>[CREDENTIAL VERIFIED]</span> PLC Programming &amp; Its Applications<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Issuer: CSIR-CEERI | Date: November 2024
-                  </div>
-                </TerminalCommand>
-
-                {/* 3. Live Simulated activity tail logger */}
-                <div style={{ margin: '36px 0' }}>
-                  <ActivityLog easterEggActive={easterEggActive} hackerEasterEggContent={hackerEasterEggContent} />
-                </div>
-
-                <TerminalCommand command="contact --list" delay={8500}>
-                  <div style={{ color: 'var(--hacker-text-primary)' }}>
-                    [METHOD 01] email<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt; <a href="mailto:goyalnishchal71@gmail.com" style={{ color: 'var(--hacker-amber)' }}>goyalnishchal71@gmail.com</a><br /><br />
-                    [METHOD 02] linkedin<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt; <a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>linkedin.com/in/nishchal-goyal-6409a5289</a><br /><br />
-                    [METHOD 03] github<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt; <a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hacker-amber)' }}>github.com/goyalnish26</a><br /><br />
-                    <span style={{ color: 'var(--hacker-text-dim)' }}>[NOTE] Open to: SOC Analyst · Security Intern · Pentesting · Backend Dev</span><br />
-                    <span style={{ color: 'var(--hacker-text-dim)' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Remote or Jaipur-based preferred</span><br />
-                    <span style={{ color: 'var(--hacker-text-dim)' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Response time: &lt; 24 hours</span>
-                  </div>
-                </TerminalCommand>
-
-                {/* Prompt block ready for typing */}
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '24px', color: 'var(--hacker-text-primary)' }}>
-                  <span style={{ color: 'var(--hacker-amber)', marginRight: '8px' }}>$</span>
-                  <span style={{ marginRight: '8px' }}>_</span>
-                  <span className="terminal-cursor"></span>
-                </div>
-
-                <div className="hacker-footer">
-                  <div>[SESSION END] nishchal_goyal@kali — all rights reserved, none respected</div>
-                  <div className="hacker-footer-quote">
-                    &quot;Everyone keeps telling me how my story is supposed to go&hellip; Nah, I&apos;mma do my own thing.&quot; &mdash; Miles Morales
-                  </div>
-                </div>
-
-                {/* CTF Post-Credits */}
-                <div ref={hackerPostCreditsSentinelRef} style={{ height: '1px', width: '100%' }} />
-                
-                {hackerPostCreditsActive && (
-                  <div className="ctf-container">
-                    {ctfStage === 0 && (
-                      <div className="ctf-intro">
-                        <div style={{ color: 'var(--hacker-text-dim)' }}>[SYS] End of public profile reached.</div>
-                        <div style={{ color: 'var(--hacker-text-dim)' }}>[SYS] Deeper access requires authentication.</div>
-                        <div style={{ color: '#C0C0C0' }}>[INFO] There is another layer. Find it.</div>
-                      </div>
-                    )}
-                    {ctfStage >= 1 && ctfStage <= 3 && (
-                      <div className="ctf-game">
-                        <div className="ctf-banner">
-                          ╔═══════════════════════════════════╗<br />
-                          ║&nbsp;&nbsp; BREACH PROTOCOL — NISHCHAL OS&nbsp;&nbsp;║<br />
-                          ║&nbsp;&nbsp; Unauthorized access detected.&nbsp;&nbsp;║<br />
-                          ║&nbsp;&nbsp; Prove you belong here.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ╚═══════════════════════════════════╝
-                        </div>
-                        <div style={{ color: 'var(--hacker-text-dim)', marginBottom: '16px' }}>
-                          [SYS] 3 layers of security. Break them all.<br />
-                          [SYS] Your keystrokes are being logged.
-                        </div>
-
-                        {ctfStage === 1 && (
-                          <div>
-                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 1/3] RECON</div>
-                            <div style={{ color: '#C0C0C0' }}>The system has fingerprints. Find mine.</div>
-                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
-                              Clue: &quot;What tool did I build that watches your auth.log?&quot;
-                            </div>
-                            <div className="ctf-progress">████░░░░░░░░ 0%</div>
-                          </div>
-                        )}
-                        {ctfStage === 2 && (
-                          <div>
-                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 2/3] CRYPTANALYSIS</div>
-                            <div style={{ color: '#C0C0C0' }}>Someone left a message in the logs.</div>
-                            <div style={{ color: 'var(--hacker-amber)', marginTop: '8px', fontFamily: 'JetBrains Mono', wordBreak: 'break-all' }}>
-                              4e61682c2049276d6d6120646f206d79206f776e207468696e672e
-                            </div>
-                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
-                              [INFO] It&apos;s not encrypted. Just encoded.<br />
-                              [INFO] Standard encoding. You know this.
-                            </div>
-                            <div className="ctf-progress">████████░░░░ 33%</div>
-                          </div>
-                        )}
-                        {ctfStage === 3 && (
-                          <div>
-                            <div style={{ color: 'var(--hacker-amber)' }}>[LAYER 3/3] FINAL ACCESS</div>
-                            <div style={{ color: '#C0C0C0' }}>One last thing. This one&apos;s personal.</div>
-                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '8px', fontFamily: 'JetBrains Mono', fontSize: '0.75rem' }}>
-                              0x00: 42 65 68 69 6e 64 20 74 68 65 20&nbsp;&nbsp;&quot;Behind the &quot;<br />
-                              0x0B: 49 44 45 2c 20 6a 75 73 74 20 61&nbsp;&nbsp;&quot;IDE, just a&quot;<br />
-                              0x17: 20 73 74 75 64 65 6e 74 20 66 72&nbsp;&nbsp;&quot; student fr&quot;<br />
-                              0x23: 6f 6d 20 4a 61 69 70 75 72 2e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;om Jaipur.&quot;<br />
-                              0x2C: 42 65 68 69 6e 64 20 74 68 65 20&nbsp;&nbsp;&quot;Behind the &quot;<br />
-                              0x38: 74 65 72 6d 69 6e 61 6c 2c 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;terminal, &quot;<br />
-                              0x43: ?? ?? ?? ?? ?? ?? ?? ?? ?? ??&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;??????????&quot;
-                            </div>
-                            <div style={{ color: 'var(--hacker-text-dim)', marginTop: '4px' }}>
-                              [INFO] Complete the redacted section.<br />
-                              [INFO] What won&apos;t I leave behind?
-                            </div>
-                            <div className="ctf-progress">████████████ 66%</div>
-                          </div>
-                        )}
-
-                        {ctfMessage && (
-                          <div className="ctf-message">
-                            {ctfMessage.split('\n').map((line, i) => (
-                              <div key={i} style={{ color: line.includes('[OK]') ? '#00FF66' : line.includes('[DENIED]') ? '#FF3B30' : line.includes('[HINT]') ? '#FFB300' : '#C0C0C0' }}>{line}</div>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="ctf-input-row">
-                          <span style={{ color: 'var(--hacker-amber)' }}>&gt; </span>
-                          <input
-                            ref={ctfInputRef}
-                            className="ctf-input"
-                            type="text"
-                            value={ctfInput}
-                            onChange={(e) => setCtfInput(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === 'Enter') handleCtfSubmit(); }}
-                            autoFocus
-                          />
-                        </div>
-                      </div>
-                    )}
-                    {ctfStage === 4 && (
-                      <div className="ctf-victory">
-                        <div style={{ color: '#C0C0C0' }}>[SYS] ================================</div>
-                        <div style={{ color: '#C0C0C0' }}>[SYS] BREACH PROTOCOL — COMPLETE</div>
-                        <div style={{ color: '#C0C0C0', marginBottom: '12px' }}>[SYS] ================================</div>
-                        <div style={{ color: '#00FF66' }}>[OK]&nbsp; Identity confirmed.</div>
-                        <div style={{ color: '#00FF66' }}>[OK]&nbsp; You think like I do.</div>
-                        <div style={{ color: '#00FF66', marginBottom: '12px' }}>[OK]&nbsp; That&apos;s rare.</div>
-                        <div style={{ color: '#C0C0C0' }}>[SYS] Dropping you a flag:</div>
-                        <div style={{ color: '#FFB300', fontWeight: 'bold', marginBottom: '12px' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flag&#123;c4n0n_br34k3r_1n_th3_n3tw0rk&#125;</div>
-                        <div style={{ color: '#C0C0C0' }}>[SYS] And something more useful:</div>
-                        <div className="ctf-contact-box">
-                          ╔══════════════════════════════════════╗<br />
-                          ║&nbsp; DIRECT LINE — NISHCHAL GOYAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ║&nbsp; goyalnishchal71@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ║&nbsp; github.com/goyalnish26&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ║&nbsp; linkedin.com/in/nishchal-goyal-&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ║&nbsp; 6409a5289&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║<br />
-                          ╚══════════════════════════════════════╝
-                        </div>
-                        <div style={{ color: '#4A4A4A', fontStyle: 'italic', marginTop: '12px' }}>
-                          [SYS] &quot;Everyone keeps telling me how my story is supposed to go…&quot;<br />
-                          [SYS] &quot;Nah, I&apos;mma do my own thing.&quot;<br />
-                          [SYS] — Miles Morales
-                        </div>
-                        <div style={{ color: '#4A4A4A', marginTop: '12px' }}>[SYS] Session terminated. Good hunt.</div>
-                        <div className="ctf-final-cursor">
-                          <span style={{ color: 'var(--hacker-amber)' }}>&gt; </span>
-                          <span className="terminal-cursor" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="crt-scanline"></div>
-        </div>
-      )}
     </div>
   );
 }
@@ -1433,204 +1609,6 @@ const DevCyberSkill = ({ name, percentage }) => {
           transition: 'width 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
         }} />
       </div>
-    </div>
-  );
-};
-
-// Subcomponent: Terminal Output command line typing simulator
-const TerminalCommand = ({ command, children, delay = 0 }) => {
-  const [showCommand, setShowCommand] = useState(false);
-  const [showOutput, setShowOutput] = useState(false);
-
-  useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setShowCommand(true);
-    }, delay);
-
-    const timer2 = setTimeout(() => {
-      setShowOutput(true);
-    }, delay + 400);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [delay]);
-
-  if (!showCommand) return null;
-
-  return (
-    <div className="terminal-command-group" style={{ marginBottom: '24px' }}>
-      <div style={{ color: 'var(--hacker-text-primary)', display: 'flex', alignItems: 'center' }}>
-        <span style={{ color: 'var(--hacker-amber)', marginRight: '8px' }}>$</span>
-        <span className="typewriter-text" style={{ borderRight: showOutput ? 'none' : '1.5px solid var(--hacker-text-primary)' }}>{command}</span>
-      </div>
-      {showOutput && (
-        <div style={{ color: 'var(--hacker-text-primary)', marginTop: '8px', paddingLeft: '8px' }}>
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Subcomponent: Monospace Character Hacker Progress Bar
-const ProgressBar = ({ targetCount, percentage, statusText }) => {
-  const [currentCount, setCurrentCount] = useState(0);
-
-  useEffect(() => {
-    let interval = setInterval(() => {
-      setCurrentCount(prev => {
-        if (prev < targetCount) return prev + 1;
-        clearInterval(interval);
-        return prev;
-      });
-    }, 45);
-    return () => clearInterval(interval);
-  }, [targetCount]);
-
-  const solid = "█".repeat(currentCount);
-  const empty = "░".repeat(10 - currentCount);
-
-  return (
-    <span>
-      <span style={{ color: 'var(--hacker-text-bright)' }}>{solid}</span>
-      <span style={{ color: 'var(--hacker-text-dim)' }}>{empty}</span>
-      &nbsp;&nbsp;{percentage}%&nbsp;&nbsp;&nbsp;&nbsp;{statusText}
-    </span>
-  );
-};
-
-const HackerSkillRow = ({ name, percentage, targetCount, statusText }) => {
-  return (
-    <div className="hacker-skill-row" style={{ lineHeight: '1.6' }}>
-      <span style={{ color: 'var(--hacker-text-primary)' }}>[+] {padRight(name, 32)}</span>
-      <ProgressBar targetCount={targetCount} percentage={percentage} statusText={statusText} />
-    </div>
-  );
-};
-
-// Subcomponent: Active rolling activity tail log simulator
-const ActivityLog = ({ easterEggActive, hackerEasterEggContent }) => {
-  const [logs, setLogs] = useState([]);
-  const logIndex = useRef(0);
-  const baseTime = useRef(new Date());
-
-  useEffect(() => {
-    // Populate first 4 entries immediately on load
-    const initialLogs = [];
-    for (let i = 0; i < 4; i++) {
-      const template = logTemplates[i];
-      const logTime = new Date(baseTime.current.getTime() + template.offsetSec * 1000);
-      const pad = (num) => String(num).padStart(2, '0');
-      const formattedDate = `${logTime.getFullYear()}-${pad(logTime.getMonth() + 1)}-${pad(logTime.getDate())}`;
-      const formattedTime = `${pad(logTime.getHours())}:${pad(logTime.getMinutes())}:${pad(logTime.getSeconds())}`;
-      const timestamp = `[${formattedDate} ${formattedTime}]`;
-      initialLogs.push(`${timestamp} ${template.isCommand ? '' : '>> '}${template.text}`);
-    }
-    setLogs(initialLogs);
-    logIndex.current = 4;
-
-    const interval = setInterval(() => {
-      if (easterEggActive) return;
-
-      setLogs(prev => {
-        const nextIndex = logIndex.current % logTemplates.length;
-        if (nextIndex === 0 && logIndex.current !== 0) {
-          baseTime.current = new Date();
-        }
-
-        const template = logTemplates[nextIndex];
-        const logTime = new Date(baseTime.current.getTime() + template.offsetSec * 1000);
-        const pad = (num) => String(num).padStart(2, '0');
-        const formattedDate = `${logTime.getFullYear()}-${pad(logTime.getMonth() + 1)}-${pad(logTime.getDate())}`;
-        const formattedTime = `${pad(logTime.getHours())}:${pad(logTime.getMinutes())}:${pad(logTime.getSeconds())}`;
-        const timestamp = `[${formattedDate} ${formattedTime}]`;
-        const logLine = `${timestamp} ${template.isCommand ? '' : '>> '}${template.text}`;
-
-        logIndex.current += 1;
-        const updated = [...prev, logLine];
-        if (updated.length > 9) updated.shift();
-        return updated;
-      });
-    }, 1800);
-
-    return () => clearInterval(interval);
-  }, [easterEggActive]);
-
-  const renderEasterEggContent = () => {
-    switch (hackerEasterEggContent) {
-      case 'sudo':
-        return (
-          <div className="easter-egg-terminal-content">
-            <div className="red-alert-msg">[AUTH]  sudo: permission denied</div>
-            <div className="red-alert-msg">[AUTH]  nish is not in the sudoers file.</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO]  This incident will be reported.</div>
-            <div className="amber-msg">[WARN]  Just kidding. But I&apos;m already in your system.</div>
-            <div className="sig-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Nishchal</div>
-          </div>
-        );
-      case 'help':
-        return (
-          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
-            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ help</div>
-            <div style={{ color: '#C0C0C0', marginBottom: '4px' }}>AVAILABLE COMMANDS:</div>
-            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;whoami&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— you already know</div>
-            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;ls /secrets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— nice try</div>
-            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;cat flag.txt&nbsp;&nbsp;&nbsp;&nbsp;— not today</div>
-            <div style={{ color: '#C0C0C0' }}>&nbsp;&nbsp;sudo nish&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— you wish</div>
-            <div style={{ color: '#C0C0C0', marginBottom: '8px' }}>&nbsp;&nbsp;exit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— why would you?</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO] Some commands do more than others.</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO] Type carefully.</div>
-          </div>
-        );
-      case 'secrets':
-        return (
-          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
-            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ ls /secrets</div>
-            <div style={{ color: '#C0C0C0' }}>ls: cannot access &apos;/secrets&apos;: Permission denied</div>
-            <div className="red-alert-msg">[ERRNO 13] Access denied — not your directory.</div>
-            <div className="amber-msg">[HINT] Try harder. Or maybe don&apos;t.</div>
-          </div>
-        );
-      case 'flag':
-        return (
-          <div className="easter-egg-terminal-content" style={{ animation: 'none' }}>
-            <div style={{ color: 'var(--hacker-amber)', marginBottom: '8px' }}>$ cat flag.txt</div>
-            <div style={{ color: '#FFB300', fontWeight: 'bold', marginBottom: '8px' }}>flag&#123;y0u_f0und_n0th1ng_but_y0u_tr13d&#125;</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO] Points for effort.</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO] Zero for success.</div>
-            <div style={{ color: '#C0C0C0' }}>[INFO] But I respect the attempt.</div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="terminal-log-panel">
-      <div className="tail-log-header">
-        $ tail -f /var/log/activity.log
-      </div>
-
-      {easterEggActive ? (
-        renderEasterEggContent()
-      ) : (
-        <div className="logs-scroller-content">
-          {logs.map((log, i) => (
-            <div
-              key={i}
-              className={`log-line-entry ${log.includes('ALERT') ? 'amber-log' : log.includes('CRITICAL') ? 'red-log' : 'normal-log'}`}
-            >
-              {log}
-            </div>
-          ))}
-          <div className="cursor-blink-line">
-            <span className="terminal-cursor"></span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -2212,16 +2190,58 @@ const CustomStyles = () => (
       color: #C9A84C;
     }
 
-    /* Hero */
+    /* Hero Grid & Layout */
     .dev-hero {
       position: relative;
-      height: 100vh;
+      min-height: 100vh;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+    .hero-grid-container {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 4rem;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+    .hero-left-column {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      padding: 0;
+    }
+    .hero-right-column {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-illustration-wrapper {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-illustration-img {
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
+      opacity: 0.95;
+      filter: drop-shadow(0 10px 20px rgba(45, 36, 22, 0.08));
+      animation: illustration-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes illustration-fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 0.95; transform: translateY(0); }
     }
     .spider-web-element {
       position: absolute;
@@ -2872,191 +2892,301 @@ const CustomStyles = () => (
     }
 
     /* ----------------------------------------- */
-    /* HACKER MODE DESIGN (SPIDER-NOIR Vintage Monitor) */
+    /* HACKER MODE DESIGN (REAL TERMINAL ENVIRONMENT) */
     /* ----------------------------------------- */
     .hacker-portfolio-wrapper {
       min-height: 100vh;
       width: 100%;
-      background-color: #0D0D0D;
+      background-color: var(--hacker-bg);
+      color: var(--hacker-text-primary);
       font-family: 'JetBrains Mono', monospace;
-      color: #C0C0C0;
       position: relative;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
 
-      /* CSS custom properties for hacker palette — used by var() in inline styles */
+      /* Defaults (Miles Theme) */
+      --hacker-bg: #050505;
+      --hacker-accent: #9D4EDD;
+      --hacker-text-primary: #E0AAFF;
+      --hacker-text-bright: #FF2E63;
+      --hacker-text-dim: #5c5470;
+      --hacker-border: #240046;
+      --hacker-glow: rgba(157, 78, 221, 0.25);
+      --hacker-secondary: #FF2E63;
+    }
+    
+    .hacker-portfolio-wrapper.theme-light {
+      --hacker-bg: #FEFAE0;
+      --hacker-text-primary: #1A1A1A;
+      --hacker-text-bright: #1A1A1A;
+      --hacker-text-dim: #8A7F6B;
+      --hacker-accent: #E9C46A;
+      --hacker-border: #E9C46A;
+      --hacker-secondary: #E9C46A;
+      --hacker-glow: rgba(233, 196, 106, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-dark {
       --hacker-bg: #0D0D0D;
-      --hacker-bg-surface: #111111;
-      --hacker-bg-raised: #161616;
       --hacker-text-primary: #C0C0C0;
+      --hacker-text-bright: #C0C0C0;
       --hacker-text-dim: #4A4A4A;
-      --hacker-text-bright: #E8E8E8;
-      --hacker-amber: #FFB300;
-      --hacker-amber-dim: #7A5500;
-      --hacker-red-alert: #FF3B30;
+      --hacker-accent: #C0C0C0;
       --hacker-border: #1E1E1E;
+      --hacker-secondary: #C0C0C0;
+      --hacker-glow: rgba(192, 192, 192, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-peter {
+      --hacker-bg: #0a0a0a;
+      --hacker-text-primary: #FF0000;
+      --hacker-text-bright: #FF0000;
+      --hacker-text-dim: #660000;
+      --hacker-accent: #FF0000;
+      --hacker-border: #660000;
+      --hacker-secondary: #FF0000;
+      --hacker-glow: rgba(255, 0, 0, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-miles {
+      --hacker-bg: #0a0a0a;
+      --hacker-text-primary: #B833FF;
+      --hacker-text-bright: #FF3D3D;
+      --hacker-text-dim: #660080;
+      --hacker-accent: #FF3D3D;
+      --hacker-border: #660080;
+      --hacker-secondary: #FF3D3D;
+      --hacker-glow: rgba(255, 61, 61, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-noir {
+      --hacker-bg: #000000;
+      --hacker-text-primary: #FFFFFF;
+      --hacker-text-bright: #FFFFFF;
+      --hacker-text-dim: #808080;
+      --hacker-accent: #FFFFFF;
+      --hacker-border: #808080;
+      --hacker-secondary: #FFFFFF;
+      --hacker-glow: rgba(255, 255, 255, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-2099 {
+      --hacker-bg: #0a0a2e;
+      --hacker-text-primary: #00D9FF;
+      --hacker-text-bright: #00D9FF;
+      --hacker-text-dim: #0066CC;
+      --hacker-accent: #00D9FF;
+      --hacker-border: #0066CC;
+      --hacker-secondary: #00D9FF;
+      --hacker-glow: rgba(0, 217, 255, 0.25);
+    }
+    .hacker-portfolio-wrapper.theme-kali {
+      --hacker-bg: #1a1a2e;
+      --hacker-text-primary: #33FF00;
+      --hacker-text-bright: #33FF00;
+      --hacker-text-dim: #006600;
+      --hacker-accent: #6B00B0;
+      --hacker-border: #006600;
+      --hacker-secondary: #6B00B0;
+      --hacker-glow: rgba(107, 0, 176, 0.25);
     }
 
-    .hacker-status-bar {
-      position: fixed;
+    /* Glitch visual animation */
+    .hacker-portfolio-wrapper.terminal-glitching {
+      animation: glitch-skew 250ms steps(2) infinite;
+      position: relative;
+    }
+    .hacker-portfolio-wrapper.terminal-glitching::after {
+      content: '';
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      background-color: #111111;
-      border-bottom: 1px solid #1E1E1E;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      z-index: 10000;
+      animation: glitch-flash 150ms infinite alternate;
+    }
+    @keyframes glitch-skew {
+      0% { transform: skew(0deg); filter: hue-rotate(0deg); }
+      20% { transform: skew(3deg); filter: hue-rotate(90deg); }
+      40% { transform: skew(-3deg); filter: hue-rotate(180deg); }
+      60% { transform: skew(2deg); filter: hue-rotate(270deg); }
+      80% { transform: skew(-2deg); filter: hue-rotate(360deg); }
+      100% { transform: skew(0deg); filter: hue-rotate(0deg); }
+    }
+    @keyframes glitch-flash {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.8; }
+    }
+
+    /* Hacker Terminal Environment */
+    .hacker-terminal-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+      background-color: var(--hacker-bg);
+      color: var(--hacker-text-primary);
+      box-sizing: border-box;
+      position: relative;
+    }
+    .hacker-terminal-container .hacker-status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(22, 22, 22, 0.4);
+      border-bottom: 1px solid var(--hacker-border);
       padding: 0.6rem 1.5rem;
       font-size: 0.75rem;
-      color: #6A6A6A;
+      color: var(--hacker-text-dim);
       display: flex;
       justify-content: space-between;
-      z-index: 1000;
+      z-index: 10;
       box-sizing: border-box;
+      backdrop-filter: blur(4px);
     }
-    .hacker-status-bar .status-tags {
-      color: #888888;
+    .hacker-terminal-container .hacker-status-bar .status-tags {
+      color: var(--hacker-text-dim);
     }
-
-    .hacker-terminal-body {
-      padding: 4rem 2rem 6rem 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-      width: 100%;
-      box-sizing: border-box;
+    .terminal-history-scroller {
+      padding: 4rem 2rem 2rem 2rem;
       flex-grow: 1;
-    }
-
-    /* Boot text styling */
-    .terminal-boot-container {
-      font-size: 0.85rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
       line-height: 1.6;
-      margin-bottom: 2rem;
+      box-sizing: border-box;
     }
-    .boot-line {
-      margin-bottom: 4px;
+    .history-item-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .history-command-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .terminal-prompt-text {
+      color: var(--hacker-text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: bold;
+    }
+    .history-command-text {
+      color: var(--hacker-text-bright);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .history-output-line {
+      color: var(--hacker-text-primary);
       white-space: pre-wrap;
     }
-    .boot-line.ok { color: #C0C0C0; }
-    .boot-line.warn { color: #FFB300; }
-    .boot-line.info { color: #4A4A4A; }
-    
-    .cursor-blink-line {
+    .terminal-output-text {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--hacker-text-primary);
+    }
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .terminal-input-container {
       display: inline-flex;
       align-items: center;
+      position: relative;
+      flex-grow: 1;
     }
-    .terminal-cursor {
-      width: 8px;
-      height: 15px;
-      background-color: #C0C0C0;
+    .terminal-typed-text {
+      color: var(--hacker-text-bright);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .terminal-cursor-block {
+      display: inline-block;
+      width: 10px;
+      height: 16px;
+      background-color: var(--hacker-text-bright);
+      margin-left: 2px;
       animation: blink 1s step-end infinite;
     }
     @keyframes blink {
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
-
-    /* Typewriter animation inside commands */
-    .typewriter-text {
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      animation: typing-effect 0.4s steps(20, end) forwards;
-    }
-    @keyframes typing-effect {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-
-    .terminal-command-group {
-      font-size: 0.9rem;
-    }
-    .terminal-command-group a {
-      color: #FFB300;
-      text-decoration: underline;
-      cursor: none;
-    }
-    .terminal-command-group a:hover {
-      color: #E8E8E8;
+    .terminal-hidden-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: transparent;
+      caret-color: transparent;
+      z-index: 5;
     }
 
-    /* Hacker Skills Table */
-    .skills-matrix-monocle {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin: 12px 0;
-      border-left: 2px solid #1E1E1E;
-      padding-left: 16px;
-    }
-
-    /* Simulated Activity Tail Log panel */
-    .terminal-log-panel {
-      border: 1px solid #1E1E1E;
-      background-color: #111111;
-      padding: 1.5rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      min-height: 220px;
-      position: relative;
-    }
-    .tail-log-header {
-      color: #4A4A4A;
-      margin-bottom: 12px;
-      border-bottom: 1px solid #1E1E1E;
-      padding-bottom: 8px;
-      font-size: 0.75rem;
-    }
-    .logs-scroller-content {
+    /* Command Output Formatting */
+    .terminal-help-table {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      max-width: 800px;
     }
-    .log-line-entry {
-      white-space: pre-wrap;
+    .help-row {
+      display: grid;
+      grid-template-columns: 160px 1.5fr 1fr;
+      gap: 1rem;
+      padding: 4px 0;
     }
-    .normal-log { color: #C0C0C0; }
-    .amber-log { color: #FFB300; }
-    .red-log { color: #FF3B30; }
-
-    /* Easter egg block style */
-    .easter-egg-terminal-content {
-      color: #FFB300;
-      animation: crt-flicker-short 0.1s infinite;
-      line-height: 1.6;
-    }
-    .red-alert-msg {
-      color: #FF3B30;
+    .help-row.header {
+      border-bottom: 1px dashed var(--hacker-border);
+      color: var(--hacker-text-bright);
       font-weight: bold;
     }
-    .amber-msg {
-      color: #FFB300;
+    .help-col.cmd {
+      color: var(--hacker-accent);
     }
-    .sig-line {
-      text-align: right;
-      color: #E8E8E8;
+    .help-col.ex {
+      color: var(--hacker-text-dim);
     }
-
-    @keyframes crt-flicker-short {
-      0% { opacity: 0.95; }
-      50% { opacity: 1; }
-      100% { opacity: 0.98; }
-    }
-
-    /* Hacker footer */
-    .hacker-footer {
-      border-top: 1px solid #1E1E1E;
-      padding-top: 2rem;
-      margin-top: 6rem;
-      font-size: 0.75rem;
-      color: #4A4A4A;
+    .terminal-whoami, .terminal-about, .terminal-skills-tree, .terminal-projects-list, .terminal-project-details, .terminal-experience, .terminal-certs, .terminal-journey, .terminal-contact, .terminal-easter-egg, .terminal-shutdown {
       line-height: 1.6;
+      color: var(--hacker-text-primary);
     }
-    .hacker-footer-quote {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      color: #4A4A4A;
-      margin-top: 0.8rem;
-      text-align: center;
-      font-style: italic;
+    .whoami-label, .about-hl, .proj-title, .exp-header strong, .canon-detector-header {
+      color: var(--hacker-text-bright);
+    }
+    .cmd-ex {
+      color: var(--hacker-accent);
+      font-weight: bold;
+    }
+    .terminal-error {
+      color: var(--hacker-secondary);
+      font-weight: bold;
+    }
+    .terminal-project-details a, .terminal-contact a {
+      color: var(--hacker-accent);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .terminal-project-details a:hover, .terminal-contact a:hover {
+      color: var(--hacker-text-bright);
+    }
+    .exp-date {
+      float: right;
+      color: var(--hacker-text-dim);
     }
 
     /* CRT scanline simulation overlay */
@@ -3081,82 +3211,13 @@ const CustomStyles = () => (
       opacity: 0.4;
     }
 
-    /* Accessibility / Reset utility overrides */
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid #E9C46A;
-      outline-offset: 4px;
-    }
     .hacker-portfolio-wrapper a:focus-visible {
-      outline: 2px solid #FFB300;
+      outline: 2px solid var(--hacker-accent);
     }
 
-    /* Slash Search Bar styling */
-    .slash-search-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #FDF5C0;
-      border-top: 1px solid #E9C46A;
-      padding: 1.5rem 2rem;
-      z-index: 10000;
-      box-shadow: 0 -10px 30px rgba(45, 36, 22, 0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: search-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      box-sizing: border-box;
-    }
-    @keyframes search-slide-up {
-      0% { transform: translateY(100%); }
-      100% { transform: translateY(0); }
-    }
-    .slash-search-input {
-      width: 100%;
-      max-width: 600px;
-      padding: 0.8rem 1.2rem;
-      background: transparent;
-      border: 1px solid #E9C46A;
-      border-radius: 4px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.95rem;
-      color: #1A1A1A;
-      outline: none;
-    }
-    .slash-search-input::placeholder {
-      color: #A89F8B;
-    }
-    .slash-search-notfound {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      color: #8A7F6B;
-      margin-top: 0.8rem;
-    }
 
-    /* Keyword animations */
-    .project-card-pulse {
-      animation: gold-pulse-anim 1s ease-in-out 3;
-    }
-    @keyframes gold-pulse-anim {
-      0%, 100% { box-shadow: 0 4px 20px rgba(45, 36, 22, 0.04); border-color: rgba(233, 196, 106, 0.3); }
-      50% { box-shadow: 0 0 25px rgba(233, 196, 106, 0.6); border-color: #E9C46A; transform: scale(1.02); }
-    }
 
-    .footer-quote-flash {
-      animation: quote-flash-anim 2s ease-in-out forwards;
-    }
-    @keyframes quote-flash-anim {
-      0%, 100% { color: #8A7F6B; font-weight: normal; }
-      20%, 80% { color: #E9C46A; text-shadow: 0 0 8px rgba(233, 196, 106, 0.5); font-weight: bold; }
-    }
 
-    .canon-revealed {
-      animation: canon-reveal-anim 3s ease-in-out forwards;
-    }
-    @keyframes canon-reveal-anim {
-      0%, 100% { opacity: 0.5; color: #C9A84C; }
-      10%, 90% { opacity: 1; color: #1A1A1A; font-weight: bold; }
-    }
 
     /* Spider web click & search animation */
     .spider-web-wrapper {
@@ -3181,8 +3242,6 @@ const CustomStyles = () => (
       opacity: 0.35;
       stroke-width: 1px;
     }
-
-    /* Web spinning stroke animation */
     .spider-animate .spider-web-element circle,
     .spider-animate .spider-web-element line {
       stroke-dasharray: 1000;
@@ -3237,86 +3296,124 @@ const CustomStyles = () => (
       margin-top: 0.4rem;
     }
 
-    /* Name Outline Flash styling */
-    .name-outline-flash {
-      animation: mask-outline 400ms ease forwards;
+    /* Mask Protocol Phased Overlay */
+    .mask-protocol-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #FEFAE0;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: maskOverlayFadeIn 0.3s ease forwards;
     }
-    @keyframes mask-outline {
+    .mask-protocol-content {
+      text-align: center;
+      color: #1A1A1A;
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-weight: bold;
+    }
+    .mask-phase-text {
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    @keyframes maskOverlayFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Spider Sense Bolts */
+    .spider-sense-bolts {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      pointer-events: none;
+    }
+    .spider-sense-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .bolt-path {
+      stroke: #E63946;
+      stroke-width: 2.5px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      filter: drop-shadow(0 0 3px #E63946);
+      animation: bolt-flicker 0.2s infinite alternate;
+    }
+    @keyframes bolt-flicker {
+      0% { opacity: 0.3; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* CB350 Motorcycle Animation */
+    .cb350-bike {
+      position: fixed;
+      bottom: 2rem;
+      left: -50px;
+      font-size: 2.5rem;
+      z-index: 9999;
+      pointer-events: none;
+      animation: rideScreen 2.5s linear forwards;
+    }
+    @keyframes rideScreen {
       0% {
-        color: transparent;
-        -webkit-text-stroke: 2px #1A1A1A;
+        left: -50px;
+        transform: translateY(0);
       }
-      90% {
-        color: transparent;
-        -webkit-text-stroke: 2px #1A1A1A;
-      }
+      10% { transform: translateY(-4px); }
+      20% { transform: translateY(0); }
+      30% { transform: translateY(-4px); }
+      40% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+      60% { transform: translateY(0); }
+      70% { transform: translateY(-4px); }
+      80% { transform: translateY(0); }
+      90% { transform: translateY(-4px); }
       100% {
-        color: #2D2416;
-        -webkit-text-stroke: 0px transparent;
+        left: calc(100vw + 50px);
+        transform: translateY(0);
       }
     }
 
-    /* CTF Breach Protocol styling */
-    .ctf-container {
-      margin-top: 3rem;
-      border-top: 1px dashed #1E1E1E;
-      padding-top: 2rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+    /* Dev Mode Post-Credits Timeline */
+    .dev-post-credits-timeline {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      color: #8A7F6B;
+      letter-spacing: 2px;
+      z-index: 1000;
+      text-transform: uppercase;
+      pointer-events: none;
+      animation: fadeInPostCredits 0.5s ease forwards;
     }
-    .ctf-banner {
-      color: #FFB300;
-      line-height: 1.4;
-      margin-bottom: 1rem;
-      white-space: pre-wrap;
+    @keyframes fadeInPostCredits {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
-    .ctf-progress {
-      font-family: 'JetBrains Mono', monospace;
-      color: #FFB300;
-      margin-top: 8px;
-      margin-bottom: 16px;
+    .blinking-cursor {
+      animation: blinkCursorPost 1s infinite step-end;
     }
-    .ctf-message {
-      margin: 16px 0;
-      white-space: pre-wrap;
-      line-height: 1.6;
-    }
-    .ctf-input-row {
-      display: flex;
-      align-items: center;
-      margin-top: 12px;
-    }
-    .ctf-input {
-      background: transparent;
-      border: none;
-      outline: none;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      color: #C0C0C0;
-      flex-grow: 1;
-      caret-color: #FFB300;
-    }
-    .ctf-contact-box {
-      color: #C0C0C0;
-      border: 1px solid #FFB300;
-      padding: 1rem;
-      margin: 1rem 0;
-      display: inline-block;
-      line-height: 1.5;
-      background-color: #111111;
-      white-space: pre-wrap;
-    }
-    .ctf-victory {
-      line-height: 1.6;
-    }
-    .ctf-final-cursor {
-      display: flex;
-      align-items: center;
-      margin-top: 16px;
+    @keyframes blinkCursorPost {
+      from, to { color: transparent }
+      50% { color: #8A7F6B }
     }
 
-    /* Spider-Verse Post Credits Overlay styling */
-    .spiderverse-overlay {
+    /* Canon Rejected Ending Noir Overlay */
+    .canon-rejected-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -3324,19 +3421,44 @@ const CustomStyles = () => (
       height: 100vh;
       background-color: #000;
       z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      box-sizing: border-box;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .aot-crack {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' stroke='white' stroke-width='1.5' fill='none'><path d='M50 50 L10 10 M50 50 L90 10 M50 50 L10 90 M50 50 L90 90 M50 50 L50 0 M50 50 L50 100 M50 50 L0 50 M50 50 L100 50 M30 30 L40 10 L50 30 L70 20 L80 40 L60 50 L70 70 L90 60 L80 80 L50 70 L30 80 L10 70 L30 50 L20 40 Z'/></svg>");
+      background-size: cover;
+      z-index: 200;
+      pointer-events: none;
+      opacity: 0.2;
+      animation: crack-shatter 0.5s ease-out forwards;
+    }
+    @keyframes crack-shatter {
+      0% { opacity: 0; transform: scale(0.8); }
+      10% { opacity: 0.2; }
+      90% { opacity: 0.2; }
+      100% { opacity: 0.15; }
+    }
+    .sv-panels-noir {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: 1.2fr 1.5fr;
-      padding: 2rem;
       gap: 1.5rem;
+      width: 100%;
+      height: calc(100% - 60px);
       box-sizing: border-box;
-      animation: sv-fade-out 0.5s ease 8s forwards;
     }
-    @keyframes sv-fade-out {
-      to { opacity: 0; pointer-events: none; }
-    }
-    .sv-panel {
-      border: 4px solid #000;
+    .sv-panel-noir {
+      border: 4px solid #fff;
+      background-color: #000;
       position: relative;
       overflow: hidden;
       display: flex;
@@ -3347,7 +3469,7 @@ const CustomStyles = () => (
       text-align: center;
       opacity: 0;
     }
-    .sv-halftone {
+    .sv-panel-noir .sv-halftone {
       position: absolute;
       top: 0;
       left: 0;
@@ -3355,314 +3477,74 @@ const CustomStyles = () => (
       height: 100%;
       z-index: 0;
       opacity: 0.15;
+      background-image: radial-gradient(#fff 15%, transparent 15%);
+      background-size: 8px 8px;
     }
-    .sv-label {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      background-color: #000;
-      color: #fff;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      z-index: 2;
-      font-weight: bold;
-    }
-    .sv-large {
-      font-family: 'Bangers', sans-serif;
-      font-size: clamp(2rem, 5vw, 4rem);
+    .sv-panel-noir-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-weight: 900;
       color: #fff;
       z-index: 1;
-      text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
       margin-bottom: 0.5rem;
-      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-style: italic;
     }
-    .sv-small {
-      font-family: 'DM Sans', sans-serif;
+    .sv-panel-noir-desc {
+      font-family: 'DM Mono', monospace;
       font-size: 0.9rem;
-      color: #fff;
-      z-index: 1;
-      font-weight: bold;
-      text-shadow: 1px 1px 0px #000;
-    }
-    .sv-panel-1 {
-      grid-column: 1 / 3;
-      background-color: #8B0000;
-      animation: panel-show 0.1s forwards 0.3s;
-    }
-    .sv-panel-1 .sv-halftone {
-      background-image: radial-gradient(#A50000 20%, transparent 20%);
-      background-size: 10px 10px;
-    }
-    .sv-panel-2 {
-      grid-column: 3 / 5;
-      background-color: #1A1A5E;
-      animation: panel-show 0.1s forwards 1.3s;
-    }
-    .sv-panel-2 .sv-halftone {
-      background-image: radial-gradient(#1E1E6E 20%, transparent 20%);
-      background-size: 10px 10px;
-    }
-    .sv-panel-3 {
-      grid-column: 1 / 3;
-      background-color: #0D0D0D;
-      animation: panel-show 0.1s forwards 2.3s;
-    }
-    .sv-panel-3 .sv-halftone {
-      background-image: radial-gradient(#FF006E 15%, transparent 15%);
-      background-size: 8px 8px;
-    }
-    .sv-cursor {
-      color: #FF006E;
-      animation: blink 1s step-end infinite;
-    }
-    .sv-panel-4 {
-      grid-column: 3 / 5;
-      background-color: #000;
-      border-color: #fff;
-      animation: panel-show 0.1s forwards 3.3s;
-    }
-    .sv-panel-4 .sv-halftone {
-      background-image: radial-gradient(#fff 10%, transparent 10%);
-      background-size: 12px 12px;
-      opacity: 0.1;
-    }
-    .sv-panel-5 {
-      grid-column: 1 / 5;
-      background: linear-gradient(135deg, #8B0000, #1A1A5E, #FF006E, #000);
-      animation: panel-show 0.1s forwards 4.3s;
-      border-width: 5px;
-    }
-    .sv-panel-5 .sv-halftone-multi {
-      background-image: radial-gradient(#E9C46A 20%, transparent 20%);
-      background-size: 10px 10px;
-      opacity: 0.1;
-    }
-    .sv-large-splash {
-      font-size: clamp(4rem, 10vw, 8rem);
-      color: #E9C46A;
-      animation: splash-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 4.4s both;
-    }
-    @keyframes splash-scale {
-      0% { transform: scale(0.5); }
-      100% { transform: scale(1); }
-    }
-    .sv-splash-sub {
-      font-family: 'Bangers', sans-serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      color: #fff;
-      text-shadow: 3px 3px 0px #000;
-      letter-spacing: 2px;
-      z-index: 1;
-      margin-bottom: 1rem;
-    }
-    .sv-splash-sig {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.85rem;
-      color: #fff;
-      opacity: 0.8;
-      z-index: 1;
-    }
-    @keyframes panel-show {
-      to { opacity: 1; }
-    }
-    .sv-to-be-continued {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #000;
-      z-index: 200;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      animation: tbc-show 0.1s forwards 5.8s;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.5rem;
-      color: #fff;
-    }
-    @keyframes tbc-show {
-      to { opacity: 1; }
-    }
-    .sv-typewriter {
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      width: 0;
-      animation: sv-typing 1.2s steps(20, end) forwards 6.1s;
-    }
-    @keyframes sv-typing {
-      from { width: 0; }
-      to { width: 220px; }
-    }
-
-    /* Konami AoT Manga Overlay styling */
-    .aot-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: #000;
-      z-index: 100000;
-      display: flex;
-      flex-direction: column;
-      animation: sv-fade-out 0.5s ease 8s forwards;
-    }
-    .aot-crack {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' stroke='black' stroke-width='1.5' fill='none'><path d='M50 50 L10 10 M50 50 L90 10 M50 50 L10 90 M50 50 L90 90 M50 50 L50 0 M50 50 L50 100 M50 50 L0 50 M50 50 L100 50 M30 30 L40 10 L50 30 L70 20 L80 40 L60 50 L70 70 L90 60 L80 80 L50 70 L30 80 L10 70 L30 50 L20 40 Z'/></svg>");
-      background-size: cover;
-      z-index: 200;
-      pointer-events: none;
-      animation: crack-shatter 0.5s ease-out forwards;
-    }
-    .aot-crack-end {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' stroke='black' stroke-width='1.5' fill='none'><path d='M50 50 L10 10 M50 50 L90 10 M50 50 L10 90 M50 50 L90 90 M50 50 L50 0 M50 50 L50 100 M50 50 L0 50 M50 50 L100 50 M30 30 L40 10 L50 30 L70 20 L80 40 L60 50 L70 70 L90 60 L80 80 L50 70 L30 80 L10 70 L30 50 L20 40 Z'/></svg>");
-      background-size: cover;
-      z-index: 200;
-      pointer-events: none;
-      opacity: 0;
-      animation: crack-shatter 0.5s ease-out forwards 8s;
-    }
-    @keyframes crack-shatter {
-      0% { opacity: 0; transform: scale(0.8); }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-    .aot-panels {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      width: 100%;
-      height: 100%;
-      gap: 10px;
-      padding: 10px;
-      box-sizing: border-box;
-      background-color: #000;
-    }
-    .aot-panel {
-      position: relative;
-      background-color: #000;
-      border: 4px solid #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      text-align: center;
-      overflow: hidden;
-      opacity: 0;
-      animation: panel-show 0.1s forwards 0.5s;
-    }
-    .aot-halftone {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: radial-gradient(#333 15%, transparent 15%);
-      background-size: 8px 8px;
-      opacity: 0.3;
-      z-index: 0;
-    }
-    .aot-text-large {
-      font-family: 'Impact', 'Arial Black', sans-serif;
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      color: #fff;
-      z-index: 1;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0px #000;
-      margin-bottom: 0.5rem;
-    }
-    .aot-text-small {
-      font-family: 'Impact', sans-serif;
-      font-size: clamp(1rem, 2vw, 1.8rem);
       color: #ccc;
       z-index: 1;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 0px #000;
     }
-    .aot-panel-1 {
-      border-right-width: 6px;
-      border-bottom-width: 6px;
+    .sv-panel-noir-1 {
+      grid-column: 1 / 3;
+      animation: panel-show 0.1s forwards 0.3s;
     }
-    .aot-panel-2 {
-      border-left-width: 6px;
-      border-bottom-width: 6px;
+    .sv-panel-noir-2 {
+      grid-column: 3 / 5;
+      animation: panel-show 0.1s forwards 1.3s;
     }
-    .aot-panel-3 {
-      border-right-width: 6px;
-      border-top-width: 6px;
+    .sv-panel-noir-3 {
+      grid-column: 1 / 3;
+      animation: panel-show 0.1s forwards 2.3s;
     }
-    .aot-panel-3 .aot-halftone {
-      background-image: radial-gradient(#555 20%, transparent 20%);
-      background-size: 6px 6px;
-      opacity: 0.5;
+    .sv-panel-noir-4 {
+      grid-column: 3 / 5;
+      animation: panel-show 0.1s forwards 3.3s;
+      background: #0D0D0D;
     }
-    .aot-panel-4 {
-      border-left-width: 6px;
-      border-top-width: 6px;
-    }
-    .aot-eye {
-      width: 80px;
-      height: 40px;
-      background-color: #fff;
-      border-radius: 50% 50%;
-      border: 3px solid #000;
-      position: relative;
-      margin-top: 1rem;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
-    }
-    .aot-iris {
-      width: 30px;
-      height: 30px;
-      background-color: #000;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      position: relative;
-    }
-    .aot-iris::after {
-      content: '';
+    .sv-panel-noir-4 .sv-halftone-multi {
       position: absolute;
-      top: 5px;
-      left: 5px;
-      width: 6px;
-      height: 6px;
-      background-color: #fff;
-      border-radius: 50%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.2;
+      background-image: radial-gradient(#fff 20%, transparent 20%);
+      background-size: 10px 10px;
     }
-    .aot-wings {
-      margin-bottom: 1rem;
+    .sv-panel-noir-large-splash {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      font-style: italic;
+      color: #fff;
       z-index: 1;
+      animation: splash-scale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.4s both;
     }
-    .wings-svg {
-      width: 100px;
-      height: 60px;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
+    .sv-panel-noir-splash-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: #fff;
+      z-index: 1;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
     }
-    .aot-kanji {
-      font-family: 'Impact', sans-serif;
-      font-size: 1.5rem;
-      color: #888;
-      margin-top: 1rem;
+    .sv-panel-noir-splash-sig {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: #aaa;
       z-index: 1;
     }
 
@@ -3674,7 +3556,6 @@ const CustomStyles = () => (
       .decor-num { display: none; }
       .skills-layout { grid-template-columns: 1fr; gap: 3rem; }
       .certs-grid { grid-template-columns: 1fr; }
-      
       .project-card-wrapper {
         width: 100% !important;
         margin-top: 0 !important;
@@ -3683,10 +3564,10 @@ const CustomStyles = () => (
 
     @media (max-width: 768px) {
       body {
-        cursor: auto !important; /* fallback for mobile tap actions */
+        cursor: auto !important;
       }
       .cursor-dot, .cursor-ring {
-        display: none !important; /* Hide custom cursor on mobile */
+        display: none !important;
       }
       .nav-links-desktop {
         display: none;
@@ -3729,8 +3610,6 @@ const CustomStyles = () => (
         gap: 12px;
         text-align: center;
       }
-
-      /* Hero vertical text positioning on mobile */
       .hero-bottom-left {
         position: relative;
         writing-mode: horizontal-tb;
@@ -3740,16 +3619,61 @@ const CustomStyles = () => (
         margin-top: 2rem;
         padding-left: 0.5rem;
       }
+      .hero-grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 5rem 1.2rem 2rem 1.2rem;
+        height: auto;
+        gap: 1.5rem;
+      }
+      .dev-hero {
+        height: auto;
+        min-height: 100vh;
+      }
+      .hero-illustration-wrapper {
+        max-width: 280px;
+        margin-top: 1rem;
+      }
+      .hero-illustration-img {
+        max-height: 40vh;
+      }
 
-      /* Hacker responsive styling - no horizontal page scroll, scroll only inside containers */
+      /* Hacker responsive styling */
       .hacker-portfolio-wrapper {
         overflow-x: hidden;
       }
-      .hacker-terminal-body {
-        width: 100%;
-        max-width: 900px;
-        min-width: 0 !important;
-        padding: 4rem 1.2rem 6rem 1.2rem;
+      .hacker-terminal-container {
+        height: 100vh;
+      }
+      .terminal-history-scroller {
+        padding: 3.5rem 1rem 1.5rem 1rem;
+        font-size: 12px;
+        gap: 1.2rem;
+      }
+      .terminal-output-text {
+        font-size: 12px;
+      }
+      .terminal-prompt-text {
+        font-size: 12px;
+      }
+      .history-command-text {
+        font-size: 12px;
+      }
+      .terminal-typed-text {
+        font-size: 12px;
+      }
+      .terminal-cursor-block {
+        width: 8px;
+        height: 14px;
+      }
+      .sv-panels-noir {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 0.8rem;
+        height: calc(100% - 40px);
+      }
+      .sv-panel-noir-1, .sv-panel-noir-2, .sv-panel-noir-3, .sv-panel-noir-4 {
+        grid-column: 1 / 2;
       }
     }
 
@@ -3770,6 +3694,7 @@ const CustomStyles = () => (
         align-self: flex-start;
       }
     }
+
   `}</style>
 );
 
