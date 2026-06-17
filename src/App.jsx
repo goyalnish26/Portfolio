@@ -199,14 +199,11 @@ The learning never stops.
 The canon isn't the destination.
 Breaking it is.`;
 
-const CONTACT_TEXT = `Email: goyalnishchal71@gmail.com
-LinkedIn: linkedin.com/in/nishchal-goyal-6409a5289
-GitHub: github.com/goyalnish26
-
-Open to: SOC Analyst · Security Intern · 
-         Pentesting · Backend Development
-Location: Remote or Jaipur-based
-Response: < 24 hours`;
+const CONTACT_TEXT_JSX = () => (
+  <pre className="terminal-output-text">
+    {'Email: '}<a href="mailto:goyalnishchal71@gmail.com" target="_blank" rel="noopener noreferrer" className="terminal-link">goyalnishchal71@gmail.com</a>{`\nLinkedIn: `}<a href="https://linkedin.com/in/nishchal-goyal-6409a5289" target="_blank" rel="noopener noreferrer" className="terminal-link">linkedin.com/in/nishchal-goyal-6409a5289</a>{`\nGitHub: `}<a href="https://github.com/goyalnish26" target="_blank" rel="noopener noreferrer" className="terminal-link">github.com/goyalnish26</a>{`\n\nOpen to: SOC Analyst · Security Intern · \n         Pentesting · Backend Development\nLocation: Remote or Jaipur-based\nResponse: < 24 hours`}
+  </pre>
+);
 
 const CANON_TEXT = `Canon Event 1:
   Everyone told me: ECE = embedded systems
@@ -360,29 +357,40 @@ Making coffee... ✓ Complete`
 ];
 
 const getGreetingOutput = () => {
-  const asciiLines = [
-    " ███╗   ██╗██╗███████╗██╗  ██╗ ██████╗██╗  ██╗ █████╗ ██╗                       ,##,,eew,",
-    " ████╗  ██║██║██╔════╝██║  ██║██╔════╝██║  ██║██╔══██╗██║                     ,##############C",
-    " ██╔██╗ ██║██║███████╗███████║██║     ███████║███████║██║                  a###############@##",
-    " ██║╚██╗██║██║╚════██║██╔══██║██║     ██╔══██║██╔══██║██║                 7####^`^\"7W7^\"@####",
-    " ██║ ╚████║██║███████║██║  ██║╚██████╗██║  ██║██║  ██║███████╗        @#@b`         ^@#@^",
-    " ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝         ##^,,,,   ,,,,^#^",
-    "                                                                     ,,@######\"#######=",
-    "                                                                      .''555\"` '5555b|",
-    "                                                                      T\"@  ,,,^,mg,@,*",
-    "                                                                         %p||`~~'.#`",
-    "                                                                          ^Wp  ,#T",
-    "                                                                         :b''/ Y \\\\b^}",
-    "                                                                      ,^    / \\\\_/ \\\\ 'b 3-",
-    "                                                                  .<` 'p    \\\\ / \\\\ / #   b   *.",
-    "                                                                {      }   # \\\\_Y_/b   [",
-    "                                                                C      3 * @#######Nl      `",
-    "                                                               '            ^@##b     ($    !"
+  const nameLines = [
+    " ███╗   ██╗██╗███████╗██╗  ██╗ ██████╗██╗  ██╗ █████╗ ██╗     ",
+    " ████╗  ██║██║██╔════╝██║  ██║██╔════╝██║  ██║██╔══██╗██║     ",
+    " ██╔██╗ ██║██║███████╗███████║██║     ███████║███████║██║     ",
+    " ██║╚██╗██║██║╚════██║██╔══██║██║     ██╔══██║██╔══██║██║     ",
+    " ██║ ╚████║██║███████║██║  ██║╚██████╗██║  ██║██║  ██║███████╗",
+    " ╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝"
+  ];
+  const figureLines = [
+    "                       ,##,,eew,",
+    "                     ,##############C",
+    "                  a###############@##",
+    "                 7####^`^\"7W7^\"@####",
+    "                 @#@b`         ^@#@^",
+    "                  ##^,,,,   ,,,,^#^",
+    "                 ,,@######\"#######=",
+    "                  .''555\"` '5555b|",
+    "                  T\"@  ,,,^,mg,@,*",
+    "                     %p||`~~'.#`",
+    "                      ^Wp  ,#T",
+    "                     :b''@@b^}",
+    "                  ,^      ^      b 3-",
+    "              .<` 'p    <🕷>    b   *.",
+    "            {      }   #\"GpGb   [",
+    "            C      3 * @#######Nl      `",
+    "           '            ^@##b     ($    !"
   ];
   return (
     <div className="terminal-system-greeting">
       <pre className="terminal-ascii-art">
-        {asciiLines.join("\n")}
+        {nameLines.join("\n")}
+      </pre>
+      <pre className="terminal-ascii-art" style={{ marginTop: '0.8rem' }}>
+        {figureLines.join("\n")}
       </pre>
       <div className="terminal-welcome-msg" style={{ marginTop: '1rem' }}>Welcome back.</div>
       <div className="terminal-welcome-sub" style={{ fontStyle: 'italic', margin: '0.4rem 0', color: 'var(--hacker-secondary)' }}>
@@ -424,6 +432,7 @@ function App() {
   const [lastLoginTime, setLastLoginTime] = useState('');
   const [canonRejectedActive, setCanonRejectedActive] = useState(false);
   const [exitingTerminal, setExitingTerminal] = useState(false);
+  const [unmaskProtocolState, setUnmaskProtocolState] = useState(null); // null, 'exit', 'sync', 'off'
 
   const terminalInputRef = useRef(null);
   const terminalHistoryRef = useRef(null);
@@ -799,62 +808,23 @@ function App() {
         case 'project': {
           const targetProj = args[0] ? args[0].toLowerCase() : '';
           if (targetProj === 'aegisguard') {
-            output = <TerminalText>{`AegisGuard — Real-time Security Monitoring Platform
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Real-time log monitoring tailing auth.log and
-web_access.log streams. Detects:
-
-  • SSH Brute Force (5+ failed attempts per 60s window)
-  • SQL Injection patterns
-  • Cross-Site Scripting (XSS) vectors
-  • Path Traversal attempts
-  • Sensitive directory discovery
-
-Custom regex rules engine. Zero dependencies.
-Live attack simulator sandbox for testing.
-Discord webhook alerts for High + Critical severity events.
-
-Stack: Python · FastAPI · SQLite · JavaScript
-
-Repository: github.com/goyalnish26/AegisGuard
-Live Demo: goyalnish26.github.io/AegisGuard`}</TerminalText>;
+            output = (
+              <pre className="terminal-output-text">
+                {`AegisGuard — Real-time Security Monitoring Platform\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nReal-time log monitoring tailing auth.log and\nweb_access.log streams. Detects:\n\n  • SSH Brute Force (5+ failed attempts per 60s window)\n  • SQL Injection patterns\n  • Cross-Site Scripting (XSS) vectors\n  • Path Traversal attempts\n  • Sensitive directory discovery\n\nCustom regex rules engine. Zero dependencies.\nLive attack simulator sandbox for testing.\nDiscord webhook alerts for High + Critical severity events.\n\nStack: Python · FastAPI · SQLite · JavaScript\n\nRepository: `}<a href="https://github.com/goyalnish26/AegisGuard" target="_blank" rel="noopener noreferrer" className="terminal-link">github.com/goyalnish26/AegisGuard</a>{`\nLive Demo: `}<a href="https://goyalnish26.github.io/AegisGuard" target="_blank" rel="noopener noreferrer" className="terminal-link">goyalnish26.github.io/AegisGuard</a>
+              </pre>
+            );
           } else if (targetProj === 'intelscope' || targetProj === 'intelscope-pulse') {
-            output = <TerminalText>{`IntelScope-Pulse — CVE Threat Intelligence Dashboard
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Live threat intelligence dashboard pulling CVE data
-from the NVD API. Features:
-
-  • Dynamic 90-day rolling window queries
-  • Real-time severity breakdown charts
-  • Persistent CVE watchlist
-  • Actionable threat classification
-
-Built for analysts who want signal, not noise.
-
-Stack: React · NVD API · Chart.js
-
-Repository: github.com/goyalnish26/IntelScope-Pulse`}</TerminalText>;
+            output = (
+              <pre className="terminal-output-text">
+                {`IntelScope-Pulse — CVE Threat Intelligence Dashboard\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nLive threat intelligence dashboard pulling CVE data\nfrom the NVD API. Features:\n\n  • Dynamic 90-day rolling window queries\n  • Real-time severity breakdown charts\n  • Persistent CVE watchlist\n  • Actionable threat classification\n\nBuilt for analysts who want signal, not noise.\n\nStack: React · NVD API · Chart.js\n\nRepository: `}<a href="https://github.com/goyalnish26/IntelScope-Pulse" target="_blank" rel="noopener noreferrer" className="terminal-link">github.com/goyalnish26/IntelScope-Pulse</a>
+              </pre>
+            );
           } else if (targetProj === 'writeblog') {
-            output = <TerminalText>{`WriteBlog — Full-Stack Blogging Platform
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Polished Flask blogging application with:
-
-  • Role-based authentication (reader/author/admin)
-  • Markdown editor with live preview
-  • Nested comments system
-  • Likes and bookmarks
-  • Image uploads
-  • Admin analytics dashboard
-  • Rate-limited auth routes
-  • Full Docker + CI/CD pipeline
-
-Stack: Python · Flask · SQLAlchemy · Bootstrap 5 ·
-       Chart.js · Docker · GitHub Actions
-
-Repository: github.com/goyalnish26/writeblog`}</TerminalText>;
+            output = (
+              <pre className="terminal-output-text">
+                {`WriteBlog — Full-Stack Blogging Platform\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nPolished Flask blogging application with:\n\n  • Role-based authentication (reader/author/admin)\n  • Markdown editor with live preview\n  • Nested comments system\n  • Likes and bookmarks\n  • Image uploads\n  • Admin analytics dashboard\n  • Rate-limited auth routes\n  • Full Docker + CI/CD pipeline\n\nStack: Python · Flask · SQLAlchemy · Bootstrap 5 ·\n       Chart.js · Docker · GitHub Actions\n\nRepository: `}<a href="https://github.com/goyalnish26/writeblog" target="_blank" rel="noopener noreferrer" className="terminal-link">github.com/goyalnish26/writeblog</a>
+              </pre>
+            );
           } else {
             output = <TerminalText>{`Project not found.
 Available: aegisguard, intelscope, writeblog`}</TerminalText>;
@@ -871,7 +841,7 @@ Available: aegisguard, intelscope, writeblog`}</TerminalText>;
           output = <TerminalText>{JOURNEY_TEXT}</TerminalText>;
           break;
         case 'contact':
-          output = <TerminalText>{CONTACT_TEXT}</TerminalText>;
+          output = <CONTACT_TEXT_JSX />;
           break;
         case 'canon':
           output = <TerminalText>{CANON_TEXT}</TerminalText>;
@@ -959,7 +929,14 @@ to view available themes.`}</TerminalText>;
             setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Welcome back.</TerminalText> }]);
           }, 2500);
           setTimeout(() => {
-            triggerTransition('dev');
+            // Trigger unmask protocol overlay (black bg, reverse text)
+            setUnmaskProtocolState('exit');
+            setTimeout(() => setUnmaskProtocolState('sync'), 800);
+            setTimeout(() => setUnmaskProtocolState('off'), 1600);
+            setTimeout(() => {
+              triggerTransition('dev');
+              setTimeout(() => setUnmaskProtocolState(null), 1000);
+            }, 2200);
           }, 3000);
           return;
         default:
@@ -1030,7 +1007,14 @@ to view available themes.`}</TerminalText>;
             if (mode === 'dev') {
               triggerMaskProtocol();
             } else {
-              triggerTransition('dev');
+              // Trigger unmask protocol overlay for hacker→dev
+              setUnmaskProtocolState('exit');
+              setTimeout(() => setUnmaskProtocolState('sync'), 800);
+              setTimeout(() => setUnmaskProtocolState('off'), 1600);
+              setTimeout(() => {
+                triggerTransition('dev');
+                setTimeout(() => setUnmaskProtocolState(null), 1000);
+              }, 2200);
             }
           }}
         >
@@ -1085,11 +1069,11 @@ to view available themes.`}</TerminalText>;
             <div className="nav-container">
               <div className="nav-logo">NG.</div>
               <div className="nav-links-desktop">
-                <a href="#about">01. LORE</a>
-                <a href="#skills">02. SKILLS</a>
-                <a href="#projects">03. PROJECTS</a>
-                <a href="#experience">04. EXPERIENCE</a>
-                <a href="#contact" className="nav-cta">GET IN TOUCH</a>
+                <a href="#about" onClick={(e) => { e.preventDefault(); document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }); }}>01. LORE</a>
+                <a href="#skills" onClick={(e) => { e.preventDefault(); document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }); }}>02. SKILLS</a>
+                <a href="#projects" onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>03. PROJECTS</a>
+                <a href="#experience" onClick={(e) => { e.preventDefault(); document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' }); }}>04. EXPERIENCE</a>
+                <a href="#contact" className="nav-cta" onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}>GET IN TOUCH</a>
               </div>
               <button className="nav-menu-btn" onClick={() => setMenuOpen(true)}>[ menu ]</button>
             </div>
@@ -1100,11 +1084,11 @@ to view available themes.`}</TerminalText>;
             <div className="dev-menu-overlay">
               <button className="dev-menu-close" onClick={() => setMenuOpen(false)}>[ close ]</button>
               <div className="dev-menu-links">
-                <a href="#about" onClick={() => setMenuOpen(false)}>01. LORE</a>
-                <a href="#skills" onClick={() => setMenuOpen(false)}>02. SKILLS</a>
-                <a href="#projects" onClick={() => setMenuOpen(false)}>03. PROJECTS</a>
-                <a href="#experience" onClick={() => setMenuOpen(false)}>04. EXPERIENCE</a>
-                <a href="#contact" onClick={() => setMenuOpen(false)}>05. CONTACT</a>
+                <a href="#about" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>01. LORE</a>
+                <a href="#skills" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setTimeout(() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>02. SKILLS</a>
+                <a href="#projects" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setTimeout(() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>03. PROJECTS</a>
+                <a href="#experience" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setTimeout(() => document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>04. EXPERIENCE</a>
+                <a href="#contact" onClick={(e) => { e.preventDefault(); setMenuOpen(false); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>05. CONTACT</a>
               </div>
             </div>
           )}
@@ -1231,16 +1215,16 @@ to view available themes.`}</TerminalText>;
                   <h3 className="dark-panel-title">The other side.</h3>
 
                   <div className="dark-panel-grid">
-                    <DevCyberSkill name="Network Security" percentage={72} />
-                    <DevCyberSkill name="SIEM &amp; Log Analysis" percentage={65} />
-                    <DevCyberSkill name="Web App Pentesting" percentage={55} />
-                    <DevCyberSkill name="OverTheWire Bandit (Lvl 12+)" percentage={75} />
-                    <DevCyberSkill name="TryHackMe CS101" percentage={70} />
-                    <DevCyberSkill name="Threat Intelligence" percentage={58} />
-                    <DevCyberSkill name="OSINT &amp; CVE Research" percentage={52} />
-                    <DevCyberSkill name="Burp Suite / NMAP / Wireshark" percentage={48} />
-                    <DevCyberSkill name="Metasploit Framework (learning)" percentage={35} />
-                    <DevCyberSkill name="SQL Injection / XSS" percentage={45} />
+                    <DevCyberSkill name="Network Security" percentage={22} />
+                    <DevCyberSkill name="SIEM &amp; Log Analysis" percentage={18} />
+                    <DevCyberSkill name="Web App Pentesting" percentage={15} />
+                    <DevCyberSkill name="OverTheWire Bandit (Lvl 12+)" percentage={25} />
+                    <DevCyberSkill name="TryHackMe CS101" percentage={20} />
+                    <DevCyberSkill name="Threat Intelligence" percentage={16} />
+                    <DevCyberSkill name="OSINT &amp; CVE Research" percentage={14} />
+                    <DevCyberSkill name="Burp Suite / NMAP / Wireshark" percentage={19} />
+                    <DevCyberSkill name="Metasploit Framework (learning)" percentage={10} />
+                    <DevCyberSkill name="SQL Injection / XSS" percentage={17} />
                   </div>
 
                   <div className="dark-panel-pathway">
@@ -1500,6 +1484,23 @@ to view available themes.`}</TerminalText>;
             )}
             {maskProtocolState === 'ready' && (
               <div className="mask-phase-text">Mask on.</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Unmask Protocol Overlay — Terminal to Dev (Black BG, opposite text) */}
+      {unmaskProtocolState !== null && (
+        <div className="unmask-protocol-overlay">
+          <div className="unmask-protocol-content">
+            {unmaskProtocolState === 'exit' && (
+              <div className="unmask-phase-text">Exiting Terminal Session...</div>
+            )}
+            {unmaskProtocolState === 'sync' && (
+              <div className="unmask-phase-text">Synchronizing Dimensions...</div>
+            )}
+            {unmaskProtocolState === 'off' && (
+              <div className="unmask-phase-text">Mask Off.</div>
             )}
           </div>
         </div>
@@ -2324,28 +2325,33 @@ const CustomStyles = () => (
     }
     .hero-illustration-wrapper {
       width: 100%;
-      max-width: 420px;
+      max-width: 520px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .hero-illustration-img {
-      width: 100%;
+      width: 110%;
       height: auto;
-      max-height: 60vh;
+      max-height: 72vh;
       object-fit: contain;
       opacity: 0.95;
-      filter: drop-shadow(0 10px 20px rgba(45, 36, 22, 0.08));
-      animation: illustration-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      filter: drop-shadow(0 10px 30px rgba(45, 36, 22, 0.12));
+      animation: illustration-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards, hero-float 4s ease-in-out 1.5s infinite;
       mix-blend-mode: multiply;
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
     }
     .hero-illustration-img:hover {
-      transform: scale(1.05);
+      transform: scale(1.12);
+      filter: drop-shadow(0 15px 40px rgba(45, 36, 22, 0.18));
     }
     @keyframes illustration-fade-in {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 0.95; transform: translateY(0); }
+    }
+    @keyframes hero-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
     .spider-web-element {
       position: absolute;
@@ -3441,6 +3447,52 @@ const CustomStyles = () => (
       to { opacity: 1; }
     }
 
+    /* Unmask Protocol Overlay — Terminal to Dev (Black) */
+    .unmask-protocol-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #0D0D0D;
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: unmaskOverlayFadeIn 0.3s ease forwards;
+    }
+    .unmask-protocol-content {
+      text-align: center;
+      color: #00FF41;
+      font-size: clamp(1.2rem, 3vw, 2.2rem);
+      font-weight: bold;
+    }
+    .unmask-phase-text {
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
+    }
+    @keyframes unmaskOverlayFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Terminal clickable links */
+    .terminal-link {
+      color: var(--hacker-secondary, #E9C46A);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+    .terminal-link:hover {
+      color: #00FF41;
+      text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+      text-decoration-style: solid;
+    }
+
     /* Spider Sense Bolts */
     .spider-sense-bolts {
       position: absolute;
@@ -3756,11 +3808,12 @@ const CustomStyles = () => (
         min-height: 100vh;
       }
       .hero-illustration-wrapper {
-        max-width: 280px;
+        max-width: 340px;
         margin-top: 1rem;
       }
       .hero-illustration-img {
-        max-height: 40vh;
+        width: 100%;
+        max-height: 45vh;
       }
 
       /* Hacker responsive styling */
