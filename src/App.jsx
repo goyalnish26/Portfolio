@@ -1089,7 +1089,7 @@ to view available themes.`}</TerminalText>;
           </div>
           <div className={`entry-center-box ${entryExpandingSide ? 'entry-center-hidden' : ''}`}>
             <div className="entry-question">Who are you looking for?</div>
-            <div className="entry-subtext">"He is both. Always has been."</div>
+            <div className="entry-subtext">"I am both. Always have been."</div>
           </div>
         </div>
       )}
@@ -1100,7 +1100,7 @@ to view available themes.`}</TerminalText>;
           {/* Sticky Navigation */}
           <nav className={`dev-nav ${scrolled ? 'scrolled' : ''}`}>
             <div className="nav-container">
-              <div className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>NG.</div>
+              <div className="nav-logo" role="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>NG.</div>
               <div className="nav-links-desktop">
                 <a href="#about" onClick={(e) => { e.preventDefault(); document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }); }}>01. LORE</a>
                 <a href="#skills" onClick={(e) => { e.preventDefault(); document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }); }}>02. SKILLS</a>
@@ -1496,16 +1496,16 @@ to view available themes.`}</TerminalText>;
 
           {/* Post-credits sentinel — hidden below footer */}
           <div ref={devPostCreditsSentinelRef} style={{ height: '1px', width: '100%' }} />
-        </div>
-      )}
 
-      {/* Dev Mode Post-Credits Timeline */}
-      {devPostCreditsState !== null && (
-        <div className="dev-post-credits-timeline">
-          {devPostCreditsState === 'wait' && <span>wait</span>}
-          {devPostCreditsState === 'rejected' && <span>Canon rejected</span>}
-          {devPostCreditsState === 'loading' && <span>Story still loading</span>}
-          {devPostCreditsState === 'cursor' && <span className="blinking-cursor">_</span>}
+          {/* Dev Mode Post-Credits Timeline */}
+          {devPostCreditsState !== null && (
+            <div className="dev-post-credits-timeline">
+              {devPostCreditsState === 'wait' && <span>wait</span>}
+              {devPostCreditsState === 'rejected' && <span>Canon rejected</span>}
+              {devPostCreditsState === 'loading' && <span>Story still loading</span>}
+              {devPostCreditsState === 'cursor' && <span className="blinking-cursor">_</span>}
+            </div>
+          )}
         </div>
       )}
 
@@ -3652,22 +3652,21 @@ const CustomStyles = () => (
 
     /* Dev Mode Post-Credits Timeline */
     .dev-post-credits-timeline {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
+      padding: 1.5rem 0 3rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-family: 'DM Mono', monospace;
       font-size: 0.9rem;
       color: #8A7F6B;
       letter-spacing: 2px;
-      z-index: 1000;
       text-transform: uppercase;
       pointer-events: none;
       animation: fadeInPostCredits 0.5s ease forwards;
     }
     @keyframes fadeInPostCredits {
-      from { opacity: 0; transform: translate(-50%, 10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .blinking-cursor {
       animation: blinkCursorPost 1s infinite step-end;

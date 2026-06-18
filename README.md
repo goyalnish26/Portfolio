@@ -28,9 +28,9 @@
 
 This is not a standard portfolio. It is built around a structural idea borrowed from **Spider-Man: Into the Spider-Verse** — every Spider-Person has their own distinct art style. Same hero, different visual language.
 
-**Nishchal Goyal** is two things simultaneously:
+I am two things simultaneously:
 - A **backend developer** building production REST APIs, Odoo ERP modules, and full-stack platforms
-- An **offensive security learner** doing OverTheWire, TryHackMe, and building his own SIEM tools
+- An **offensive security learner** doing OverTheWire, TryHackMe, and building my own SIEM tools
 
 When you open the portfolio, you're asked to **choose**. That choice matters.
 
@@ -40,7 +40,7 @@ Who are you looking for?
   [ D ]  The Developer
   [ H ]  The Security Researcher
 
-         "He is both. Always has been."
+         "I am both. Always have been."
 ```
 
 ---
@@ -202,7 +202,7 @@ The portfolio is packed with hidden interactive features:
   - `cat flag.txt` → yields a secret flag key.
 * **Breach Protocol CTF (Post Credits)**: Scroll to the bottom of the active terminal session and wait for 5 seconds to initiate a terminal-styled 3-layer cybersecurity CTF game. Decrypt hex codes, complete terminal phrases, and breach the OS to unlock:
   - The victory flag `flag{c4n0n_br34k3r_1n_th3_n3tw0rk}`.
-  - An exclusive direct contact terminal card for Nishchal.
+  - An exclusive direct contact terminal card.
   *Note: CTF progress is saved in `sessionStorage` under `breachLayer` so your progress persists if you scroll away or reload.*
 
 ---
@@ -220,15 +220,15 @@ The portfolio is packed with hidden interactive features:
 
 ---
 
-## 👤 About Nishchal
+## 👤 About Me
 
 **B.Tech ECE · SKIT Jaipur · Batch 2027**
 
-> *An ECE student doing backend development and cybersecurity in a world that tells ECE students to just do embedded systems or go for a government job. Miles Morales didn't accept the canon. Neither does he.*
+> *I am an ECE student doing backend development and cybersecurity in a world that tells ECE students to just do embedded systems or go for a government job. Miles Morales didn't accept the canon. Neither do I.*
 
 - 🏢 **Interning** at Dreamsoft4u — building Odoo 15 REST API modules
 - 🔐 **Security pathway** — OverTheWire → TryHackMe → HackTheBox → eJPT → OSCP
-- 🏍️ Rides a Honda CB350 Classic (2024)
+- 🏍️ I ride a Honda CB350 Classic (2024)
 - 📍 Based in Jaipur, Rajasthan, India
 
 ### Contact
