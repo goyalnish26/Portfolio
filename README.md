@@ -54,18 +54,21 @@ Who are you looking for?
 |---|---|
 | Background | `#FEFAE0` — warm butter cream |
 | Accent | `#E9C46A` — golden yellow |
-| Fonts | Playfair Display · DM Sans · DM Mono |
-| Feel | High-end print magazine, asymmetric grids, dramatic type sizing |
+| Fonts | Space Grotesk · Playfair Display · DM Sans · DM Mono |
+| Feel | High-end print magazine, asymmetric grids, dramatic bold type sizing |
 
 **Features:**
-- Staggered letter-drop hero animation (Nishchal / outline Goyal)
-- Subtle SVG spider web in corner at 18% opacity
-- Hidden `// breaking the canon since 2021` in the hero
-- Two-column editorial About section with decorative large number
-- Flowing skill tag cloud + dark magazine insert panel for cybersecurity
-- Staggered, offset project cards (not a uniform grid — intentional)
-- Golden vertical timeline for experience
-- 2×2 certification grid
+- **Space Grotesk Hero Name:** Staggered letter-drop hero animation ("Nishchal" bold, "Goyal" outline with golden stroke and text shadow), using `white-space: nowrap` to stay clean across zoom levels (75% to 200%).
+- **Interactive Favicon:** Uses the processed transparent `hero.png` as the site icon.
+- **Top-left Navigation:** Clickable `NG.` logo in the header with a scroll-to-top handler.
+- **Subtle SVG spider web** in corner at 18% opacity.
+- **Hidden `// breaking the canon since 2021`** in the hero.
+- **Two-column editorial About section** with decorative large number.
+- **Flowing skill tag cloud** + dark magazine insert panel for cybersecurity.
+- **Staggered, offset project cards** (not a uniform grid — intentional).
+- **Golden vertical timeline** for experience.
+- **2×2 certification grid**.
+- **Split Quote Layout:** Miles Morales quote in the footer split across two lines for visual balance.
 
 ---
 
@@ -78,6 +81,7 @@ Who are you looking for?
 | Accent | `#FFB300` — amber warnings |
 | Font | JetBrains Mono — the only font |
 | Feel | You've SSH'd into someone's actual system |
+| Themes | Includes `peter` theme with a dynamic Red + Blue Spider-Man suit interplay |
 
 **Features:**
 - Boot sequence animation (15 lines, staggered timing)
