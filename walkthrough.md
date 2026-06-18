@@ -163,8 +163,35 @@ Each section prefixed with a `$` command, then delayed output appears:
 
 | File | Change |
 |---|---|
-| [`src/App.jsx`](file:///d:/programs/Portfolio/src/App.jsx) | **Created** — entire dual-identity portfolio |
+| [`src/App.jsx`](file:///d:/programs/Portfolio/src/App.jsx) | Modified — Added `isMaskProtocolRunning` guard, updated name typography, made NG. logo clickable, updated Miles Morales quote |
 | [`src/index.css`](file:///d:/programs/Portfolio/src/index.css) | Replaced with minimal reset + `cursor: none` |
-| [`index.html`](file:///d:/programs/Portfolio/index.html) | Updated title + SEO meta tags |
+| [`index.html`](file:///d:/programs/Portfolio/index.html) | Updated title, SEO meta tags, and changed favicon to transparent `/hero.png` |
 | `src/App.css` | Deleted (not needed) |
 
+---
+
+## Recent Updates (June 2026)
+
+1. **Hero Illustration Processing:**
+   - The user-uploaded `hero.png` had a baked-in gray/white checkered background.
+   - We processed the image using a flood-fill script from the borders to remove the outer grid.
+   - We then extracted the exact grid size ($S=19$px) and cleared the remaining checkerboard grid inside the internal gaps (like under the **coffee mug handle** and between the **shoe laces**) without affecting solid white illustration details.
+2. **Maskon & Maskoff Transition Fixes:**
+   - Added a React ref-based state guard `isMaskProtocolRunning` to prevent the keydown listener and timeouts from double-triggering the transition animation sequence due to state update batching.
+   - Updated the `maskoff` command handler in terminal mode to trigger the unmask overlay immediately (removed the 3-second delay) and bypass appending the command/exiting text to the terminal history, ensuring a seamless and clean black screen overlay transition.
+3. **Hero Name Redesign (Geometric Bold):**
+   - Switched the hero name font from 'Playfair Display' to **'Space Grotesk'** for a modern, geometric, tech-confident look.
+   - Removed italics from "Nishchal" so it is straight up bold (font-weight: 800).
+   - Structured it to show "Nishchal" on the first line and "Goyal" (with the golden accent outline stroke) directly under it.
+   - **Responsive Wrapping Fix:** Added `white-space: nowrap;` and `max-width: 600px;` to the name styling to guarantee that "Nishchal" and "Goyal" stay entirely on their respective lines without broken word wraps across all viewports and browser zoom levels (from 75% to 200%). Added `max-width: 500px;` to the tagline to prevent awkward wrapping.
+4. **Header Logo Navigation:**
+   - Made the top-left logo `NG.` clickable with a smooth hover effect and scroll-to-top handler.
+5. **Miles Morales Quote Update:**
+   - Updated and split the dev mode footer quote across two lines:
+     *"Everyone keeps telling me how my story is supposed to go.*
+     *Nah… I’m-a do my own thing."* — Miles Morales
+6. **Favicon Update:**
+   - Replaced the purple lightning SVG favicon with the transparent `hero.png` illustration.
+7. **Peter Theme Color Overhaul:**
+   - Re-designed the custom `peter` theme inside Hacker Mode to create a high-contrast Spider-Man suit aesthetic.
+   - Replaced the redundant all-red variables with an interplay of solid bright red for primary text (`#FF0000`) and solid bright blue for accent elements, highlights, glows, and borders (`#0066FF`).

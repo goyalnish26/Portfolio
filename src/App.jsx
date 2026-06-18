@@ -453,7 +453,7 @@ function App() {
   const entryTransition = (targetMode) => {
     if (entryExpandingSide) return;
     setEntryExpandingSide(targetMode);
-    
+
     // After expand animation completes (700ms), switch mode
     setTimeout(() => {
       setMode(targetMode);
@@ -505,6 +505,8 @@ function App() {
         const timeStr = now.toTimeString().split(' ')[0];
         const yearStr = now.getFullYear();
         setLastLoginTime(`${dayStr} ${monthStr} ${dateStr} ${timeStr} ${yearStr}`);
+      } else if (targetMode === 'dev') {
+        isMaskProtocolRunning.current = false;
       }
     }, 400);
 
@@ -543,7 +545,8 @@ function App() {
   const devPostCreditsSentinelRef = useRef(null);
 
   const triggerMaskProtocol = () => {
-    if (maskProtocolState !== null) return;
+    if (isMaskProtocolRunning.current) return;
+    isMaskProtocolRunning.current = true;
     setMaskProtocolState('init');
     setTimeout(() => {
       setMaskProtocolState('sync');
@@ -555,6 +558,7 @@ function App() {
       triggerTransition('hacker');
       setTimeout(() => {
         setMaskProtocolState(null);
+        isMaskProtocolRunning.current = false;
       }, 1000);
     }, 2600);
   };
@@ -566,6 +570,7 @@ function App() {
 
   // Dev mode keydown buffer for "maskon"
   const devKeyBuffer = useRef('');
+  const isMaskProtocolRunning = useRef(false);
   useEffect(() => {
     if (mode !== 'dev') return;
     const handleDevKeyDown = (e) => {
@@ -600,15 +605,15 @@ function App() {
           if (isSentinelIntersecting.current) {
             sessionStorage.setItem('devPostCreditsSeen', 'true');
             setDevPostCreditsState('wait');
-            
+
             setTimeout(() => {
               setDevPostCreditsState('rejected');
             }, 2000);
-            
+
             setTimeout(() => {
               setDevPostCreditsState('loading');
             }, 3500);
-            
+
             setTimeout(() => {
               setDevPostCreditsState('cursor');
             }, 4500);
@@ -660,7 +665,7 @@ function App() {
         const triggers = document.querySelectorAll('.spider-sense-trigger');
         let near = false;
         const radius = window.innerWidth < 768 ? 60 : 40;
-        
+
         for (let i = 0; i < triggers.length; i++) {
           const rect = triggers[i].getBoundingClientRect();
           const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
@@ -812,16 +817,16 @@ function App() {
       setHackerInput('');
       setCursorPos(0);
       setHistoryIndex(-1);
-      
+
       if (!cmdTrimmed) {
         setHackerHistory(prev => [...prev, { command: '', output: null }]);
         return;
       }
-      
+
       const parts = cmdTrimmed.split(/\s+/);
       const command = parts[0].toLowerCase();
       const args = parts.slice(1);
-      
+
       let output = null;
 
       // Abbreviations mapping
@@ -958,32 +963,19 @@ to view available themes.`}</TerminalText>;
           setHackerHistory([]);
           return;
         case 'maskoff':
-          setExitingTerminal(true);
-          setHackerHistory(prev => [...prev, { command: rawCmd, output: <TerminalText>Exiting terminal...</TerminalText> }]);
+          // Trigger unmask protocol overlay immediately (black bg, reverse text)
+          setUnmaskProtocolState('exit');
+          setTimeout(() => setUnmaskProtocolState('sync'), 800);
+          setTimeout(() => setUnmaskProtocolState('off'), 1600);
           setTimeout(() => {
-            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Synchronizing dimensions...</TerminalText> }]);
-          }, 1000);
-          setTimeout(() => {
-            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Mask off.</TerminalText> }]);
-          }, 2000);
-          setTimeout(() => {
-            setHackerHistory(prev => [...prev, { command: null, output: <TerminalText>Welcome back.</TerminalText> }]);
-          }, 2500);
-          setTimeout(() => {
-            // Trigger unmask protocol overlay (black bg, reverse text)
-            setUnmaskProtocolState('exit');
-            setTimeout(() => setUnmaskProtocolState('sync'), 800);
-            setTimeout(() => setUnmaskProtocolState('off'), 1600);
-            setTimeout(() => {
-              triggerTransition('dev');
-              setTimeout(() => setUnmaskProtocolState(null), 1000);
-            }, 2200);
-          }, 3000);
+            triggerTransition('dev');
+            setTimeout(() => setUnmaskProtocolState(null), 1000);
+          }, 2200);
           return;
         default:
           output = <TerminalText>{`Command not found: ${command}\nType 'help' for available commands.`}</TerminalText>;
       }
-      
+
       setHackerHistory(prev => [...prev, { command: rawCmd, output }]);
     }
   };
@@ -1007,9 +999,9 @@ to view available themes.`}</TerminalText>;
 
       {/* Custom Cursor Dot & Ring */}
       <div id="custom-cursor-dot" ref={cursorDotRef} className={`cursor-dot ${mode === 'dev' ? 'dev' : 'hacker'}`} />
-      <div 
-        id="custom-cursor-ring" 
-        ref={cursorRingRef} 
+      <div
+        id="custom-cursor-ring"
+        ref={cursorRingRef}
         className={`cursor-ring ${mode === 'dev' ? 'dev' : 'hacker'}`}
       >
         {mode === 'dev' && spiderSenseNear && (
@@ -1066,8 +1058,8 @@ to view available themes.`}</TerminalText>;
       {/* Screen 1: Entry Screen */}
       {(mode === 'entry' || entryExpandingSide) && (
         <div className={`entry-container ${entryExpandingSide ? 'entry-expanding' : ''}`}>
-          <div 
-            className={`entry-side dev-side ${entryExpandingSide === 'dev' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'hacker' ? 'entry-side-dismissed' : ''}`} 
+          <div
+            className={`entry-side dev-side ${entryExpandingSide === 'dev' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'hacker' ? 'entry-side-dismissed' : ''}`}
             onClick={() => entryTransition('dev')}
           >
             <div className="entry-side-content">
@@ -1081,8 +1073,8 @@ to view available themes.`}</TerminalText>;
             </div>
           </div>
           <div className={`entry-split-line ${entryExpandingSide ? 'entry-split-hidden' : ''}`}></div>
-          <div 
-            className={`entry-side hacker-side ${entryExpandingSide === 'hacker' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'dev' ? 'entry-side-dismissed' : ''}`} 
+          <div
+            className={`entry-side hacker-side ${entryExpandingSide === 'hacker' ? 'entry-side-chosen' : ''} ${entryExpandingSide === 'dev' ? 'entry-side-dismissed' : ''}`}
             onClick={() => entryTransition('hacker')}
           >
             <div className="entry-side-content">
@@ -1108,7 +1100,7 @@ to view available themes.`}</TerminalText>;
           {/* Sticky Navigation */}
           <nav className={`dev-nav ${scrolled ? 'scrolled' : ''}`}>
             <div className="nav-container">
-              <div className="nav-logo">NG.</div>
+              <div className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>NG.</div>
               <div className="nav-links-desktop">
                 <a href="#about" onClick={(e) => { e.preventDefault(); document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }); }}>01. LORE</a>
                 <a href="#skills" onClick={(e) => { e.preventDefault(); document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }); }}>02. SKILLS</a>
@@ -1136,7 +1128,7 @@ to view available themes.`}</TerminalText>;
 
           {/* Hero Section */}
           <header className="dev-hero">
-            <div 
+            <div
               className="spider-web-wrapper spider-sense-trigger"
               onClick={() => { setSpiderWebTooltip(true); setTimeout(() => setSpiderWebTooltip(false), 6000); }}
             >
@@ -1149,7 +1141,7 @@ to view available themes.`}</TerminalText>;
                 <div className="spider-tooltip-bold">That&apos;s exactly the kind of attention to detail I bring.</div>
               </div>
             )}
-            
+
             <div className="hero-grid-container">
               <div className="hero-left-column">
                 <div className="hero-content">
@@ -1207,7 +1199,7 @@ to view available themes.`}</TerminalText>;
                   <span className="about-pill">7.5 CGPA · No Backlogs</span>
                   <span className="about-pill">Batch 2027</span>
                   <span className="about-pill">Jaipur, Rajasthan</span>
-                  <span 
+                  <span
                     className="about-pill spider-sense-trigger interactive"
                     style={{ cursor: 'pointer' }}
                     onClick={triggerBikeRide}
@@ -1494,7 +1486,11 @@ to view available themes.`}</TerminalText>;
           <footer className="dev-footer">
             <div className="footer-content">
               <div>nishchal goyal · jaipur · 2026</div>
-              <div className="footer-quote">&quot;I&apos;ll break it.&quot; — Miles Morales</div>
+              <div className="footer-quote">
+                &quot;Everyone keeps telling me how my story is supposed to go.
+                <br />
+                Nah… I&apos;m-a do my own thing.&quot; — Miles Morales
+              </div>
             </div>
           </footer>
 
@@ -1549,8 +1545,8 @@ to view available themes.`}</TerminalText>;
 
       {/* Dynamic motorcycle runs */}
       {bikeRides.map(ride => (
-        <div 
-          key={ride.id} 
+        <div
+          key={ride.id}
           className="cb350-bike"
           style={{ animationDuration: window.innerWidth < 768 ? '1.8s' : '2.5s' }}
           onAnimationEnd={() => {
@@ -1573,7 +1569,7 @@ to view available themes.`}</TerminalText>;
               <span>nishchal@canon-breaker:~</span>
               <span className="status-tags">[SESSION ACTIVE]</span>
             </div>
-            
+
             <div className="terminal-history-scroller" ref={terminalHistoryRef}>
               {hackerHistory.map((item, idx) => (
                 <div key={idx} className="history-item-group">
@@ -1590,70 +1586,70 @@ to view available themes.`}</TerminalText>;
                   )}
                 </div>
               ))}
-              
+
               {!exitingTerminal && (
                 <>
-                <div className="terminal-input-row">
-                  <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
-                  <div className="terminal-input-container">
-                    <span className="terminal-typed-text">{hackerInput.slice(0, cursorPos)}</span>
-                    <span className="terminal-cursor-block">{cursorPos < hackerInput.length ? hackerInput[cursorPos] : ' '}</span>
-                    <span className="terminal-typed-text">{hackerInput.slice(cursorPos + 1)}</span>
-                    <input
-                      ref={terminalInputRef}
-                      className="terminal-hidden-input"
-                      type="text"
-                      value={hackerInput}
-                      onChange={(e) => {
-                        setHackerInput(e.target.value);
-                        setCursorPos(e.target.selectionStart);
-                        setTabSuggestions([]);
-                      }}
-                      onKeyDown={(e) => {
-                        setTimeout(() => {
+                  <div className="terminal-input-row">
+                    <span className="terminal-prompt-text">nishchal@canon-breaker:~$ </span>
+                    <div className="terminal-input-container">
+                      <span className="terminal-typed-text">{hackerInput.slice(0, cursorPos)}</span>
+                      <span className="terminal-cursor-block">{cursorPos < hackerInput.length ? hackerInput[cursorPos] : ' '}</span>
+                      <span className="terminal-typed-text">{hackerInput.slice(cursorPos + 1)}</span>
+                      <input
+                        ref={terminalInputRef}
+                        className="terminal-hidden-input"
+                        type="text"
+                        value={hackerInput}
+                        onChange={(e) => {
+                          setHackerInput(e.target.value);
+                          setCursorPos(e.target.selectionStart);
+                          setTabSuggestions([]);
+                        }}
+                        onKeyDown={(e) => {
+                          setTimeout(() => {
+                            if (terminalInputRef.current) {
+                              setCursorPos(terminalInputRef.current.selectionStart);
+                            }
+                          }, 0);
+                          handleTerminalKeyDown(e);
+                        }}
+                        onClick={() => {
                           if (terminalInputRef.current) {
                             setCursorPos(terminalInputRef.current.selectionStart);
                           }
-                        }, 0);
-                        handleTerminalKeyDown(e);
-                      }}
-                      onClick={() => {
-                        if (terminalInputRef.current) {
-                          setCursorPos(terminalInputRef.current.selectionStart);
-                        }
-                      }}
-                      onKeyUp={() => {
-                        if (terminalInputRef.current) {
-                          setCursorPos(terminalInputRef.current.selectionStart);
-                        }
-                      }}
-                      onFocus={() => {
-                        if (terminalInputRef.current) {
-                          setCursorPos(terminalInputRef.current.selectionStart);
-                        }
-                      }}
-                      autoFocus
-                      autoComplete="off"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                      spellCheck="false"
-                    />
+                        }}
+                        onKeyUp={() => {
+                          if (terminalInputRef.current) {
+                            setCursorPos(terminalInputRef.current.selectionStart);
+                          }
+                        }}
+                        onFocus={() => {
+                          if (terminalInputRef.current) {
+                            setCursorPos(terminalInputRef.current.selectionStart);
+                          }
+                        }}
+                        autoFocus
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
+                      />
+                    </div>
                   </div>
-                </div>
-                {tabSuggestions.length > 0 && (
-                  <div className="terminal-tab-suggestions">
-                    {tabSuggestions.join('  ')}
-                  </div>
-                )}
+                  {tabSuggestions.length > 0 && (
+                    <div className="terminal-tab-suggestions">
+                      {tabSuggestions.join('  ')}
+                    </div>
+                  )}
                 </>
               )}
             </div>
           </div>
-          
+
           <div className="crt-scanline"></div>
         </div>
       )}
-      
+
       {/* Canon Rejected Ending Noir Overlay */}
       {canonRejectedActive && (
         <div className="canon-rejected-overlay" onClick={() => setCanonRejectedActive(false)}>
@@ -1778,7 +1774,7 @@ const SpiderWebSVG = () => (
 // Stylesheet Injector Component
 const CustomStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Grotesk:wght@700;800&display=swap');
 
     /* CSS variables scoping */
     .root-wrapper-theme {
@@ -2251,6 +2247,11 @@ const CustomStyles = () => (
       font-weight: 900;
       font-size: 1.8rem;
       color: #2D2416;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    .nav-logo:hover {
+      opacity: 0.7;
     }
     .nav-links-desktop {
       display: flex;
@@ -2416,22 +2417,32 @@ const CustomStyles = () => (
     }
 
     .hero-heading {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 8vw, 6.5rem);
-      line-height: 0.9;
-      font-weight: 900;
-      margin: 0 0 1.5rem 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 8.5vw, 7.2rem);
+      line-height: 0.95;
+      font-weight: 800;
+      margin: 0 0 2rem 0;
       display: flex;
       flex-direction: column;
+      letter-spacing: -0.04em;
+      max-width: 600px;
     }
     .hero-heading-first {
-      color: #2D2416;
-      font-style: italic;
+      color: #1A1A1A;
+      font-style: normal;
+      white-space: nowrap;
     }
     .hero-heading-last {
-      -webkit-text-stroke: 2.5px #1A1A1A;
+      -webkit-text-stroke: 2px #E9C46A;
       color: transparent;
-      padding-left: 2vw;
+      padding-left: 4vw;
+      text-shadow: 0 0 40px rgba(233, 196, 106, 0.15);
+      transition: -webkit-text-stroke 0.3s ease, text-shadow 0.3s ease;
+      white-space: nowrap;
+    }
+    .hero-heading-last:hover {
+      -webkit-text-stroke: 2px #2D2416;
+      text-shadow: none;
     }
     .hero-letter {
       display: inline-block;
@@ -2451,6 +2462,7 @@ const CustomStyles = () => (
       margin: 0;
       padding-left: 0.5rem;
       line-height: 1.6;
+      max-width: 500px;
     }
     .hero-tagline-dim {
       color: #A89F8B;
@@ -3037,6 +3049,7 @@ const CustomStyles = () => (
     }
     .footer-quote {
       font-style: italic;
+      text-align: right;
     }
 
     /* Scroll reveal transitions */
@@ -3099,12 +3112,12 @@ const CustomStyles = () => (
     .hacker-portfolio-wrapper.theme-peter {
       --hacker-bg: #0a0a0a;
       --hacker-text-primary: #FF0000;
-      --hacker-text-bright: #FF0000;
-      --hacker-text-dim: #660000;
-      --hacker-accent: #FF0000;
-      --hacker-border: #660000;
-      --hacker-secondary: #FF0000;
-      --hacker-glow: rgba(255, 0, 0, 0.25);
+      --hacker-text-bright: #0066FF;
+      --hacker-text-dim: #0033cc;
+      --hacker-accent: #0066FF;
+      --hacker-border: #0066FF;
+      --hacker-secondary: #0066FF;
+      --hacker-glow: rgba(0, 102, 255, 0.25);
     }
     .hacker-portfolio-wrapper.theme-miles {
       --hacker-bg: #0a0a0a;
@@ -3838,7 +3851,7 @@ const CustomStyles = () => (
         padding: 5rem 0;
       }
       .hero-heading-last {
-        -webkit-text-stroke: 1.5px #1A1A1A;
+        -webkit-text-stroke: 1.5px #E9C46A;
       }
       .hero-tagline {
         font-size: 1.15rem;
@@ -3860,6 +3873,9 @@ const CustomStyles = () => (
       .footer-content {
         flex-direction: column;
         gap: 12px;
+        text-align: center;
+      }
+      .footer-quote {
         text-align: center;
       }
       .hero-bottom-left {
