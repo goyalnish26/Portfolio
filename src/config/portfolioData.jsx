@@ -313,7 +313,7 @@ This is where the canon breaks.`;
 
 export const BIKE_TEXT = `Honda CB350 Classic · 2024 · Jaipur
 
-Red fuel tank, retro frame, classic vibes.
+Black fuel tank, retro frame, classic vibes.
 Two wheels. Open road. No distractions.
 
 When the terminal gets too intense,

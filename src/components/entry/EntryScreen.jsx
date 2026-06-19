@@ -22,10 +22,10 @@ export default function EntryScreen({ entryExpandingSide, entryTransition }) {
       >
         <div className="entry-side-content">
           <div className="side-label">MODE 02</div>
-          <div className="side-title">SECURITY RESEARCHER</div>
+          <div className="side-title">OFFENSIVE SECURITY LEARNER</div>
           <div className="side-desc">
-            Kernel terminal session. Monospace phosphor. Intrusive threat logs.
-            Focused on ethical hacking, CVE research, and building SIEM modules.
+            Retro phosphor terminal interface. Simulated commands, logs, and CLI tools.
+            Documenting my learning journey in web application security, threat analysis, and defensive scripting.
           </div>
           <button className="entry-btn hacker-btn">[ H ] SELECT</button>
         </div>

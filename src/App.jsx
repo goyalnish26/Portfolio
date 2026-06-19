@@ -248,8 +248,8 @@ function App() {
       document.title = "nishchal@canon-breaker:~$";
       document.querySelector('meta[name="description"]')?.setAttribute("content", "Nishchal OS v2.1.0. Offensive security research environment. CVE tracking, Bandit, TryHackMe, and SIEM modules.");
     } else {
-      document.title = "Nishchal Goyal | Developer & Security Researcher";
-      document.querySelector('meta[name="description"]')?.setAttribute("content", "Nishchal Goyal - Final-year ECE student at SKIT Jaipur. Dual-identity portfolio featuring a warm magazine developer log and a retro phosphor terminal security environment.");
+      document.title = "Nishchal Goyal | Developer & Offensive Security Learner";
+      document.querySelector('meta[name="description"]')?.setAttribute("content", "Nishchal Goyal - Final-year ECE student at SKIT Jaipur. Dual-identity portfolio featuring a warm magazine developer log and a retro phosphor terminal security learning environment.");
     }
   }, [mode]);
 
