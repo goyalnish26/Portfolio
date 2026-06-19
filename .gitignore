@@ -20,4 +20,7 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+
+# Markdown prompts containing internal plays
+dev_mode_final_prompt.md
+hacker_mode_terminal_prompt.md
