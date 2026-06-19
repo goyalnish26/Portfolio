@@ -614,33 +614,13 @@ to view available themes.`}</TerminalText>;
 
   return (
     <div className={`root-wrapper-theme ${mode}-mode-active`}>
-      {/* Spider Sense Bolts */}
-      {spiderSenseNear && (
-        <div className="spider-sense-bolts">
-          <svg className="spider-sense-svg" viewBox="0 0 100 100">
-            <path d="M 50,50 C 44,44 42,32 30,28" className="bolt-path" />
-            <path d="M 50,50 C 40,48 34,58 20,54" className="bolt-path" />
-            <path d="M 48,50 C 46,62 38,64 30,76" className="bolt-path" />
-            <path d="M 50,50 C 50,60 44,66 50,80" className="bolt-path" />
-            <path d="M 52,50 C 54,62 62,64 70,76" className="bolt-path" />
-            <path d="M 50,50 C 60,48 66,58 80,54" className="bolt-path" />
-            <path d="M 52,50 C 54,62 62,64 70,76" className="bolt-path" />
-            <path d="M 50,50 C 60,48 66,58 80,54" className="bolt-path" />
-            <path d="M 50,50 C 56,44 58,32 70,28" className="bolt-path" />
-            <path d="M 50,50 C 50,38 56,34 50,20" className="bolt-path" />
-            <path d="M 34,26 C 28,32 26,26 18,34" className="bolt-path" />
-            <path d="M 66,34 C 72,28 74,34 82,26" className="bolt-path" />
-            <path d="M 72,48 C 78,46 82,52 90,48" className="bolt-path" />
-          </svg>
-        </div>
-      )}
-
       {/* Custom Cursor System */}
       <CustomCursor
         cursorDotRef={cursorDotRef}
         cursorRingRef={cursorRingRef}
         mode={mode}
         isTouchDevice={isTouchDevice}
+        spiderSenseNear={spiderSenseNear}
       />
 
       {/* Glitch Transition */}

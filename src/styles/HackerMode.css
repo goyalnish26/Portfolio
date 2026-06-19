@@ -550,12 +550,28 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
-  filter: drop-shadow(0 0 3px #E63946);
-  animation: bolt-flicker 0.2s infinite alternate;
+  filter: drop-shadow(0 0 4px #E63946);
+  
+  /* Radiating wave animation instead of flickering */
+  stroke-dasharray: 12 18;
+  stroke-dashoffset: 30;
+  animation: bolt-wave-flow 0.8s linear infinite;
+  transform-origin: center;
 }
-@keyframes bolt-flicker {
-  0% { opacity: 0.3; transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1.05); }
+@keyframes bolt-wave-flow {
+  0% {
+    stroke-dashoffset: 30;
+    opacity: 0.2;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.15;
+    transform: scale(1.15);
+  }
 }
 
 /* CB350 Motorcycle Animation */
