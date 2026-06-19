@@ -2,14 +2,22 @@
 
 ## What Was Built
 
-A fully-featured **dual-identity portfolio** for Nishchal Goyal — a single-file React application (`src/App.jsx`) with no external component libraries. The portfolio features two completely different visual worlds that feel like different websites, not just a color swap.
+A fully-featured, optimized, and highly polished **dual-identity portfolio** for Nishchal Goyal. The portfolio features two completely different visual worlds that feel like different websites, not just a color swap:
+1. **Developer Mode**: A maximalist editorial design with a warm butter cream theme, geometric typography, and smooth grid transitions.
+2. **Offensive Security Learner Mode**: A retro phosphor monochrome terminal simulator accepting custom command queries and tracking mock SIEM logs.
 
 ---
 
 ## How to Run
 
 ```bash
-# From d:\programs\Portfolio
+# Clone or navigate to the project directory
+cd d:\programs\Portfolio
+
+# Install dependencies (Vite + React 19 + Vercel Analytics)
+npm install
+
+# Start the development server
 npm run dev
 ```
 
@@ -17,181 +25,68 @@ Then open **http://localhost:5173/** in your browser.
 
 ---
 
-## Features Implemented
+## Clean Architecture Overhaul (Refactoring)
 
-### Entry Split Screen
-- Fullscreen split: left half warm cream (Developer), right half near-black (Security Researcher)
-- The dividing line pulses/glows with a gradient animation
-- Both sides expand on hover for a living feel
-- Keyboard shortcuts: press **D** → Developer mode, **H** → Hacker mode
-- Click either half to enter
-- Center floating pill: _"Who are you looking for?"_ + _"He is both. Always has been."_
+We successfully extracted the 3,150-line single-file monolithic structure of `src/App.jsx` into a highly maintainable, component-driven architecture:
 
-### Glitch Transition (Spider-Verse Style)
-- Triggered on mode switches between Dev ↔ Hacker
-- **RGB channel-split strips** with horizontal offsets (3–4 strips)
-- **Pixel noise overlay** with CSS noise animation
-- **White flash** at the peak
-- **`CANON SHIFT`** text with red/cyan RGB ghost layers
-- Total duration: 800ms — violent and fast, not smooth
+```
+Portfolio/
+├── src/
+│   ├── components/
+│   │   ├── common/         ← CustomCursor, GlitchTransition, CRTScanline
+│   │   ├── entry/          ← EntryScreen choice layout
+│   │   ├── dev/            ← DevMode views, cyber panels, and SVGs
+│   │   └── hacker/         ← HackerTerminal console and command execution loops
+│   ├── config/
+│   │   └── portfolioData.jsx ← All static data, commands map, and ASCII greeting blocks
+│   ├── hooks/
+│   │   └── useCustomCursor.js ← requestAnimationFrame cursor tracking hook
+│   ├── styles/
+│   │   ├── global.css      ← Custom scrollbars and styling rules
+│   │   ├── Entry.css       ← Split entry screen layout styles
+│   │   ├── DevMode.css     ← Magazine grid layout styles
+│   │   └── HackerMode.css  ← Phosphor terminal styles and colors
+│   ├── App.jsx             ← Main state coordinator and router
+│   └── main.jsx            ← Mount entry script
+├── index.html              ← Root HTML with SEO fallback shell and Google Analytics tag
+├── package.json
+├── vite.config.js
+└── README.md
+```
 
-### Custom Cursor System
-- Small filled **dot** (6px) snapping to mouse position instantly
-- Large **ring** (28px) that lerps behind using `requestAnimationFrame` at 12% per frame
-- **Dev mode**: dot `#1A1A1A`, ring `#E9C46A` at 55% opacity
-- **Hacker mode**: dot `#C0C0C0`, ring `#C0C0C0` at 35% opacity
-- On hover over clickable elements: ring scales to 48px (dev) / 44px (hacker)
-- Hidden on mobile (under 768px)
-
-### Floating Mode Toggle
-- Bottom-right pill button, always visible after entry
-- **Dev mode**: `[ >_ ]` warm golden pill with pulse glow animation
-- **Hacker mode**: `[ ◈ DEV ]` monochrome pill with subtle silver pulse
-
----
-
-## Developer Mode (Gwen Stacy — Warm Magazine)
-
-### Fonts
-- **Playfair Display** — headings, hero, project titles
-- **DM Sans** — body, nav links
-- **DM Mono** — section labels, metadata, pills, contact note
-
-### Hero Section
-- **10.5vw Playfair Display** headline — `Nishchal` solid ink, `Goyal` outline stroke
-- Letters animate in staggered (40px Y drop) with `animationDelay` per character
-- Tagline: _"No safety net. Just shipping."_
-- Bottom-left: vertical rotated `ECE '27 · SKIT Jaipur · Jaipur, IN`
-- Bottom-center: hidden faint `// breaking the canon since 2021`
-- Bottom-right: bouncing scroll arrow
-- Top-right corner: SVG spider web at 18% opacity in `#E9C46A`
-
-### About Section
-- 2-column desktop: decorative `01` at 12rem light color / content column
-- Exact body text from the prompt
-- Pill row: `ECE · SKIT Jaipur`, `7.5 CGPA · No Backlogs`, `Batch 2027`, `Jaipur, Rajasthan`, `Honda CB350 · 2024`
-
-### Skills Section
-- **Zone A**: Flowing tag cloud with slight font-size variation by proficiency
-- **Zone B**: Full-width dark `#1A1A1A` magazine insert with:
-  - `The other side.` in Playfair italic white
-  - Animated gold progress bars per skill (IntersectionObserver triggered)
-  - CRT-style amber scan line sweeping down every 8 seconds
-  - Pathway footer in DM Mono gold
-
-### Projects (Editorial Staggered Grid)
-- **Project 1** (AegisGuard): large card, 72% width, left-aligned
-- **Project 2** (IntelScope-Pulse): medium card, 62% width, right-aligned, slight overlap
-- **Project 3** (WriteBlog): medium card, 62% width, left-aligned
-- Cards have left-border bookmark accent, hover lift + golden bottom-bar animation
-- Security projects tagged with `[SEC] 🔴` in `--red-spider` accent
-
-### Experience Timeline
-- Vertical `#E9C46A` timeline line with dot connectors
-- Three entries: Dreamsoft4u (active), AIESEC (volunteer), True Value Infosoft
-
-### Certifications
-- 2×2 grid of editorial cert cards
-- Google Cybersecurity (with `[VERIFIED]` badge in red), NPTEL Ethical Hacking, NPTEL Cyber Security & Privacy, Microsoft AI Security
-
-### Contact + Footer
-- Large centered `Let's work together.` heading
-- Three pill buttons: Send Email, LinkedIn, GitHub
-- Easter note: _"Or find a vulnerability in this site. I'll be impressed."_
-- Footer: `nishchal goyal · jaipur · 2025` + _"I'll break it." — Miles Morales_
+* **App.jsx** is now under **800 lines** and only coordinates top-level states (mode selection, unmask/mask protocols, Vercel tracking hooks, and dynamic browser title updates).
+* **Stylesheets** are separated, keeping global concerns clean from mode-specific overrides.
+* **Vite build size** and Fast Refresh compiler warnings are resolved.
 
 ---
 
-## Hacker Mode (Spider-Noir — Vintage Phosphor Monitor)
+## Core Optimizations
 
-### Fonts
-- **JetBrains Mono** exclusively — weights differentiate hierarchy
+### 1. Dynamic SEO & Crawlability
+* **Semantic HTML Fallback**: Added a structured, search-crawler-readable fallback body in `index.html` (inside `<div id="root">`, hidden from layout using `display: none` / `aria-hidden="true"`). Search engine indexers parse the content immediately without relying on JavaScript executions.
+* **Header Syncing**: Updated `App.jsx` with active `useEffect` hooks syncing the document title and meta descriptions on mode switches:
+  - **Dev Mode**: `Nishchal Goyal | Backend Developer`
+  - **Offensive Security Learner Mode**: `nishchal@canon-breaker:~$`
+  - **Default**: `Nishchal Goyal | Developer & Offensive Security Learner`
 
-### Boot Sequence
-- 15 lines type out sequentially at ~120–200ms each
-- `[OK]` lines in silver, `[WARN]` in amber `#FFB300`, `[INFO]` in dim `#4A4A4A`
-- Blinking cursor block after completion
-- 1-second pause before main content appears
+### 2. Analytics Integration
+* **Vercel Analytics**: Fully integrated to monitor theme selections, command executions, and identity choices.
+* **Google Analytics**: Installed the global `gtag.js` tracking tag immediately inside the `<head>` element in `index.html` for comprehensive traffic auditing.
 
-### Terminal Command Blocks
-Each section prefixed with a `$` command, then delayed output appears:
-- `whoami` → identity
-- `cat identity.txt`, `cat mission.txt`, `uptime`
-- `cat skills --category=security` → competency matrix with animated block-character progress bars filling left-to-right
-- `cat skills --category=development`
-- `ls -la /projects/` + `cat /projects/aegisguard/README`, intelscopepulse, writeblog
-- `cat /etc/work_history` → 3 employment entries
-- `cat /etc/credentials` → 4 verified credentials in green
-- `contact --list` with amber hyperlinks
-
-### Live Activity Log (`tail -f /var/log/activity.log`)
-- Auto-cycling terminal simulation with real timestamps
-- Rotates through 14 log line templates (nmap, auth.log, aegisguard, bandit, etc.)
-- `[ALERT]` lines in amber, `[CRITICAL]` in red, normal in silver
-
-### CRT Scanline Overlay
-- Fixed `repeating-linear-gradient` overlay at 40% opacity across the whole page
-
-### Easter Egg
-- Listen globally for `sudo nish` typed anywhere while in Hacker mode
-- Replaces the activity log with:
-  ```
-  [AUTH]  sudo: permission denied — you are not in the sudoers file.
-  [INFO]  This incident will be reported.
-  [WARN]  Just kidding. But I'm already in your system.
-          — Nishchal
-  ```
-- Auto-clears after 5 seconds
+### 3. Mobile Performance & Proximity Optimization
+* **Touch Device Bypass**: Cursor coordinate tracking loops are completely disabled on coarse pointer devices (e.g. mobile phones and tablets) to save mobile processors from running expensive drawing routines.
+* **Proximity Coordinate Cache**: Interactive target coordinates are cached dynamically on mount, scroll, and resize rather than invoking layout-triggering `getBoundingClientRect()` calls inside mouse move event handlers. This prevents layout thrashing and keeps rendering at a smooth 60 FPS.
 
 ---
 
-## Technical Architecture
+## Recent Modifications
 
-| Concern | Approach |
-|---|---|
-| State | `useState` for mode, transitioning, boot, menu, easter egg |
-| Animations | CSS keyframes + IntersectionObserver + rAF cursor loop |
-| Cursor | Pure `requestAnimationFrame` lerp, no React state updates |
-| Fonts | Google Fonts via `@import` in `<style>` tag in JSX |
-| CSS | Single embedded `<style>` tag as `CustomStyles` component |
-| Build | Vite + React 19, builds in ~240ms |
-| Responsive | Dev mode: fully responsive. Hacker mode: intentionally terminal-like (min-width: 800px on mobile) |
-
----
-
-## Files Modified
-
-| File | Change |
-|---|---|
-| [`src/App.jsx`](file:///d:/programs/Portfolio/src/App.jsx) | Modified — Added `isMaskProtocolRunning` guard, updated name typography, made NG. logo clickable, updated Miles Morales quote |
-| [`src/index.css`](file:///d:/programs/Portfolio/src/index.css) | Replaced with minimal reset + `cursor: none` |
-| [`index.html`](file:///d:/programs/Portfolio/index.html) | Updated title, SEO meta tags, and changed favicon to transparent `/hero.png` |
-| `src/App.css` | Deleted (not needed) |
-
----
-
-## Recent Updates (June 2026)
-
-1. **Hero Illustration Processing:**
-   - The user-uploaded `hero.png` had a baked-in gray/white checkered background.
-   - We processed the image using a flood-fill script from the borders to remove the outer grid.
-   - We then extracted the exact grid size ($S=19$px) and cleared the remaining checkerboard grid inside the internal gaps (like under the **coffee mug handle** and between the **shoe laces**) without affecting solid white illustration details.
-2. **Maskon & Maskoff Transition Fixes:**
-   - Added a React ref-based state guard `isMaskProtocolRunning` to prevent the keydown listener and timeouts from double-triggering the transition animation sequence due to state update batching.
-   - Updated the `maskoff` command handler in terminal mode to trigger the unmask overlay immediately (removed the 3-second delay) and bypass appending the command/exiting text to the terminal history, ensuring a seamless and clean black screen overlay transition.
-3. **Hero Name Redesign (Geometric Bold):**
-   - Switched the hero name font from 'Playfair Display' to **'Space Grotesk'** for a modern, geometric, tech-confident look.
-   - Removed italics from "Nishchal" so it is straight up bold (font-weight: 800).
-   - Structured it to show "Nishchal" on the first line and "Goyal" (with the golden accent outline stroke) directly under it.
-   - **Responsive Wrapping Fix:** Added `white-space: nowrap;` and `max-width: 600px;` to the name styling to guarantee that "Nishchal" and "Goyal" stay entirely on their respective lines without broken word wraps across all viewports and browser zoom levels (from 75% to 200%). Added `max-width: 500px;` to the tagline to prevent awkward wrapping.
-4. **Header Logo Navigation:**
-   - Made the top-left logo `NG.` clickable with a smooth hover effect and scroll-to-top handler.
-5. **Miles Morales Quote Update:**
-   - Updated and split the dev mode footer quote across two lines:
-     *"Everyone keeps telling me how my story is supposed to go.*
-     *Nah… I’m-a do my own thing."* — Miles Morales
-6. **Favicon Update:**
-   - Replaced the purple lightning SVG favicon with the transparent `hero.png` illustration.
-7. **Peter Theme Color Overhaul:**
-   - Re-designed the custom `peter` theme inside Hacker Mode to create a high-contrast Spider-Man suit aesthetic.
-   - Replaced the redundant all-red variables with an interplay of solid bright red for primary text (`#FF0000`) and solid bright blue for accent elements, highlights, glows, and borders (`#0066FF`).
+1. **Hacker Mode Rename (Humble & Honest)**:
+   - Changed the title from `SECURITY RESEARCHER` to `OFFENSIVE SECURITY LEARNER` on the entry split screen, matching headers, and document titles.
+   - Refactored the entry screen description to represent an honest and limit-aligned description of your current cybersecurity path:
+     *"Retro phosphor terminal interface. Simulated commands, logs, and CLI tools. Documenting my learning journey in web application security, threat analysis, and defensive scripting."*
+2. **Bike Output Update**:
+   - Changed the CB350 fuel tank color description in terminal output from `Red fuel tank` to `Black fuel tank` in `src/config/portfolioData.jsx` to accurately match your bike.
+3. **Public Git Scrubbing**:
+   - Removed local spec sheets (`dev_mode_final_prompt.md` and `hacker_mode_terminal_prompt.md`) from the tracking path and added pattern rules to `.gitignore`.
+   - Staged, committed, and successfully pushed all clean modifications to your origin branch on GitHub.
