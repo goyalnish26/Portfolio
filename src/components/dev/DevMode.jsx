@@ -5,6 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Import Refactored Sections
 import BackgroundDepth from './BackgroundDepth';
+import AtmosphereManager from './AtmosphereManager';
+import LivingSpider from './LivingSpider';
 import DevNav from './DevNav';
 import HeroSection from './HeroSection';
 import AboutSection from './AboutSection';
@@ -57,6 +59,12 @@ export default function DevMode({
     <div className="dev-portfolio">
       {/* Layered Parallax Background */}
       <BackgroundDepth />
+
+      {/* Dynamic Time & Inactivity Atmosphere Manager */}
+      <AtmosphereManager />
+
+      {/* Living Spider System */}
+      <LivingSpider />
 
       {/* Floating Capsule Nav */}
       <DevNav scrolled={scrolled} setMenuOpen={setMenuOpen} />
@@ -141,7 +149,6 @@ export default function DevMode({
       <HeroSection
         spiderWebTooltip={spiderWebTooltip}
         setSpiderWebTooltip={setSpiderWebTooltip}
-        triggerBikeRide={triggerBikeRide}
       />
 
       <AboutSection triggerBikeRide={triggerBikeRide} />
