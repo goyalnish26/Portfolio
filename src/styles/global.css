@@ -117,12 +117,12 @@ a, button, input, select, textarea, [role="button"] {
   color: #1A1A1A;
 }
 .hacker-mode-active ::selection {
-  background: rgba(0, 255, 65, 0.15);
-  color: #00FF41;
+  background-color: var(--selection-bg);
+  color: var(--selection-text);
 }
 .hacker-mode-active ::-moz-selection {
-  background: rgba(0, 255, 65, 0.15);
-  color: #00FF41;
+  background-color: var(--selection-bg);
+  color: var(--selection-text);
 }
 
 @media (max-width: 768px) {
