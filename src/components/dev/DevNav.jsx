@@ -1,15 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function DevNav({ scrolled, setMenuOpen }) {
+export default function DevNav({ scrolled, setMenuOpen, devNightMode, toggleDevNightMode }) {
   const [activeSection, setActiveSection] = useState('about');
-  const indicatorRef = useRef(null);
   const containerRef = useRef(null);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
   // Monitor active section using IntersectionObserver
   useEffect(() => {
     const sections = ['about', 'skills', 'projects', 'experience', 'contact'];
 
     const observerCallback = (entries) => {
+      // Prevent jumpy underlines during smooth scrolls from clicking links
+      if (isScrollingRef.current) return;
+
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setActiveSection(entry.target.id);
@@ -32,27 +36,19 @@ export default function DevNav({ scrolled, setMenuOpen }) {
       }
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, []);
-
-  // Update sliding indicator pill dimensions and offset to match active nav item
-  useEffect(() => {
-    const activeLink = containerRef.current?.querySelector(`.nav-link[data-section="${activeSection}"]`);
-    const indicator = indicatorRef.current;
-    if (activeLink && indicator) {
-      const linkRect = activeLink.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
-      indicator.style.left = `${linkRect.left - containerRect.left}px`;
-      indicator.style.width = `${linkRect.width}px`;
-      indicator.style.height = `${linkRect.height}px`;
-      indicator.style.opacity = '1';
-    } else if (indicator) {
-      indicator.style.opacity = '0';
-    }
-  }, [activeSection]);
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
+    setActiveSection(id);
+    isScrollingRef.current = true;
+
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
     const el = document.getElementById(id);
     if (el) {
       const offset = 80; // offset for the floating capsule
@@ -65,14 +61,17 @@ export default function DevNav({ scrolled, setMenuOpen }) {
         top: offsetPosition,
         behavior: 'smooth',
       });
+
+      // Release scroll block after smooth scroll is expected to end
+      scrollTimeoutRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 850);
     }
   };
 
   return (
     <nav className={`dev-nav-capsule-wrapper ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-capsule-inner" ref={containerRef}>
-        {/* Sliding Morphing Indicator Backdrop */}
-        <div className="nav-active-pill" ref={indicatorRef} />
 
         <div
           className="nav-logo-capsule interactive"
@@ -115,12 +114,29 @@ export default function DevNav({ scrolled, setMenuOpen }) {
           >
             EXPERIENCE
           </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link nav-resume-capsule interactive"
+          >
+            RESUME
+          </a>
         </div>
+
+        <button
+          className="nav-night-toggle-capsule interactive"
+          onClick={toggleDevNightMode}
+          aria-label={devNightMode ? 'Switch to day mode' : 'Switch to night mode'}
+          title={devNightMode ? 'Switch to day mode' : 'Switch to night mode'}
+        >
+          {devNightMode ? '☼' : '☾'}
+        </button>
 
         <a
           href="#contact"
           data-section="contact"
-          className="nav-cta-capsule interactive"
+          className={`nav-cta-capsule interactive ${activeSection === 'contact' ? 'active' : ''}`}
           onClick={(e) => handleNavClick(e, 'contact')}
         >
           CONNECT

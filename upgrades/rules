@@ -1,0 +1,147 @@
+# Amendment A — Project Preservation Rules
+
+> This amendment overrides every future design document in this Design Bible.
+
+---
+
+# Core Principle
+
+Portfolio V3 is an enhancement project.
+
+It is **NOT** a redesign project.
+
+The objective is to preserve the existing identity while significantly increasing immersion, polish, and interaction quality.
+
+Every implementation must respect the existing product before introducing new features.
+
+---
+
+# Preservation Rule 01 — Content is Sacred
+
+The portfolio exists to showcase work.
+
+Content always has higher priority than visual effects.
+
+Do not rewrite, replace, reorder, simplify, or redesign the existing content unless explicitly requested.
+
+This includes, but is not limited to:
+
+* Hero copy
+* About section
+* Skills
+* Timeline
+* Experience
+* Projects
+* Certifications
+* Contact information
+* Resume links
+* Social links
+* SEO metadata
+
+Animations may support the content.
+
+They must never replace it.
+
+---
+
+# Preservation Rule 02 — Analytics are Untouchable
+
+The existing analytics implementation must remain exactly as it is.
+
+Do not remove analytics.
+
+Do not replace analytics.
+
+Do not modify event tracking.
+
+Do not rename tracking events.
+
+Do not introduce breaking changes.
+
+Any animation or interaction introduced into the portfolio must remain compatible with the existing analytics system.
+
+Analytics must continue collecting data exactly as before.
+
+---
+
+# Preservation Rule 03 — Terminal Mode is the Identity
+
+The terminal command system is the signature feature of this portfolio.
+
+It is considered part of the product identity.
+
+Therefore:
+
+Do not redesign it.
+
+Do not simplify it.
+
+Do not replace it with buttons.
+
+Do not replace it with toggles.
+
+Do not hide it.
+
+Do not automate it.
+
+Do not remove commands.
+
+Do not change its personality.
+
+Developer Mode and Hacker Mode must continue switching exactly through the existing terminal interaction.
+
+The implementation may be optimized internally if necessary, but the user experience must remain unchanged.
+
+---
+
+# Preservation Rule 04 — Existing Features Come First
+
+Before adding any new feature:
+
+Verify that all existing features continue functioning exactly as before.
+
+No regression is acceptable.
+
+If a new effect breaks an existing interaction,
+
+the new effect must be removed.
+
+---
+
+# Preservation Rule 05 — Progressive Enhancement
+
+Every enhancement should be additive.
+
+Nothing currently working should be sacrificed.
+
+The visitor should feel:
+
+"The portfolio became richer."
+
+Never:
+
+"The portfolio became different."
+
+---
+
+# Preservation Rule 06 — Respect Existing Architecture
+
+Whenever possible,
+
+extend existing components instead of replacing them.
+
+Avoid unnecessary rewrites.
+
+Prefer composition over replacement.
+
+Preserve proven logic.
+
+Improve implementation quality without changing product behavior.
+
+---
+
+# Final Rule
+
+The goal of Portfolio V3 is not to build a new portfolio.
+
+The goal is to make the current portfolio feel like the best possible version of itself.

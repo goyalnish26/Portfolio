@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-export default function AtmosphereManager() {
-  const [timeClass, setTimeClass] = useState('time-afternoon');
+export default function AtmosphereManager({ devNightMode }) {
+  const [timeClass, setTimeClass] = useState(devNightMode ? 'time-night' : 'time-afternoon');
   const [isIdle, setIsIdle] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [lightningActive, setLightningActive] = useState(false);
@@ -13,25 +13,10 @@ export default function AtmosphereManager() {
   const rainInterval = useRef(null);
   const promptShownThisCycle = useRef(false);
 
-  // Time-of-day detector
+  // Sync timeClass to devNightMode prop (no automatic time detector)
   useEffect(() => {
-    const updateTimeClass = () => {
-      const hours = new Date().getHours();
-      if (hours >= 6 && hours < 12) {
-        setTimeClass('time-morning');
-      } else if (hours >= 12 && hours < 17) {
-        setTimeClass('time-afternoon');
-      } else if (hours >= 17 && hours < 21) {
-        setTimeClass('time-evening');
-      } else {
-        setTimeClass('time-night');
-      }
-    };
-
-    updateTimeClass();
-    const interval = setInterval(updateTimeClass, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, []);
+    setTimeClass(devNightMode ? 'time-night' : 'time-afternoon');
+  }, [devNightMode]);
 
   // Sync class name to root-wrapper element
   useEffect(() => {

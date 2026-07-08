@@ -13,119 +13,102 @@
   overflow: hidden;
   box-sizing: border-box;
 
-  /* Theme Variables Mapping */
-  --hacker-bg: var(--bg);
-  --hacker-accent: var(--accent);
-  --hacker-text-primary: var(--text-primary);
-  --hacker-text-bright: var(--command);
-  --hacker-text-dim: var(--prompt);
-  --hacker-border: var(--border);
-  --hacker-secondary: var(--accent);
+  /* Defaults (Dark Theme) */
+  --hacker-bg: #0D0D0D;
+  --hacker-accent: #C0C0C0;
+  --hacker-text-primary: #C0C0C0;
+  --hacker-text-bright: #C0C0C0;
+  --hacker-text-dim: #8a8a8a;
+  --hacker-border: #1E1E1E;
+  --hacker-glow: rgba(192, 192, 192, 0.25);
+  --hacker-secondary: #C0C0C0;
+  --hacker-selection-bg: rgba(192, 192, 192, 0.25);
+  --hacker-selection-text: #FFFFFF;
 }
 
 .hacker-portfolio-wrapper.theme-light {
-  --bg: #FEFAE0;
-  --surface: #FDF5C0;
-  --text-primary: #1A1A1A;
-  --text-muted: #8A7F6B;
-  --accent: #E9C46A;
-  --border: #E9C46A;
-  --prompt: #8A7F6B;
-  --command: #1A1A1A;
-  --output: #1A1A1A;
-  --selection-bg: #E9C46A;
-  --selection-text: #1A1A1A;
-  --hacker-glow: rgba(233, 196, 106, 0.25);
+  --hacker-bg: #FEFAE0;
+  --hacker-text-primary: #1A1A1A;
+  --hacker-text-bright: #1A1A1A;
+  --hacker-text-dim: #6b5f47;
+  --hacker-accent: #8B6914;
+  --hacker-border: #E9C46A;
+  --hacker-secondary: #8B6914;
+  --hacker-glow: rgba(233, 196, 106, 0.35);
+  --hacker-selection-bg: rgba(139, 105, 20, 0.25);
+  --hacker-selection-text: #1A1A1A;
 }
-
 .hacker-portfolio-wrapper.theme-dark {
-  --bg: #0D0D0D;
-  --surface: #1A1A1A;
-  --text-primary: #C0C0C0;
-  --text-muted: #4A4A4A;
-  --accent: #C0C0C0;
-  --border: #1E1E1E;
-  --prompt: #4A4A4A;
-  --command: #C0C0C0;
-  --output: #C0C0C0;
-  --selection-bg: #4A4A4A;
-  --selection-text: #FFFFFF;
+  --hacker-bg: #0D0D0D;
+  --hacker-text-primary: #C0C0C0;
+  --hacker-text-bright: #C0C0C0;
+  --hacker-text-dim: #8a8a8a;
+  --hacker-accent: #C0C0C0;
+  --hacker-border: #1E1E1E;
+  --hacker-secondary: #C0C0C0;
   --hacker-glow: rgba(192, 192, 192, 0.25);
+  --hacker-selection-bg: rgba(192, 192, 192, 0.25);
+  --hacker-selection-text: #FFFFFF;
 }
-
 .hacker-portfolio-wrapper.theme-peter {
-  --bg: #0A0A0A;
-  --surface: #1a1a1a;
-  --text-primary: #FF0000;
-  --text-muted: #660000;
-  --accent: #0066FF;
-  --border: #330000;
-  --prompt: #660000;
-  --command: #FF0000;
-  --output: #FF0000;
-  --selection-bg: #0066FF;
-  --selection-text: #FF0000;
+  --hacker-bg: #0a0a0a;
+  --hacker-text-primary: #FF0000;
+  --hacker-text-bright: #0066FF;
+  --hacker-text-dim: #4d94ff;
+  --hacker-accent: #0066FF;
+  --hacker-border: #0066FF;
+  --hacker-secondary: #0066FF;
   --hacker-glow: rgba(0, 102, 255, 0.25);
+  --hacker-selection-bg: rgba(255, 0, 0, 0.3);
+  --hacker-selection-text: #FFFFFF;
 }
-
 .hacker-portfolio-wrapper.theme-miles {
-  --bg: #0A0A0A;
-  --surface: #1a1a1a;
-  --text-primary: #B833FF;
-  --text-muted: #660080;
-  --accent: #FF3D3D;
-  --border: #330055;
-  --prompt: #660080;
-  --command: #B833FF;
-  --output: #B833FF;
-  --selection-bg: #FF3D3D;
-  --selection-text: #B833FF;
+  --hacker-bg: #0a0a0a;
+  --hacker-text-primary: #B833FF;
+  --hacker-text-bright: #FF3D3D;
+  --hacker-text-dim: #d896ff;
+  --hacker-accent: #FF3D3D;
+  --hacker-border: #660080;
+  --hacker-secondary: #FF3D3D;
   --hacker-glow: rgba(255, 61, 61, 0.25);
+  --hacker-selection-bg: rgba(255, 61, 61, 0.3);
+  --hacker-selection-text: #FFFFFF;
 }
-
 .hacker-portfolio-wrapper.theme-noir {
-  --bg: #000000;
-  --surface: #1a1a1a;
-  --text-primary: #FFFFFF;
-  --text-muted: #808080;
-  --accent: #FFFFFF;
-  --border: #333333;
-  --prompt: #808080;
-  --command: #FFFFFF;
-  --output: #FFFFFF;
-  --selection-bg: #FFFFFF;
-  --selection-text: #000000;
+  --hacker-bg: #000000;
+  --hacker-text-primary: #FFFFFF;
+  --hacker-text-bright: #FFFFFF;
+  --hacker-text-dim: #808080;
+  --hacker-accent: #FFFFFF;
+  --hacker-border: #808080;
+  --hacker-secondary: #FFFFFF;
   --hacker-glow: rgba(255, 255, 255, 0.25);
+  --hacker-selection-bg: rgba(255, 255, 255, 0.3);
+  --hacker-selection-text: #000000;
 }
-
 .hacker-portfolio-wrapper.theme-2099 {
-  --bg: #0A0A2E;
-  --surface: #16213E;
-  --text-primary: #00D9FF;
-  --text-muted: #0066CC;
-  --accent: #00D9FF;
-  --border: #003D80;
-  --prompt: #0066CC;
-  --command: #00D9FF;
-  --output: #00D9FF;
-  --selection-bg: #00D9FF;
-  --selection-text: #0A0A2E;
+  --hacker-bg: #0a0a2e;
+  --hacker-text-primary: #00D9FF;
+  --hacker-text-bright: #00D9FF;
+  --hacker-text-dim: #4db8e8;
+  --hacker-accent: #00D9FF;
+  --hacker-border: #0066CC;
+  --hacker-secondary: #00D9FF;
   --hacker-glow: rgba(0, 217, 255, 0.25);
+  --hacker-selection-bg: rgba(0, 217, 255, 0.25);
+  --hacker-selection-text: #FFFFFF;
 }
-
 .hacker-portfolio-wrapper.theme-kali {
-  --bg: #1A1A2E;
-  --surface: #16213E;
-  --text-primary: #33FF00;
-  --text-muted: #006600;
-  --accent: #6B00B0;
-  --border: #003300;
-  --prompt: #006600;
-  --command: #33FF00;
-  --output: #33FF00;
-  --selection-bg: #6B00B0;
-  --selection-text: #33FF00;
+  --hacker-bg: #1a1a2e;
+  --hacker-text-primary: #33FF00;
+  --hacker-text-bright: #33FF00;
+  --hacker-text-dim: #33cc33;
+  --hacker-accent: #b366ff;
+  --hacker-border: #006600;
+  --hacker-secondary: #b366ff;
   --hacker-glow: rgba(107, 0, 176, 0.25);
+  --hacker-selection-bg: rgba(51, 255, 0, 0.25);
+  --hacker-selection-text: #33FF00;
 }
 
 /* Glitch visual animation */

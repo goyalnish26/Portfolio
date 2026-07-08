@@ -25,7 +25,9 @@ export default function DevMode({
   setSpiderWebTooltip,
   devPostCreditsState,
   devPostCreditsSentinelRef,
-  triggerBikeRide
+  triggerBikeRide,
+  devNightMode,
+  toggleDevNightMode
 }) {
   // Sync Lenis smooth scroll with GSAP ScrollTrigger ticker
   useEffect(() => {
@@ -56,18 +58,18 @@ export default function DevMode({
   }, []);
 
   return (
-    <div className="dev-portfolio">
+    <div className={`dev-portfolio ${devNightMode ? 'night-mode' : ''}`}>
       {/* Layered Parallax Background */}
       <BackgroundDepth />
 
       {/* Dynamic Time & Inactivity Atmosphere Manager */}
-      <AtmosphereManager />
+      <AtmosphereManager devNightMode={devNightMode} />
 
       {/* Living Spider System */}
       <LivingSpider />
 
       {/* Floating Capsule Nav */}
-      <DevNav scrolled={scrolled} setMenuOpen={setMenuOpen} />
+      <DevNav scrolled={scrolled} setMenuOpen={setMenuOpen} devNightMode={devNightMode} toggleDevNightMode={toggleDevNightMode} />
 
       {/* Mobile Drawer Navigation (Frosted Glass Overlay) */}
       {menuOpen && (
@@ -141,7 +143,11 @@ export default function DevMode({
             >
               05. CONTACT
             </a>
+            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="dev-menu-resume">RESUME ↗</a>
           </div>
+          <button className="nav-night-toggle mobile" onClick={toggleDevNightMode} aria-label="Toggle night mode">
+            {devNightMode ? '☼ Day Mode' : '☾ Night Mode'}
+          </button>
         </div>
       )}
 

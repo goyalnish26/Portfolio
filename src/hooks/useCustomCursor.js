@@ -5,7 +5,7 @@ export function useCustomCursor() {
   const cursorRingRef = useRef(null);
   const mousePos = useRef({ x: -100, y: -100 });
   const ringPos = useRef({ x: -100, y: -100 });
-  
+
   // Lazy state initialization to avoid synchronous state setter inside useEffect
   const [isTouchDevice] = useState(() => {
     return typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
@@ -48,7 +48,7 @@ export function useCustomCursor() {
     let rAF;
     const updateRing = () => {
       const lerpFactor = 0.12;
-      
+
       // Calculate next lerped step
       ringPos.current.x += (mousePos.current.x - ringPos.current.x) * lerpFactor;
       ringPos.current.y += (mousePos.current.y - ringPos.current.y) * lerpFactor;

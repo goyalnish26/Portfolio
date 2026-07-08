@@ -85,8 +85,11 @@ export default function BackgroundDepth() {
 
     // Helper to check if theme is light or dark
     const isLightTheme = () => {
-      const el = document.querySelector('.theme-light');
-      return el !== null;
+      const isDev = document.querySelector('.dev-mode-active') !== null;
+      if (isDev) {
+        return document.querySelector('.night-mode') === null;
+      }
+      return document.querySelector('.theme-light') !== null;
     };
 
     class Particle {

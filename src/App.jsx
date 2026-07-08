@@ -87,7 +87,18 @@ function App() {
   const [bikeRides, setBikeRides] = useState([]);
   const [devPostCreditsState, setDevPostCreditsState] = useState(null); // null, 'wait', 'rejected', 'loading', 'cursor'
   const [spiderSenseNear, setSpiderSenseNear] = useState(false);
+  const [devNightMode, setDevNightMode] = useState(() => {
+    return localStorage.getItem('devModeNightMode') === 'true';
+  });
   const devPostCreditsSentinelRef = useRef(null);
+
+  const toggleDevNightMode = () => {
+    setDevNightMode(prev => {
+      const next = !prev;
+      localStorage.setItem('devModeNightMode', String(next));
+      return next;
+    });
+  };
 
   // Smooth expand transition for entry screen
   const entryTransition = useCallback((targetMode) => {
@@ -145,7 +156,7 @@ function App() {
     isMaskProtocolRunning.current = true;
     setMaskProtocolState('init');
     track('Mask Protocol Started');
-    
+
     setTimeout(() => {
       setMaskProtocolState('sync');
     }, 1000);
@@ -307,16 +318,14 @@ function App() {
     triggerRects.current = rects;
   }, [mode]);
 
-  // Update layout bounding cache on load, resize, and scroll
+  // Update layout bounding cache on load and resize (no scroll listener to prevent layout thrashing and thread freezes)
   useEffect(() => {
     if (mode === 'dev') {
-      const timer = setTimeout(updateTriggerRects, 200);
+      const timer = setTimeout(updateTriggerRects, 300);
       window.addEventListener('resize', updateTriggerRects);
-      window.addEventListener('scroll', updateTriggerRects, { passive: true });
       return () => {
         clearTimeout(timer);
         window.removeEventListener('resize', updateTriggerRects);
-        window.removeEventListener('scroll', updateTriggerRects);
       };
     }
   }, [mode, updateTriggerRects]);
@@ -613,7 +622,7 @@ to view available themes.`}</TerminalText>;
   };
 
   return (
-    <div className={`root-wrapper-theme ${mode}-mode-active`}>
+    <div className={`root-wrapper-theme ${mode}-mode-active ${mode === 'dev' && devNightMode ? 'night-mode' : ''}`}>
       {/* Custom Cursor System */}
       <CustomCursor
         cursorDotRef={cursorDotRef}
@@ -667,6 +676,8 @@ to view available themes.`}</TerminalText>;
           devPostCreditsState={devPostCreditsState}
           devPostCreditsSentinelRef={devPostCreditsSentinelRef}
           triggerBikeRide={triggerBikeRide}
+          devNightMode={devNightMode}
+          toggleDevNightMode={toggleDevNightMode}
         />
       )}
 

@@ -7,7 +7,9 @@
   padding: 0;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -15,13 +17,19 @@ html, body, #root {
 }
 
 body {
-  cursor: none !important; /* Hide default OS cursor globally */
+  cursor: none !important;
+  /* Hide default OS cursor globally */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Ensure default cursor is hidden on interactive elements */
-a, button, input, select, textarea, [role="button"] {
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
   cursor: none !important;
 }
 
@@ -36,8 +44,50 @@ a, button, input, select, textarea, [role="button"] {
 
 /* Core Styles for Entry */
 .dev-mode-active {
-  background-color: #FEFAE0;
-  color: #1A1A1A;
+  --dev-bg: #FEFAE0;
+  --dev-bg-deep: #FBF3CE;
+  --dev-card-bg: #FDF5C0;
+  --dev-text: #1A1A1A;
+  --dev-text-heading: #2D2416;
+  --dev-text-dim: #8A7F6B;
+  --dev-accent: #E9C46A;
+  --dev-accent-hover: #C9A84C;
+  --dev-border: #F5EDB0;
+  --dev-nav-scrolled-bg: rgba(254, 250, 224, 0.92);
+  
+  /* Liquid Glass Navbar Tokens - Day Mode */
+  --dev-nav-bg: rgba(254, 250, 224, 0.38);
+  --dev-nav-bg-scrolled: rgba(254, 250, 224, 0.68);
+  --dev-nav-border: rgba(233, 196, 106, 0.35);
+  --dev-nav-shadow: 0 20px 40px -10px rgba(45, 36, 22, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --dev-specular-opacity: 0.75;
+  --dev-bevel-opacity: 0.08;
+  --dev-glare-opacity: 0.15;
+  
+  background-color: var(--dev-bg);
+  color: var(--dev-text);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+.dev-mode-active.night-mode {
+  --dev-bg: #14100a;
+  --dev-bg-deep: #1b150d;
+  --dev-card-bg: #241c10;
+  --dev-text: #F5EDE0;
+  --dev-text-heading: #FDF5C0;
+  --dev-text-dim: #A89478;
+  --dev-accent: #E9C46A;
+  --dev-accent-hover: #F4D888;
+  --dev-border: #3a2e1a;
+  --dev-nav-scrolled-bg: rgba(20, 16, 10, 0.85);
+  
+  /* Liquid Glass Navbar Tokens - Night Mode */
+  --dev-nav-bg: rgba(20, 16, 10, 0.35);
+  --dev-nav-bg-scrolled: rgba(20, 16, 10, 0.65);
+  --dev-nav-border: rgba(233, 196, 106, 0.15);
+  --dev-nav-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --dev-specular-opacity: 0.25;
+  --dev-bevel-opacity: 0.22;
+  --dev-glare-opacity: 0.05;
 }
 .hacker-mode-active {
   background-color: #0D0D0D;
@@ -57,6 +107,7 @@ a, button, input, select, textarea, [role="button"] {
   z-index: 100000;
   transition: background-color 0.3s ease;
 }
+
 .cursor-ring {
   position: fixed;
   left: 0;
@@ -68,22 +119,24 @@ a, button, input, select, textarea, [role="button"] {
   border: 1.5px solid;
   pointer-events: none;
   z-index: 100000;
-  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-              height 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
-              border-color 0.3s ease, 
-              background-color 0.2s ease, 
-              opacity 0.3s ease;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    background-color 0.2s ease,
+    opacity 0.3s ease;
 }
 
 .cursor-dot.dev {
   background-color: #1A1A1A;
 }
+
 .cursor-ring.dev {
   border-color: #C9A84C;
   border-width: 2px;
   opacity: 0.85;
   mix-blend-mode: multiply;
 }
+
 .cursor-ring.dev.cursor-hover {
   width: 48px;
   height: 48px;
@@ -95,11 +148,13 @@ a, button, input, select, textarea, [role="button"] {
 .cursor-dot.hacker {
   background-color: #C0C0C0;
 }
+
 .cursor-ring.hacker {
   border-color: #C0C0C0;
   opacity: 0.4;
   mix-blend-mode: normal;
 }
+
 .cursor-ring.hacker.cursor-hover {
   width: 44px;
   height: 44px;
@@ -112,24 +167,28 @@ a, button, input, select, textarea, [role="button"] {
   background: #E9C46A;
   color: #1A1A1A;
 }
+
 .dev-mode-active ::-moz-selection {
   background: #E9C46A;
   color: #1A1A1A;
 }
+
 .hacker-mode-active ::selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-text);
+  background: var(--hacker-selection-bg, rgba(0, 255, 65, 0.25));
+  color: var(--hacker-selection-text, #00FF41);
 }
 .hacker-mode-active ::-moz-selection {
-  background-color: var(--selection-bg);
-  color: var(--selection-text);
+  background: var(--hacker-selection-bg, rgba(0, 255, 65, 0.25));
+  color: var(--hacker-selection-text, #00FF41);
 }
 
 @media (max-width: 768px) {
   body {
     cursor: auto !important;
   }
-  .cursor-dot, .cursor-ring {
+
+  .cursor-dot,
+  .cursor-ring {
     display: none !important;
   }
 }
