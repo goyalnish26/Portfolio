@@ -106,3 +106,5 @@ Portfolio/
    - Integrated custom light/dark theme variables for the new classes in [DevMode.css](file:///d:/programs/Portfolio/src/styles/DevMode.css#L644-L770) to support active dark mode styling.
 9. **Resume Link Redirection**:
    - Updated the RESUME link destination in the desktop navbar ([DevNav.jsx](file:///d:/programs/Portfolio/src/components/dev/DevNav.jsx#L135)) and mobile menu drawer ([DevMode.jsx](file:///d:/programs/Portfolio/src/components/dev/DevMode.jsx#L146)) to open your Google Drive resume link directly in a new tab.
+10. **Default Dark Mode**:
+    - Configured the default state for `devNightMode` in [App.jsx](file:///d:/programs/Portfolio/src/App.jsx#L90-L92) to default to `true` (dark mode) on first-time visits if no previous preference is saved in local storage.
