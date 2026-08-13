@@ -94,3 +94,7 @@ Portfolio/
    - Added specific CSS overrides in `src/styles/global.css` under `.dev-mode-active.night-mode` to change the dot and ring color to the theme's golden accent (`var(--dev-accent)`), set `mix-blend-mode: normal`, and added a subtle background color on hover. This ensures the cursor remains fully visible and elegant against the dark theme.
 5. **Real Profile Photo Integration**:
    - Replaced the repetitive `heroImage` (hero illustration) inside the Lore/About section ([AboutSection.jsx](file:///d:/programs/Portfolio/src/components/dev/AboutSection.jsx)) with your real photo (`src/assets/profile.jpg`), maintaining a balanced and premium layout.
+6. **Edge-to-Edge Fluid Layout**:
+   - Removed the restrictive `max-width: 1300px` and `margin: 0 auto` from `.dev-portfolio` in `DevMode.css` to allow the portfolio layout, background particles, grid pattern, and gradients to span fluidly from edge to edge on all aspect ratios.
+   - Cleaned up local negative margins (`margin: 0 -2rem` and `margin: 0 -1.2rem`) from `.bg-deep-section` and `.dev-ending-wrapper`.
+   - Standardized content centering using `.dev-section-inner` across all sections, including wrapping the Lore/About grid ([AboutSection.jsx](file:///d:/programs/Portfolio/src/components/dev/AboutSection.jsx)) and the footer ([ContactSection.jsx](file:///d:/programs/Portfolio/src/components/dev/ContactSection.jsx)), ensuring perfect readability limits (`max-width: 1200px`) and responsive side padding across mobile, tablet, and desktop aspect ratios.
