@@ -643,99 +643,156 @@
 }
 
 /* Skills Infographics */
-.skills-layout {
+.skills-content {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
   align-items: start;
 }
 
-.skills-subtitle {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  font-style: italic;
-  font-weight: 800;
-  color: var(--dev-text-heading);
-  margin-bottom: 2rem;
-}
-
-.skills-tags-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-}
-
-.skill-tag {
-  background-color: var(--dev-bg-deep);
-  border: 1px solid rgba(233, 196, 106, 0.6);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-family: 'DM Mono', monospace;
-  color: var(--dev-text-heading);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.skill-tag:hover {
-  transform: scale(1.05);
-  background-color: var(--dev-bg);
-  border-color: var(--dev-accent);
-}
-
-/* Zone B Cybersecurity insert */
-.skills-zone-b-dark-panel {
-  background-color: var(--dev-text);
-  border-radius: 8px;
-  padding: 2.5rem;
-  position: relative;
-  overflow: hidden;
-  color: #FAFAFA;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.dark-panel-scanline {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(to right, transparent, rgba(233, 196, 106, 0.8), transparent);
-  animation: dev-panel-scan 8s linear infinite;
-  will-change: top;
-}
-
-@keyframes dev-panel-scan {
-  0% {
-    top: 0%;
-  }
-
-  100% {
-    top: 100%;
-  }
-}
-
-.dark-panel-title {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: 2rem;
-  font-weight: 900;
-  color: #FAFAFA;
-  margin-bottom: 2rem;
-}
-
-.dark-panel-grid {
+.skills-dev,
+.skills-cyber {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 2rem;
 }
 
-.dark-panel-pathway {
-  margin-top: 2rem;
-  border-top: 1px solid #333;
-  padding-top: 1.5rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--dev-accent);
+.skills-dev h3,
+.skills-cyber h3 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--dev-accent, #E9C46A);
+}
+
+.skills-dev h3 {
+  color: var(--dev-text-heading, #1A1A1A);
+}
+
+/* Tier Structure */
+.skill-tier {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.tier-label {
+  font-family: "DM Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dev-accent, #E9C46A);
+  font-weight: 600;
+}
+
+/* Skill Pills (Dev Side) */
+.skill-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.pill {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  background: var(--dev-bg-deep, #FDF5C0);
+  border: 1px solid var(--dev-accent, #E9C46A);
+  color: var(--dev-text, #1A1A1A);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.pill:hover {
+  background: var(--dev-accent, #E9C46A);
+  border-color: var(--dev-accent-hover, #C9A84C);
+  color: var(--dev-bg, #FEFAE0);
+  transform: translateY(-2px);
+}
+
+.tier-description {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  color: var(--dev-text-dim, #8A7F6B);
+  line-height: 1.6;
+  margin-top: 0.4rem;
+}
+
+/* Cybersecurity Side (Dark Panel) */
+.skills-cyber {
+  background: #1A1A1A;
+  padding: 2rem;
+  border-radius: 4px;
+}
+
+.skills-cyber h3 {
+  color: #FEFAE0;
+  border-bottom-color: #E9C46A;
+}
+
+.skill-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.8rem;
+  background: rgba(233, 196, 106, 0.05);
+  border-left: 2px solid #E9C46A;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.skill-item:hover {
+  background: rgba(233, 196, 106, 0.1);
+  border-left-color: #FEFAE0;
+}
+
+.skill-name {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #FEFAE0;
+}
+
+.skill-note {
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  color: #8A7F6B;
   line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .skills-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .skill-pills {
+    gap: 0.4rem;
+  }
+  
+  .pill {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+  }
+  
+  .skill-item {
+    padding: 0.6rem;
+  }
+  
+  .skill-name {
+    font-size: 0.85rem;
+  }
 }
 
 /* Staggered Projects Grid */
