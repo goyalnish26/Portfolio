@@ -1,18 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { use3dTilt } from '../../hooks/use3dTilt';
-import heroImage from '../../assets/hero.png';
+import profileImage from '../../assets/profile.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AboutSection({ triggerBikeRide }) {
   const sectionRef = useRef(null);
   const textRef = useRef(null);
+  const cardRef = useRef(null);
   const pcbPathRef = useRef(null);
 
-  // Use unified 3D tilt hook with maxTilt = 10 degrees
-  const { tilt, handleMouseMove, handleMouseLeave, elementRef: cardRef } = use3dTilt(10);
+  // 3D Card tilt states
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     // Word-by-word scroll fade-in for text
@@ -24,7 +24,7 @@ export default function AboutSection({ triggerBikeRide }) {
         p.innerHTML = words.map(word => `<span class="scroll-word">${word}</span>`).join(' ');
 
         const wordElements = p.querySelectorAll('.scroll-word');
-        gsap.fromTo(wordElements, 
+        gsap.fromTo(wordElements,
           { opacity: 0.1, y: 5 },
           {
             opacity: 1,
@@ -61,6 +61,28 @@ export default function AboutSection({ triggerBikeRide }) {
     }
   }, []);
 
+  // Handle 3D Tilt calculations
+  const handleMouseMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x coordinate within the element
+    const y = e.clientY - rect.top;  // y coordinate within the element
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = (centerY - y) / 10; // Max tilt 10 degrees
+    const rotateY = (x - centerX) / 10;
+
+    setTilt({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
   return (
     <section ref={sectionRef} id="about" className="dev-section">
       {/* Background SVG PCB Traces */}
@@ -96,7 +118,7 @@ export default function AboutSection({ triggerBikeRide }) {
           >
             <div className="profile-card-glow" />
             <div className="profile-image-wrap">
-              <img src={heroImage} alt="Nishchal Goyal Profile Card" className="profile-image" />
+              <img src={profileImage} alt="Nishchal Goyal Profile Card" className="profile-image" />
             </div>
             <div className="profile-card-details">
               <span className="profile-tag">ECE CO-FOUNDER</span>

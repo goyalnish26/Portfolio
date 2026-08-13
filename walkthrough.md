@@ -90,3 +90,7 @@ Portfolio/
 3. **Public Git Scrubbing**:
    - Removed local spec sheets (`dev_mode_final_prompt.md` and `hacker_mode_terminal_prompt.md`) from the tracking path and added pattern rules to `.gitignore`.
    - Staged, committed, and successfully pushed all clean modifications to your origin branch on GitHub.
+4. **Custom Cursor Dark Mode Visibility**:
+   - Added specific CSS overrides in `src/styles/global.css` under `.dev-mode-active.night-mode` to change the dot and ring color to the theme's golden accent (`var(--dev-accent)`), set `mix-blend-mode: normal`, and added a subtle background color on hover. This ensures the cursor remains fully visible and elegant against the dark theme.
+5. **Real Profile Photo Integration**:
+   - Replaced the repetitive `heroImage` (hero illustration) inside the Lore/About section ([AboutSection.jsx](file:///d:/programs/Portfolio/src/components/dev/AboutSection.jsx)) with your real photo (`src/assets/profile.jpg`), maintaining a balanced and premium layout.
