@@ -143,7 +143,7 @@ export default function DevMode({
             >
               05. CONTACT
             </a>
-            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="dev-menu-resume">RESUME ↗</a>
+            <a href="https://drive.google.com/file/d/1wUdacEusDCz0rU0xPIZAj25vImhFiyqu/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="dev-menu-resume">RESUME ↗</a>
           </div>
           <button className="nav-night-toggle mobile" onClick={toggleDevNightMode} aria-label="Toggle night mode">
             {devNightMode ? '☼ Day Mode' : '☾ Night Mode'}

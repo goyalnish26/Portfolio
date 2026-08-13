@@ -132,7 +132,7 @@ export default function DevNav({ scrolled, setMenuOpen, devNightMode, toggleDevN
             EXPERIENCE
           </a>
           <a
-            href="/resume.pdf"
+            href="https://drive.google.com/file/d/1wUdacEusDCz0rU0xPIZAj25vImhFiyqu/view?usp=drive_link"
             target="_blank"
             rel="noopener noreferrer"
             className="nav-link nav-resume-capsule interactive"
