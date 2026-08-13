@@ -104,3 +104,5 @@ Portfolio/
    - Overwrote [SkillsSection.jsx](file:///d:/programs/Portfolio/src/components/dev/SkillsSection.jsx) with a clean, honest, and hierarchical presentation of your skills. Removed exaggerated log terminals and fake percentages, replacing them with Production-Ready, Competent, and Familiar tiers on the Development side, alongside structured Hands-On, Active Learning, and Certification Pathway blocks on the Cybersecurity side.
    - Cleaned up outdated classes (like `.skills-layout` and `.skills-subtitle`) and removed the unused [DevCyberSkill.jsx](file:///d:/programs/Portfolio/src/components/dev/DevCyberSkill.jsx) component.
    - Integrated custom light/dark theme variables for the new classes in [DevMode.css](file:///d:/programs/Portfolio/src/styles/DevMode.css#L644-L770) to support active dark mode styling.
+9. **Resume Link Redirection**:
+   - Updated the RESUME link destination in the desktop navbar ([DevNav.jsx](file:///d:/programs/Portfolio/src/components/dev/DevNav.jsx#L135)) and mobile menu drawer ([DevMode.jsx](file:///d:/programs/Portfolio/src/components/dev/DevMode.jsx#L146)) to open your Google Drive resume link directly in a new tab.
