@@ -5,9 +5,8 @@
    in global.css and inherited here — this keeps the full-bleed gutter
    and this container in sync under one source of truth. */
 .dev-portfolio {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  width: 100%;
+  padding: 0;
   background-color: var(--dev-bg, #FEFAE0);
   font-family: 'DM Sans', sans-serif;
   color: var(--dev-text, #1A1A1A);
@@ -557,14 +556,18 @@
 
 .bg-deep-section {
   background-color: var(--dev-bg);
-  margin: 0 -2rem;
-  padding: 8rem 2rem;
+  margin: 0;
+  padding: 8rem 0;
   border-top: 1px solid var(--dev-border);
   border-bottom: 1px solid var(--dev-border);
 }
 
 .dev-section-inner {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  box-sizing: border-box;
 }
 
 .section-label {
@@ -1386,13 +1389,13 @@
     display: block;
   }
 
-  .dev-portfolio {
-    padding: 0 1.2rem;
+  .bg-deep-section {
+    margin: 0;
+    padding: 5rem 0;
   }
 
-  .bg-deep-section {
-    margin: 0 -1.2rem;
-    padding: 5rem 1.2rem;
+  .dev-section-inner {
+    padding: 0 2rem;
   }
 
   .dev-section {
@@ -2033,8 +2036,8 @@
 /* 6. Contact Section Immersive Ending */
 .dev-ending-wrapper {
   background-color: #0A0A0A;
-  margin: 0 -2rem;
-  padding: 0 2rem;
+  margin: 0;
+  padding: 0;
   position: relative;
   overflow: hidden;
   border-top: 1px solid var(--dev-text);

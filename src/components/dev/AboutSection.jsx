@@ -100,71 +100,73 @@ export default function AboutSection({ triggerBikeRide }) {
         </svg>
       </div>
 
-      <div className="about-grid">
-        <div className="about-left-col">
-          {/* Gwen Stacy Editorial Magazine Title Number */}
-          <div className="decor-num">01</div>
+      <div className="dev-section-inner">
+        <div className="about-grid">
+          <div className="about-left-col">
+            {/* Gwen Stacy Editorial Magazine Title Number */}
+            <div className="decor-num">01</div>
 
-          {/* Interactive 3D Tilt Profile Card */}
-          <div
-            ref={cardRef}
-            className="about-profile-card interactive"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{
-              transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.02, 1.02, 1.02)`,
-              transition: tilt.x === 0 && tilt.y === 0 ? 'transform 0.5s ease' : 'none'
-            }}
-          >
-            <div className="profile-card-glow" />
-            <div className="profile-image-wrap">
-              <img src={profileImage} alt="Nishchal Goyal Profile Card" className="profile-image" />
-            </div>
-            <div className="profile-card-details">
-              <span className="profile-tag">ECE CO-FOUNDER</span>
-              <h4 className="profile-name">NISHCHAL GOYAL</h4>
-              <span className="profile-role">Jaipur, IN</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="about-right-col">
-          <div className="section-label">01 / LORE</div>
-          <h2 className="section-headline">Final-year ECE student who actually ships.</h2>
-          <div className="section-body-text" ref={textRef}>
-            <p>
-              I build backend systems that actually work and security tools that actually detect.
-              Currently in my final year at SKIT Jaipur, interning at Dreamsoft4u building Odoo 15
-              REST APIs — HTTP controllers, ORM queries, JSON pipelines — on a Python + PostgreSQL +
-              Linux stack.
-            </p>
-            <p>
-              On the other side, I&apos;m deep into offensive security — OverTheWire, TryHackMe, building
-              my own SIEM tools. The goal isn&apos;t just to get a job. It&apos;s to get good enough that breaking
-              in becomes second nature. Certified by Google in Cybersecurity. Currently on the
-              eJPT → OSCP pathway.
-            </p>
-          </div>
-          <div className="about-pills-container">
-            <span className="about-pill">ECE · SKIT Jaipur</span>
-            <span className="about-pill">7.5 CGPA · No Backlogs</span>
-            <span className="about-pill">Batch 2027</span>
-            <span className="about-pill">Jaipur, Rajasthan</span>
-            <span
-              className="about-pill spider-sense-trigger interactive"
-              style={{ cursor: 'pointer' }}
-              onClick={triggerBikeRide}
-              onMouseEnter={triggerBikeRide}
-              tabIndex="0"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  triggerBikeRide();
-                }
+            {/* Interactive 3D Tilt Profile Card */}
+            <div
+              ref={cardRef}
+              className="about-profile-card interactive"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.02, 1.02, 1.02)`,
+                transition: tilt.x === 0 && tilt.y === 0 ? 'transform 0.5s ease' : 'none'
               }}
             >
-              Honda CB350 · 2024
-            </span>
+              <div className="profile-card-glow" />
+              <div className="profile-image-wrap">
+                <img src={profileImage} alt="Nishchal Goyal Profile Card" className="profile-image" />
+              </div>
+              <div className="profile-card-details">
+                <span className="profile-tag">ECE</span>
+                <h4 className="profile-name">NISHCHAL GOYAL</h4>
+                <span className="profile-role">Jaipur, IN</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="about-right-col">
+            <div className="section-label">01 / LORE</div>
+            <h2 className="section-headline">Final-year ECE student who actually ships.</h2>
+            <div className="section-body-text" ref={textRef}>
+              <p>
+                I build backend systems that actually work and security tools that actually detect.
+                Currently in my final year at SKIT Jaipur, interning at Dreamsoft4u building Odoo 15
+                REST APIs — HTTP controllers, ORM queries, JSON pipelines — on a Python + PostgreSQL +
+                Linux stack.
+              </p>
+              <p>
+                On the other side, I&apos;m deep into offensive security — OverTheWire, TryHackMe, building
+                my own SIEM tools. The goal isn&apos;t just to get a job. It&apos;s to get good enough that breaking
+                in becomes second nature. Certified by Google in Cybersecurity. Currently on the
+                eJPT → OSCP pathway.
+              </p>
+            </div>
+            <div className="about-pills-container">
+              <span className="about-pill">ECE · SKIT Jaipur</span>
+              <span className="about-pill">7.5 CGPA · No Backlogs</span>
+              <span className="about-pill">Batch 2027</span>
+              <span className="about-pill">Jaipur, Rajasthan</span>
+              <span
+                className="about-pill spider-sense-trigger interactive"
+                style={{ cursor: 'pointer' }}
+                onClick={triggerBikeRide}
+                onMouseEnter={triggerBikeRide}
+                tabIndex="0"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    triggerBikeRide();
+                  }
+                }}
+              >
+                Honda CB350 · 2024
+              </span>
+            </div>
           </div>
         </div>
       </div>

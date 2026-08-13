@@ -45,12 +45,14 @@ export default function ContactSection({ devPostCreditsSentinelRef, devPostCredi
 
       {/* Footer */}
       <footer className="dev-footer">
-        <div className="footer-content">
-          <div>nishchal goyal · jaipur · 2026</div>
-          <div className="footer-quote">
-            &quot;Everyone keeps telling me how my story is supposed to go.
-            <br />
-            Nah… I&apos;m-a do my own thing.&quot; — Miles Morales
+        <div className="dev-section-inner">
+          <div className="footer-content">
+            <div>nishchal goyal · jaipur · 2026</div>
+            <div className="footer-quote">
+              &quot;Everyone keeps telling me how my story is supposed to go.
+              <br />
+              Nah… I&apos;m-a do my own thing.&quot; — Miles Morales
+            </div>
           </div>
         </div>
       </footer>
