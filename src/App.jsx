@@ -88,7 +88,8 @@ function App() {
   const [devPostCreditsState, setDevPostCreditsState] = useState(null); // null, 'wait', 'rejected', 'loading', 'cursor'
   const [spiderSenseNear, setSpiderSenseNear] = useState(false);
   const [devNightMode, setDevNightMode] = useState(() => {
-    return localStorage.getItem('devModeNightMode') === 'true';
+    const saved = localStorage.getItem('devModeNightMode');
+    return saved !== null ? saved === 'true' : true;
   });
   const devPostCreditsSentinelRef = useRef(null);
 
