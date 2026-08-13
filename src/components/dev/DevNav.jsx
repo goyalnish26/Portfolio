@@ -6,38 +6,55 @@ export default function DevNav({ scrolled, setMenuOpen, devNightMode, toggleDevN
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef(null);
 
-  // Monitor active section using IntersectionObserver
+  // Monitor active section using a performant custom scroll-spy listener
   useEffect(() => {
-    const sections = ['about', 'skills', 'projects', 'experience', 'contact'];
+    let ticking = false;
 
-    const observerCallback = (entries) => {
-      // Prevent jumpy underlines during smooth scrolls from clicking links
+    const handleScroll = () => {
       if (isScrollingRef.current) return;
 
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sections = ['about', 'skills', 'projects', 'experience', 'contact'];
+          const scrollPosition = window.scrollY + window.innerHeight / 3;
 
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -40% 0px', // Trigger near center viewport
-      threshold: 0.1,
-    };
+          // Default to first section (Lore) when near the top of the page
+          if (window.scrollY < 120) {
+            setActiveSection('about');
+            ticking = false;
+            return;
+          }
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
+          // Force highlight last section (Contact) when scrolled to the very bottom
+          if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 120) {
+            setActiveSection('contact');
+            ticking = false;
+            return;
+          }
 
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        observer.observe(el);
+          for (const sectionId of sections) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPosition >= top && scrollPosition < top + height) {
+                setActiveSection(sectionId);
+                break;
+              }
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
-    });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Run once on load to set initial state
+    handleScroll();
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     };
   }, []);
